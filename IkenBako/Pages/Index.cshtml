@@ -1,10 +1,28 @@
 ﻿@page
 @model IndexModel
 @{
-    ViewData["Title"] = "Home page";
+  ViewData["Title"] = "Home page";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<div class="container">
+  <form method="POST">
+    <div class="form-row">
+      <div class="form-group col-md-6 offset-md-3">
+        <label for="Message_SendTo">宛先</label>
+        <select class="form-control" asp-for="Message.SendTo" asp-items="Model.SendTargetList"></select>
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group col-md-6 offset-md-3">
+        <label for="Message_Detail">本文</label>
+        <textarea class="form-control" rows="3" asp-for="Message.Detail"></textarea>
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group col-md-6 offset-md-3">
+        <input class="btn btn-secondary mb-2" type="reset" value="クリア" />
+        <input class="btn btn-primary mb-2 float-right" type="submit" value="送信" />
+      </div>
+    </div>
+  </form>
 </div>
