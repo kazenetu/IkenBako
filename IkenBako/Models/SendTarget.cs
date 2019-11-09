@@ -6,27 +6,35 @@
   public class SendTarget
   {
     /// <summary>
-    /// 送信対象名
+    /// 送信表示象名称
     /// </summary>
-    public string Name { get; private set; }
+    public string DisplayName { get; private set; }
+
+    /// <summary>
+    /// 送信対象ID
+    /// </summary>
+    /// <remarks>アルファベットで表現すること</remarks>
+    public string ID { get; private set; }
 
     /// <summary>
     /// コンストラクタ
     /// </summary>
-    /// <param name="name">送信対象名</param>
-    private SendTarget(string name)
+    /// <param name="displayName">送信対象表示名</param>
+    /// <param name="id">送信対象ID</param>
+    private SendTarget(string displayName, string id)
     {
-      Name = name;
+      DisplayName = displayName;
+      ID = id;
     }
 
     /// <summary>
     /// 送信対象インスタンスの作成
     /// </summary>
-    /// <param name="name">送信対象名</param>
-    /// <returns>送信対象インスタンス</returns>
-    public static SendTarget Create(string name)
+    /// <param name="displayName">送信対象表示名</param>
+    /// <param name="id">送信対象ID</param>
+    public static SendTarget Create(string displayName, string id)
     {
-      return new SendTarget(name);
+      return new SendTarget(displayName, id);
     }
   }
 }

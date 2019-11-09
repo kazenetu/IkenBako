@@ -16,8 +16,8 @@ namespace IkenBako.Pages
     public List<SelectListItem> SendTargetList { 
       get
       {
-        var names = SendTargets.GetInstance().Targets.Select(item => item.Name);
-        return names.Select(name => new SelectListItem(name, name,false)).ToList();
+        var targets = SendTargets.GetInstance().Targets.Select(item => new { item.DisplayName,item.ID});
+        return targets.Select(target => new SelectListItem(target.DisplayName, target.ID, false)).ToList();
       }
     }
 

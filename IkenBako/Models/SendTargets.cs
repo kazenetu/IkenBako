@@ -27,9 +27,9 @@ namespace IkenBako.Models
     private static SendTargets Create()
     {
       var result = new SendTargets();
-      result.Targets.Add(SendTarget.Create("aa"));
-      result.Targets.Add(SendTarget.Create("bb"));
-      result.Targets.Add(SendTarget.Create("cc"));
+      result.Targets.Add(SendTarget.Create("Aさん","aa"));
+      result.Targets.Add(SendTarget.Create("Bさん", "bb"));
+      result.Targets.Add(SendTarget.Create("Cさん", "cc"));
 
       return result;
     }
