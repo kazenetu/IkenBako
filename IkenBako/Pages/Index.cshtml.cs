@@ -42,7 +42,7 @@ namespace IkenBako.Pages
       }
 
       // 保存NG
-      ViewData["ErrorMessage"] = "保存に失敗しました。";
+      ViewData["ErrorMessages"] = new List<string> { "保存に失敗しました。", "時間を置いて再送信してください。" };
     }
 
   }

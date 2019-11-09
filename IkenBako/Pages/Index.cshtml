@@ -2,13 +2,22 @@
 @model IndexModel
 @{
   ViewData["Title"] = "意見投稿";
+
+  // エラーメッセージリスト
+  var errorMessages = ViewData["ErrorMessages"] as List<string>;
 }
 
 <div class="container">
   <div class="text-center">
     <h1>@ViewData["Title"]</h1>
     <h2 id="error" style="color:red;">
-      @ViewData["ErrorMessage"]
+      @if(errorMessages != null)
+      {
+        foreach(var item in errorMessages)
+        {
+          @item <br>
+        }
+      }
     </h2>
 
     <div style="color:red;">
