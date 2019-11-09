@@ -12,7 +12,7 @@ namespace IkenBako.Infrastructures
     /// 保存
     /// </summary>
     /// <param name="message">意見メッセージクラス</param>
-    /// <returns>保存結果turns>
+    /// <returns>保存結果<returns>
     public bool Save(Message message)
     {
       return false;
