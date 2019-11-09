@@ -1,5 +1,6 @@
 ﻿using IkenBako.Infrastructures;
 using IkenBako.Models;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.Logging;
@@ -31,18 +32,18 @@ namespace IkenBako.Pages
     {
     }
 
-    public void OnPost(Message message)
+    public IActionResult OnPost(Message message)
     {
       // 意見メッセージ保存
       if(message.Save(new MessageRepository()))
       {
-        // TODO 保存OKの場合は完了メッセージページへ
-
-        return;
+        // 保存OKの場合は完了メッセージページへ
+        return RedirectToPage("/SendSuccess"); ;
       }
 
       // 保存NG
       ViewData["ErrorMessages"] = new List<string> { "保存に失敗しました。", "時間を置いて再送信してください。" };
+      return Page();
     }
 
   }
