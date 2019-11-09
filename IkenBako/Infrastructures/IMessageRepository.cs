@@ -11,8 +11,7 @@ namespace IkenBako.Infrastructures
     /// 保存
     /// </summary>
     /// <param name="message">意見メッセージクラス</param>
-    /// <returns>保存結果turns>
-    bool Save(Message message);
+    void Save(Message message);
 
     /// <summary>
     /// 送信対象宛ての意見メッセージ取得
