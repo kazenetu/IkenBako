@@ -34,7 +34,8 @@
     </div>
     <div class="form-row">
       <div class="form-group col-md-6 offset-md-3">
-        <input class="btn btn-secondary mb-2" type="reset" id="clear" value="クリア" />
+        <button class="btn btn-secondary mb-2" id="clear">クリア</button>
+
         <input class="btn btn-primary mb-2 float-right" id="send" type="submit" value="送信" />
       </div>
     </div>
@@ -48,18 +49,36 @@
       // 送信チェック
       $("#send").click(function () {
         if ($("#Message_Detail").val() === "") {
-          $("form").addClass("was-validated");
+          setDisplayError(true);
           return false;
         } else {
-          $("form").removeClass("was-validated");
+          setDisplayError(false);
           return true;
         }
       });
 
       // 入力クリア
       $("#clear").click(function () {
-        $("form").removeClass("was-validated");
+          setDisplayError(false);
+        $("#Message_Detail").val("");
+        return false;
       });
     });
+
+    /**
+     * エラーの表示設定
+     */
+    function setDisplayError(display) {
+      if (display) {
+        $("form").addClass("was-validated");
+      } else {
+        $("form").removeClass("was-validated");
+      }
+
+      // エラーメッセージの非表示
+      if ($("#error").text() !== "") {
+        $("#error").hide("");
+      }
+    }
   </script>
 }
