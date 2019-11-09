@@ -39,8 +39,7 @@ namespace IkenBako.Infrastructures
     /// 保存
     /// </summary>
     /// <param name="message">意見メッセージクラス</param>
-    /// <returns>保存結果<returns>
-    public bool Save(Message message)
+    public void Save(Message message)
     {
       // 格納ディレクトリパスを作成
       var targetPath = Path.Join(CurrentPath, message.SendTo);
@@ -62,8 +61,6 @@ namespace IkenBako.Infrastructures
       {
         stream.Write(jsonBytes, 0, jsonBytes.Length);
       }
-
-      return true;
 
       // Json変換メソッド
       Byte[] ConvartJsonBytes()

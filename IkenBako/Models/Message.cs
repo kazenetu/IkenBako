@@ -21,10 +21,9 @@ namespace IkenBako.Models
     /// 保存
     /// </summary>
     /// <param name="messageRepository">意見メッセージ保存リポジトリクラスインスタンス</param>
-    /// <returns>保存結果</returns>
-    public bool Save(IMessageRepository messageRepository)
+    public void Save(IMessageRepository messageRepository)
     {
-      return messageRepository.Save(this);
+      messageRepository.Save(this);
     }
   }
 }
