@@ -22,14 +22,40 @@
     <div class="form-row">
       <div class="form-group col-md-6 offset-md-3">
         <label for="Message_Detail">本文</label>
-        <textarea class="form-control" rows="3" placeholder="意見を入力してください。" asp-for="Message.Detail"></textarea>
+        <textarea class="form-control" rows="3" placeholder="意見を入力してください。" required asp-for="Message.Detail"></textarea>
+        <div class="invalid-feedback">
+          必ず入力してください。
+        </div>
       </div>
     </div>
     <div class="form-row">
       <div class="form-group col-md-6 offset-md-3">
-        <input class="btn btn-secondary mb-2" type="reset" value="クリア" />
-        <input class="btn btn-primary mb-2 float-right" type="submit" value="送信" />
+        <input class="btn btn-secondary mb-2" type="reset" id="clear" value="クリア" />
+        <input class="btn btn-primary mb-2 float-right" id="send" type="submit" value="送信" />
       </div>
     </div>
   </form>
 </div>
+
+@section scripts{
+  <script type="text/javascript">
+    $(function () {
+
+      // 送信チェック
+      $("#send").click(function () {
+        if ($("#Message_Detail").val() === "") {
+          $("form").addClass("was-validated");
+          return false;
+        } else {
+          $("form").removeClass("was-validated");
+          return true;
+        }
+      });
+
+      // 入力クリア
+      $("#clear").click(function () {
+        $("form").removeClass("was-validated");
+      });
+    });
+  </script>
+}
