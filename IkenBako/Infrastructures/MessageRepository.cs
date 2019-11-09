@@ -11,9 +11,9 @@ namespace IkenBako.Infrastructures
     /// <summary>
     /// 保存
     /// </summary>
-    /// <param name="sessamge">意見メッセージクラス</param>
+    /// <param name="message">意見メッセージクラス</param>
     /// <returns>保存結果turns>
-    public bool Save(Message sessamge)
+    public bool Save(Message message)
     {
       return false;
     }
