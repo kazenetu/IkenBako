@@ -1,4 +1,5 @@
-﻿using IkenBako.Models;
+﻿using IkenBako.Infrastructures;
+using IkenBako.Models;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.Logging;
@@ -32,7 +33,16 @@ namespace IkenBako.Pages
 
     public void OnPost(Message message)
     {
-      // メッセージインスタンスの処理
+      // 意見メッセージ保存
+      if(message.Save(new MessageRepository()))
+      {
+        // TODO 保存OKの場合は完了メッセージページへ
+
+        return;
+      }
+
+      // 保存NG
+      ViewData["ErrorMessage"] = "保存に失敗しました。";
     }
 
   }

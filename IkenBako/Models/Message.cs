@@ -1,4 +1,6 @@
-﻿namespace IkenBako.Models
+﻿using IkenBako.Infrastructures;
+
+namespace IkenBako.Models
 {
   /// <summary>
   /// 意見メッセージ
@@ -14,5 +16,15 @@
     /// メッセージ本文
     /// </summary>
     public string Detail { get; set; }
+
+    /// <summary>
+    /// 保存
+    /// </summary>
+    /// <param name="messageRepository">意見メッセージ保存リポジトリクラスインスタンス</param>
+    /// <returns>保存結果</returns>
+    public bool Save(IMessageRepository messageRepository)
+    {
+      return messageRepository.Save(this);
+    }
   }
 }
