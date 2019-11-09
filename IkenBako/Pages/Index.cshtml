@@ -1,10 +1,17 @@
 ﻿@page
 @model IndexModel
 @{
-  ViewData["Title"] = "Home page";
+  ViewData["Title"] = "意見投稿";
 }
 
 <div class="container">
+  <div class="text-center">
+    <h1>@ViewData["Title"]</h1>
+    <div style="color:red;">
+      良い点や改善点を投稿してください。
+    </div>
+  </div>
+
   <form method="POST">
     <div class="form-row">
       <div class="form-group col-md-6 offset-md-3">
@@ -15,7 +22,7 @@
     <div class="form-row">
       <div class="form-group col-md-6 offset-md-3">
         <label for="Message_Detail">本文</label>
-        <textarea class="form-control" rows="3" asp-for="Message.Detail"></textarea>
+        <textarea class="form-control" rows="3" placeholder="意見を入力してください。" asp-for="Message.Detail"></textarea>
       </div>
     </div>
     <div class="form-row">
