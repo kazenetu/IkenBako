@@ -1,0 +1,49 @@
+﻿@page
+@model IkenBako.Pages.MessageListsModel
+@{
+  ViewData["Title"] = "メッセージ一覧";
+}
+
+  <div class="container">
+    <div class="text-center">
+      <h1>@ViewData["Title"]</h1>
+    </div>
+
+    <form method="POST">
+      <div class="form-row">
+        <div class="form-group col-md-6 offset-md-3">
+          <label for="Message_SendTo">確認対象</label>
+          <select class="form-control" asp-for="Target" asp-items="Model.SendTargetList"></select>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group col-md-6 offset-md-3">
+          <input class="btn btn-primary mb-2 float-right" id="send" type="submit" value="確認" />
+        </div>
+      </div>
+    </form>
+
+    @if (Model.Messages.Any())
+    {
+     <table class="table table-bordered mx-sm-auto">
+        <tr>
+          <th>意見</th>
+        </tr>
+
+        @foreach (var message in Model.Messages)
+        {
+          <tr>
+            <td>@message.Detail</td>
+          </tr>
+        }
+      </table>
+    }
+    else
+    {
+      <div class="text-center">
+        <h2>
+          @ViewData["Message"]
+        </h2>
+      </div>
+    }
+  </div>
