@@ -40,7 +40,7 @@ namespace IkenBako.Pages
         message.Save(new MessageRepository());
 
         // 保存OKの場合は完了メッセージページへ
-        return RedirectToPage("/SendSuccess"); ;
+        return RedirectToPage("/SendSuccess");
       }
       catch(System.IO.FileLoadException ex)
       {
