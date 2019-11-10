@@ -1,11 +1,12 @@
 ﻿using IkenBako.Models;
+using System;
 using System.Collections.Generic;
 namespace IkenBako.Infrastructures
 {
   /// <summary>
   /// 意見メッセージリポジトリインターフェース
   /// </summary>
-  public interface IMessageRepository
+  public interface IMessageRepository : IDisposable
   {
     /// <summary>
     /// 保存
