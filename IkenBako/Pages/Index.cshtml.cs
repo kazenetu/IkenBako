@@ -14,7 +14,17 @@ namespace IkenBako.Pages
   {
     private readonly ILogger<IndexModel> _logger;
 
-    public Message Message { get; set; }
+    /// <summary>
+    /// 送信対象者
+    /// </summary>
+    [BindProperty]
+    public string SendTo { set; get; } = "";
+
+    /// <summary>
+    /// 本文
+    /// </summary>
+    [BindProperty]
+    public string Detail { set; get; } = "";
 
     public List<SelectListItem> SendTargetList { 
       get
@@ -33,12 +43,12 @@ namespace IkenBako.Pages
     {
     }
 
-    public IActionResult OnPost(Message message)
+    public IActionResult OnPost()
     {
       // 意見メッセージ保存
       try
       {
-        MessageService.Save(message);
+        MessageService.Save(Message.Create(SendTo, Detail));
 
         // 保存OKの場合は完了メッセージページへ
         return RedirectToPage("/SendSuccess");

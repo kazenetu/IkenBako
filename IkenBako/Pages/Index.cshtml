@@ -29,13 +29,13 @@
     <div class="form-row">
       <div class="form-group col-md-6 offset-md-3">
         <label for="Message_SendTo">宛先</label>
-        <select class="form-control" asp-for="Message.SendTo" asp-items="Model.SendTargetList"></select>
+        <select class="form-control" asp-for="SendTo" asp-items="Model.SendTargetList"></select>
       </div>
     </div>
     <div class="form-row">
       <div class="form-group col-md-6 offset-md-3">
         <label for="Message_Detail">本文</label>
-        <textarea class="form-control" rows="3" placeholder="意見を入力してください。" required asp-for="Message.Detail"></textarea>
+        <textarea class="form-control" rows="3" placeholder="意見を入力してください。" required asp-for="Detail"></textarea>
         <div class="invalid-feedback">
           必ず入力してください。
         </div>
@@ -57,7 +57,7 @@
 
       // 送信チェック
       $("#send").click(function () {
-        if ($("#Message_Detail").val() === "") {
+        if ($("#Detail").val() === "") {
           setDisplayError(true);
           return false;
         } else {
@@ -68,8 +68,8 @@
 
       // 入力クリア
       $("#clear").click(function () {
-          setDisplayError(false);
-        $("#Message_Detail").val("");
+        setDisplayError(false);
+        $("#Detail").val("");
         return false;
       });
     });
