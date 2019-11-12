@@ -1,4 +1,5 @@
-﻿using IkenBako.Infrastructures;
+﻿using IkenBako.ApplicationService;
+using IkenBako.Infrastructures;
 using IkenBako.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -37,7 +38,7 @@ namespace IkenBako.Pages
       // 意見メッセージ保存
       try
       {
-        message.Save(new MessageRepository());
+        MessageService.Save(message);
 
         // 保存OKの場合は完了メッセージページへ
         return RedirectToPage("/SendSuccess");

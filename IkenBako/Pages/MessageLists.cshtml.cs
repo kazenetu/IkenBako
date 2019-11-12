@@ -1,4 +1,4 @@
-﻿using IkenBako.Infrastructures;
+﻿using IkenBako.ApplicationService;
 using IkenBako.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -55,7 +55,7 @@ namespace IkenBako.Pages
       }
 
       // 対象の意見メッセージを取得
-      Messages = (new MessageRepository()).FindMessage(target);
+      Messages = MessageService.FindMessage(target);
 
       // メッセージがない場合はその旨のエラーメッセージを設定
       if (!Messages.Any())
