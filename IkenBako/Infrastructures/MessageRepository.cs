@@ -114,11 +114,19 @@ namespace IkenBako.Infrastructures
       {
         using (var stream = new FileStream(filePath, FileMode.Open))
         {
-          var jsonSerializer = new DataContractJsonSerializer(typeof(Message));
-          return jsonSerializer.ReadObject(stream) as Message;
+          var jsonSerializer = new DataContractJsonSerializer(typeof(MessageDTO));
+          var messageDTO = jsonSerializer.ReadObject(stream) as MessageDTO;
+          return Message.Create(messageDTO.SendTo, messageDTO.Detail);
         }
 
       }
     }
+
+    public class MessageDTO
+    {
+      public string SendTo { set; get; }
+      public string Detail { set; get; }
+    }
+
   }
 }
