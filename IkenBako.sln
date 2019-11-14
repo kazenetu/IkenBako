@@ -10,6 +10,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IkenBako", "IkenBako\IkenBa
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Domain", "Domain\Domain.csproj", "{C6DA6FF8-98F7-470D-8C32-7521BAD432A3}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Infrastructures", "Infrastructures\Infrastructures.csproj", "{5D716C6D-4C8A-443E-89F4-620C8F75FC78}"
+	ProjectSection(ProjectDependencies) = postProject
+		{C6DA6FF8-98F7-470D-8C32-7521BAD432A3} = {C6DA6FF8-98F7-470D-8C32-7521BAD432A3}
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -24,6 +29,10 @@ Global
 		{C6DA6FF8-98F7-470D-8C32-7521BAD432A3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C6DA6FF8-98F7-470D-8C32-7521BAD432A3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C6DA6FF8-98F7-470D-8C32-7521BAD432A3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5D716C6D-4C8A-443E-89F4-620C8F75FC78}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5D716C6D-4C8A-443E-89F4-620C8F75FC78}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5D716C6D-4C8A-443E-89F4-620C8F75FC78}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5D716C6D-4C8A-443E-89F4-620C8F75FC78}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
