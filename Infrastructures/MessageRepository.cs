@@ -11,7 +11,7 @@ namespace Infrastructures
   /// <summary>
   /// 意見メッセージリポジトリ
   /// </summary>
-  class MessageRepository: IMessageRepository
+  public class MessageRepository: IMessageRepository
   {
     /// <summary>
     /// 投稿結果ディレクトリ名
