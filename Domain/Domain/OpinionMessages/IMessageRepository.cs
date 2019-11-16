@@ -1,5 +1,4 @@
 ﻿using Domain.Domain.Receivers;
-using System;
 using System.Collections.Generic;
 
 namespace Domain.Domain.OpinionMessages
@@ -7,7 +6,7 @@ namespace Domain.Domain.OpinionMessages
   /// <summary>
   /// 意見メッセージリポジトリインターフェース
   /// </summary>
-  public interface IMessageRepository : IDisposable
+  public interface IMessageRepository
   {
     /// <summary>
     /// 保存
