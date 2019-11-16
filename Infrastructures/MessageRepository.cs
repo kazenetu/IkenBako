@@ -38,13 +38,6 @@ namespace Infrastructures
     }
 
     /// <summary>
-    /// 破棄
-    /// </summary>
-    public void Dispose()
-    {
-    }
-
-    /// <summary>
     /// 保存
     /// </summary>
     /// <param name="message">意見メッセージクラス</param>
