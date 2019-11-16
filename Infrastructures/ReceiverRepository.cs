@@ -6,7 +6,7 @@ namespace Infrastructures
   /// <summary>
   /// 送信対象者リポジトリ
   /// </summary>
-  public class ReceiverRepository
+  public class ReceiverRepository: IReceiverRepository
   {
     /// <summary>
     /// 送信対象者リストを取得
