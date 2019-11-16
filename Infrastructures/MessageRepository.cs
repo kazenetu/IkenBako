@@ -67,10 +67,19 @@ namespace Infrastructures
       // Json変換メソッド
       Byte[] ConvartJsonBytes()
       {
+        // 各要素をDictionaryに格納
+        var target = new Dictionary<string, string>();
+        var properties = message.GetType().GetProperties();
+        foreach (var p in properties)
+        {
+          target.Add(p.Name, p.GetValue(message) as string);
+        }
+
+        // Dictionaryをシリアライズ
         using (MemoryStream ms = new MemoryStream())
         {
-          var jsonSerializer = new DataContractJsonSerializer(typeof(Message));
-          jsonSerializer.WriteObject(ms, message);
+          var jsonSerializer = new DataContractJsonSerializer(typeof(Dictionary<string, string>));
+          jsonSerializer.WriteObject(ms, target);
           return ms.ToArray();
         }
       }
@@ -110,9 +119,12 @@ namespace Infrastructures
       {
         using (var stream = new FileStream(filePath, FileMode.Open))
         {
-          var jsonSerializer = new DataContractJsonSerializer(typeof(MessageModel));
-          var messageModel = jsonSerializer.ReadObject(stream) as MessageModel;
-          return Message.Create(messageModel.SendTo, messageModel.Detail);
+          // Dictionaryにデシリアライズ
+          var jsonSerializer = new DataContractJsonSerializer(typeof(Dictionary<string, string>));
+          var messageModel = jsonSerializer.ReadObject(stream) as Dictionary<string, string>;
+
+          // 意見メッセージインスタンスを生成する
+          return Message.Create(messageModel["SendTo"], messageModel["Detail"]);
         }
 
       }
