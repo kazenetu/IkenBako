@@ -1,7 +1,7 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using Domain.Application;
+using Domain.Domain.OpinionMessages;
+using Domain.Domain.Receivers;
+using Infrastructures;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -23,6 +23,15 @@ namespace IkenBako
     public void ConfigureServices(IServiceCollection services)
     {
       services.AddRazorPages();
+
+      // DIê›íË
+      // ÉäÉ|ÉWÉgÉä
+      services.AddSingleton<IMessageRepository, MessageRepository>();
+      services.AddSingleton<IReceiverRepository, ReceiverRepository>();
+
+      // ApplicationService
+      services.AddTransient<MessageService>();
+      services.AddTransient<ReceiverService>();
     }
 
     // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
