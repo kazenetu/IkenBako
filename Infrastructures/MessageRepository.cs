@@ -1,5 +1,4 @@
-﻿using Domain.Application.Models;
-using Domain.Domain.OpinionMessages;
+﻿using Domain.Domain.OpinionMessages;
 using Domain.Domain.Receivers;
 using System;
 using System.Collections.Generic;
