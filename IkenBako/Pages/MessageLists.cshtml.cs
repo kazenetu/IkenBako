@@ -1,5 +1,5 @@
-﻿using IkenBako.ApplicationService;
-using IkenBako.Models;
+﻿using Domain.Application;
+using IkenBako.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -13,7 +13,17 @@ namespace IkenBako.Pages
   {
     private readonly ILogger<MessageListsModel> _logger;
 
-    public List<Message> Messages { get; private set; } = new List<Message>();
+    /// <summary>
+    /// 意見メッセージサービス
+    /// </summary>
+    private readonly MessageService messageService;
+
+    /// <summary>
+    /// 送信者サービス
+    /// </summary>
+    private readonly ReceiverService receiverService;
+
+    public List<MessageViewModel> Messages { get; private set; } = new List<MessageViewModel>();
 
     /// <summary>
     /// 確認者
@@ -22,24 +32,30 @@ namespace IkenBako.Pages
     public string Target { set; get; }
 
     /// <summary>
-    /// 送信対象者リスト
+    /// コンストラクタ
+    /// </summary>
+    /// <param name="logger">ログインスタンス</param>
+    /// <param name="messageService">意見メッセージサービス</param>
+    /// <param name="receiverService">送信者サービス</param>
+    public MessageListsModel(ILogger<MessageListsModel> logger, MessageService messageService, ReceiverService receiverService)
+    {
+      _logger = logger;
+      this.messageService = messageService;
+      this.receiverService = receiverService;
+    }
+
+    /// <summary>
+    /// 送信対象者リストを取得
     /// </summary>
     public List<SelectListItem> SendTargetList
     {
       get
       {
-        var targets = SendTargets.GetInstance().Targets.Select(item => new { item.DisplayName, item.ID });
-        return targets.Select(target => new SelectListItem(target.DisplayName, target.ID, false)).ToList();
-      }
-    }
+        var sendTargetViewModels = receiverService.GetList().
+          Select(item => new SendTargetViewModel { DisplayName = item.DisplayName, ID = item.ID });
 
-    /// <summary>
-    /// コンストラクタ
-    /// </summary>
-    /// <param name="logger"></param>
-    public MessageListsModel(ILogger<MessageListsModel> logger)
-    {
-      _logger = logger;
+        return sendTargetViewModels.Select(target => new SelectListItem(target.DisplayName, target.ID, false)).ToList();
+      }
     }
 
     public void OnGet()
@@ -48,14 +64,12 @@ namespace IkenBako.Pages
 
     public void OnPost()
     {
-      var target = SendTargets.GetInstance().Targets.Where(item => item.ID == Target).FirstOrDefault();
-      if(target is null)
-      {
-        return;
-      }
-
       // 対象の意見メッセージを取得
-      Messages = MessageService.FindMessage(target);
+      Messages = messageService.FindMessage(Target).Select(item => new MessageViewModel
+      {
+        SendTo = item.SendTo,
+        Detail = item.Detail
+      }).ToList();
 
       // メッセージがない場合はその旨のエラーメッセージを設定
       if (!Messages.Any())
