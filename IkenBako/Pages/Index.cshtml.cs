@@ -1,6 +1,5 @@
-﻿using IkenBako.ApplicationService;
-using IkenBako.Infrastructures;
-using IkenBako.Models;
+﻿using Domain.Application;
+using IkenBako.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -15,29 +14,48 @@ namespace IkenBako.Pages
     private readonly ILogger<IndexModel> _logger;
 
     /// <summary>
-    /// 送信対象者
+    /// 意見メッセージサービス
     /// </summary>
-    [BindProperty]
-    public string SendTo { set; get; } = "";
+    private readonly MessageService messageService;
 
     /// <summary>
-    /// 本文
+    /// 送信者サービス
+    /// </summary>
+    private readonly ReceiverService receiverService;
+
+    /// <summary>
+    /// 意見メッセージViewModel
     /// </summary>
     [BindProperty]
-    public string Detail { set; get; } = "";
+    public MessageViewModel Message { set; get; }
 
-    public List<SelectListItem> SendTargetList { 
+    /// <summary>
+    /// コンストラクタ
+    /// </summary>
+    /// <param name="logger">ログインスタンス</param>
+    /// <param name="messageService">意見メッセージサービス</param>
+    /// <param name="receiverService">送信者サービス</param>
+    public IndexModel(ILogger<IndexModel> logger, MessageService messageService, ReceiverService receiverService)
+    {
+      _logger = logger;
+      this.messageService = messageService;
+      this.receiverService = receiverService;
+    }
+
+    /// <summary>
+    /// 送信対象者リストを取得
+    /// </summary>
+    public List<SelectListItem> SendTargetList
+    {
       get
       {
-        var targets = SendTargets.GetInstance().Targets.Select(item => new { item.DisplayName,item.ID});
-        return targets.Select(target => new SelectListItem(target.DisplayName, target.ID, false)).ToList();
+        var sendTargetViewModels = receiverService.GetList().
+          Select(item => new SendTargetViewModel { DisplayName = item.DisplayName, ID = item.ID });
+
+        return sendTargetViewModels.Select(target => new SelectListItem(target.DisplayName, target.ID, false)).ToList();
       }
     }
 
-    public IndexModel(ILogger<IndexModel> logger)
-    {
-      _logger = logger;
-    }
 
     public void OnGet()
     {
@@ -48,12 +66,12 @@ namespace IkenBako.Pages
       // 意見メッセージ保存
       try
       {
-        MessageService.Save(Message.Create(SendTo, Detail));
+        messageService.Save(Message.SendTo, Message.Detail);
 
         // 保存OKの場合は完了メッセージページへ
         return RedirectToPage("/SendSuccess");
       }
-      catch(System.IO.FileLoadException ex)
+      catch (System.IO.FileLoadException ex)
       {
         // 例外エラーログ追記
         _logger.LogError(ex.Message);
