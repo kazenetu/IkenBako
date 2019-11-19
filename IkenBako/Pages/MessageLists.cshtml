@@ -33,7 +33,12 @@
         @foreach (var message in Model.Messages)
         {
           <tr>
-            <td>@message.Detail</td>
+            <td>
+              @foreach (var item in message.Detail.Split(Environment.NewLine))
+              {
+                @item<br>
+              }
+            </td>
           </tr>
         }
       </table>
