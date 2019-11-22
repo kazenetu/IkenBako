@@ -104,7 +104,7 @@ namespace Infrastructures
         return result;
       }
 
-      // 対象ディレクトリからJsonファイルを取得する
+      // 対象ディレクトリからJSONファイルを取得する
       var targetFiles = Directory.GetFiles(targetPath, "*.txt");
       foreach (var filePath in targetFiles)
       {
@@ -112,21 +112,25 @@ namespace Infrastructures
       }
 
       return result;
+    }
 
-      // JsonファイルをMessageクラスインスタンスに変換する
-      Message ConvertJsonToMessage(string filePath)
+    /// <summary>
+    /// JsonファイルをMessageクラスインスタンスに変換
+    /// </summary>
+    /// <param name="filePath">JSONファイルのフルパス</param>
+    /// <returns>意見メッセージインスタンス</returns>
+    private Message ConvertJsonToMessage(string filePath)
+    {
+      using (var stream = new FileStream(filePath, FileMode.Open))
       {
-        using (var stream = new FileStream(filePath, FileMode.Open))
-        {
-          // Dictionaryにデシリアライズ
-          var jsonSerializer = new DataContractJsonSerializer(typeof(Dictionary<string, string>));
-          var messageModel = jsonSerializer.ReadObject(stream) as Dictionary<string, string>;
+        // Dictionaryにデシリアライズ
+        var jsonSerializer = new DataContractJsonSerializer(typeof(Dictionary<string, string>));
+        var messageModel = jsonSerializer.ReadObject(stream) as Dictionary<string, string>;
 
-          // 意見メッセージインスタンスを生成する
-          return Message.Create(messageModel["SendTo"], messageModel["Detail"]);
-        }
-
+        // 意見メッセージインスタンスを生成する
+        return Message.Create(messageModel["SendTo"], messageModel["Detail"]);
       }
+
     }
   }
 }
