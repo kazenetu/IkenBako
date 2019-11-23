@@ -37,9 +37,9 @@ namespace Domain.Application
     /// </summary>
     /// <param name="receiverId">送信対象ID</param>
     /// <returns>意見メッセージリスト</returns>
-    public List<MessageModel> FindMessage(string receiverId)
+    public List<MessageModel> Find(string receiverId)
     {
-      var messages = repository.FindMessage(new ReceiverId(receiverId));
+      var messages = repository.Find(new ReceiverId(receiverId));
       return messages.Select(message => new MessageModel(message)).ToList();
     }
 

@@ -90,7 +90,7 @@ namespace Infrastructures
     /// </summary>
     /// <param name="receiverId">送信対象ID</param>
     /// <returns>意見メッセージリスト</returns>
-    public List<Message> FindMessage(ReceiverId receiverId)
+    public List<Message> Find(ReceiverId receiverId)
     {
       var result = new List<Message>();
 

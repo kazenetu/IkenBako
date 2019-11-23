@@ -19,6 +19,6 @@ namespace Domain.Domain.OpinionMessages
     /// </summary>
     /// <param name="receiverId">送信対象ID</param>
     /// <returns>意見メッセージリスト</returns>
-    List<Message> FindMessage(ReceiverId receiverId);
+    List<Message> Find(ReceiverId receiverId);
   }
 }

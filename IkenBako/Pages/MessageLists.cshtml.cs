@@ -65,7 +65,7 @@ namespace IkenBako.Pages
     public void OnPost()
     {
       // 対象の意見メッセージを取得
-      Messages = messageService.FindMessage(Target).Select(item => new MessageViewModel
+      Messages = messageService.Find(Target).Select(item => new MessageViewModel
       {
         SendTo = item.SendTo,
         Detail = item.Detail
