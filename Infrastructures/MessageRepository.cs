@@ -86,7 +86,6 @@ namespace Infrastructures
     }
 
     /// <summary>
-    /// <summary>
     /// 送信対象宛ての意見メッセージ取得
     /// </summary>
     /// <param name="receiverId">送信対象ID</param>
