@@ -43,5 +43,15 @@ namespace Domain.Application
       return messages.Select(message => new MessageModel(message)).ToList();
     }
 
+    /// <summary>
+    /// すべての意見メッセージ取得
+    /// </summary>
+    /// <returns>意見メッセージリスト</returns>
+    public List<MessageModel> FindAll()
+    {
+      var messages = repository.FindAll();
+      return messages.Select(message => new MessageModel(message)).ToList();
+    }
+
   }
 }
