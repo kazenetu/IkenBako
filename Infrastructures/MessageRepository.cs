@@ -114,6 +114,24 @@ namespace Infrastructures
     }
 
     /// <summary>
+    /// すべての意見メッセージ取得
+    /// </summary>
+    /// <returns>意見メッセージリスト</returns>
+    public List<Message> FindAll()
+    {
+      var result = new List<Message>();
+
+      // 対象ディレクトリからJSONファイルを取得する
+      var targetFiles = Directory.GetFiles(CurrentPath, "*.txt", SearchOption.AllDirectories);
+      foreach (var filePath in targetFiles)
+      {
+        result.Add(ConvertJsonToMessage(filePath));
+      }
+
+      return result;
+    }
+
+    /// <summary>
     /// JsonファイルをMessageクラスインスタンスに変換
     /// </summary>
     /// <param name="filePath">JSONファイルのフルパス</param>
