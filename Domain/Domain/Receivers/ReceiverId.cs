@@ -2,10 +2,20 @@
 
 namespace Domain.Domain.Receivers
 {
+  /// <summary>
+  /// 送信対象ID
+  /// </summary>
   public class ReceiverId : IEquatable<ReceiverId>
   {
+    /// <summary>
+    /// 送信対象ID
+    /// </summary>
     public string Value { get; }
 
+    /// <summary>
+    /// コンストラクタ
+    /// </summary>
+    /// <param name="id">送信対象ID</param>
     public ReceiverId(string id)
     {
       if (string.IsNullOrEmpty(id))
@@ -16,6 +26,11 @@ namespace Domain.Domain.Receivers
       Value = id;
     }
 
+    /// <summary>
+    /// 比較
+    /// </summary>
+    /// <param name="other">比較対象</param>
+    /// <returns>比較結果</returns>
     public bool Equals(ReceiverId other)
     {
       if (ReferenceEquals(null, other)) return false;
@@ -23,6 +38,11 @@ namespace Domain.Domain.Receivers
       return string.Equals(Value, other.Value);
     }
 
+    /// <summary>
+    /// 比較
+    /// </summary>
+    /// <param name="obj">比較対象</param>
+    /// <returns>比較結果</returns>
     public override bool Equals(object obj)
     {
       if (ReferenceEquals(null, obj)) return false;
@@ -31,6 +51,10 @@ namespace Domain.Domain.Receivers
       return Equals((ReceiverId)obj);
     }
 
+    /// <summary>
+    /// ハッシュ値取得
+    /// </summary>
+    /// <returns>ハッシュ値</returns>
     public override int GetHashCode()
     {
       return (Value != null ? Value.GetHashCode() : 0);
