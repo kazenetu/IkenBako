@@ -1,4 +1,6 @@
-﻿namespace Domain.Domain.OpinionMessages
+﻿using Domain.Domain.Receivers;
+
+namespace Domain.Domain.OpinionMessages
 {
   /// <summary>
   /// 意見メッセージ
@@ -8,7 +10,7 @@
     /// <summary>
     /// メッセージ対象
     /// </summary>
-    public string SendTo { get; private set; }
+    public ReceiverId SendTo { get; private set; }
 
     /// <summary>
     /// メッセージ本文
@@ -32,7 +34,7 @@
     {
       return new Message()
       {
-        SendTo = sendTo,
+        SendTo = new ReceiverId(sendTo),
         Detail = detail
       };
     }

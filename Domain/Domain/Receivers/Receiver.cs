@@ -14,14 +14,14 @@
     /// 送信対象ID
     /// </summary>
     /// <remarks>アルファベットで表現すること</remarks>
-    public string ID { get; private set; }
+    public ReceiverId ID { get; private set; }
 
     /// <summary>
     /// コンストラクタ
     /// </summary>
     /// <param name="displayName">送信対象表示名</param>
     /// <param name="id">送信対象ID</param>
-    private Receiver(string displayName, string id)
+    private Receiver(string displayName, ReceiverId id)
     {
       DisplayName = displayName;
       ID = id;
@@ -34,7 +34,7 @@
     /// <param name="id">送信対象ID</param>
     public static Receiver Create(string displayName, string id)
     {
-      return new Receiver(displayName, id);
+      return new Receiver(displayName, new ReceiverId(id));
     }
   }
 }

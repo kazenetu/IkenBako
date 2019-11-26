@@ -43,7 +43,7 @@ namespace Infrastructures
     public void Save(Message message)
     {
       // 格納ディレクトリパスを作成
-      var targetPath = Path.Join(CurrentPath, message.SendTo);
+      var targetPath = Path.Join(CurrentPath, message.SendTo.Value);
 
       // 格納ディレクトリパスが存在しない場合はディレクトリを作成する
       if (!Directory.Exists(targetPath))

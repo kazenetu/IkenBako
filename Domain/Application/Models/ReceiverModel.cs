@@ -22,7 +22,7 @@ namespace Domain.Application.Models
     public ReceiverModel(Receiver source)
     {
       DisplayName = source.DisplayName;
-      ID = source.ID;
+      ID = source.ID.Value;
     }
   }
 }

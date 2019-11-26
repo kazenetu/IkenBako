@@ -23,7 +23,7 @@ namespace Domain.Application.Models
     /// <param name="source">意見メッセージインスタンス</param>
     public MessageModel(Message source)
     {
-      SendTo = source.SendTo;
+      SendTo = source.SendTo.Value;
       Detail = source.Detail;
     }
   }
