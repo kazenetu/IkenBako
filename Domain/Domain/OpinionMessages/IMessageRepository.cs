@@ -20,11 +20,5 @@ namespace Domain.Domain.OpinionMessages
     /// <param name="receiverId">送信対象ID</param>
     /// <returns>意見メッセージリスト</returns>
     List<Message> Find(ReceiverId receiverId);
-
-    /// <summary>
-    /// すべての意見メッセージ取得
-    /// </summary>
-    /// <returns>意見メッセージリスト</returns>
-    List<Message> FindAll();
   }
 }
