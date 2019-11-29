@@ -95,7 +95,7 @@ namespace Infrastructures
       var result = new List<Message>();
 
       // 対象ディレクトリパスを設定
-      var targetPath = Path.Join(CurrentPath, receiverId.Value);
+      var targetPath = GetReceiverDirectory(receiverId);
 
       // 対象ディレクトリパスの存在確認
       if (!Directory.Exists(targetPath))
@@ -111,6 +111,21 @@ namespace Infrastructures
       }
 
       return result;
+    }
+
+    /// <summary>
+    /// 送信対象宛てのディレクトリパスの取得
+    /// </summary>
+    /// <param name="receiverId">送信対象ID</param>
+    /// <returns>ディレクトリパス</returns>
+    private string GetReceiverDirectory(ReceiverId receiverId)
+    {
+      if (receiverId is null)
+      {
+        return CurrentPath;
+      }
+
+      return Path.Join(CurrentPath, receiverId.Value);
     }
 
     /// <summary>
