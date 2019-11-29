@@ -8,6 +8,11 @@ namespace Domain.Domain.Receivers
   public class ReceiverId : IEquatable<ReceiverId>
   {
     /// <summary>
+    /// すべての送信対象取得用ID
+    /// </summary>
+    public const string AllReceiverId = ".";
+
+    /// <summary>
     /// 送信対象ID
     /// </summary>
     public string Value { get; }
