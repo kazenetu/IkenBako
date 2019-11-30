@@ -24,10 +24,18 @@ namespace Domain.Application
     /// <summary>
     /// 送信対象者リストを取得
     /// </summary>
+    /// <param name="isAddAllItem">すべての対象を追加</param>
     /// <returns>送信対象者メッセージリスト</returns>
-    public List<ReceiverModel> GetList()
+    public List<ReceiverModel> GetList(bool isAddAllItem = false)
     {
       var receivers = repository.GetReceivers();
+
+      // すべての対象を追加
+      if (isAddAllItem)
+      {
+        receivers.Insert(0, Receiver.Create("すべて", ReceiverId.AllReceiverId));
+      }
+
       return receivers.Select(receiver => new ReceiverModel(receiver)).ToList();
     }
   }
