@@ -51,7 +51,7 @@ namespace IkenBako.Pages
     {
       get
       {
-        var sendTargetViewModels = receiverService.GetList().
+        var sendTargetViewModels = receiverService.GetList(true).
           Select(item => new SendTargetViewModel { DisplayName = item.DisplayName, ID = item.ID });
 
         return sendTargetViewModels.Select(target => new SelectListItem(target.DisplayName, target.ID, false)).ToList();
