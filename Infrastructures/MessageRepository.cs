@@ -104,7 +104,7 @@ namespace Infrastructures
       }
 
       // 対象ディレクトリからJSONファイルを取得する
-      var targetFiles = Directory.GetFiles(targetPath, "*.txt");
+      var targetFiles = Directory.GetFiles(targetPath, "*.txt", SearchOption.AllDirectories);
       foreach (var filePath in targetFiles)
       {
         result.Add(ConvertJsonToMessage(filePath));
@@ -120,7 +120,7 @@ namespace Infrastructures
     /// <returns>ディレクトリパス</returns>
     private string GetReceiverDirectory(ReceiverId receiverId)
     {
-      if (receiverId is null)
+      if (receiverId.Value == ReceiverId.AllReceiverId)
       {
         return CurrentPath;
       }
