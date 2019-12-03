@@ -38,5 +38,15 @@ namespace Domain.Application
 
       return receivers.Select(receiver => new ReceiverModel(receiver)).ToList();
     }
+
+    /// <summary>
+    /// すべての送信対象か否か
+    /// </summary>
+    /// <param name="id">確認対象のID</param>
+    /// <returns>すべての送信対象か否か</returns>
+    public bool IsAllReceiverId(string id)
+    {
+      return id == ReceiverId.AllReceiverId;
+    }
   }
 }
