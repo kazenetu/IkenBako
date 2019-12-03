@@ -27,12 +27,20 @@
     {
      <table class="table table-bordered mx-sm-auto">
         <tr>
+          @if (Model.ShowAllMessage)
+          {
+            <th>宛先</th>
+          }
           <th>意見</th>
         </tr>
 
         @foreach (var message in Model.Messages)
         {
           <tr>
+            @if (Model.ShowAllMessage)
+            {
+              <td>@message.SendTo</td>
+            }
             <td>
               @foreach (var item in message.Detail.Split(Environment.NewLine))
               {

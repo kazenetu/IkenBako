@@ -32,6 +32,11 @@ namespace IkenBako.Pages
     public string Target { set; get; }
 
     /// <summary>
+    /// すべての意見メッセージを表示するか否か
+    /// </summary>
+    public bool ShowAllMessage { get; private set; } = false;
+
+    /// <summary>
     /// コンストラクタ
     /// </summary>
     /// <param name="logger">ログインスタンス</param>
@@ -75,7 +80,12 @@ namespace IkenBako.Pages
       if (!Messages.Any())
       {
         ViewData["Message"] = "意見メッセージはありません。";
+        return;
       }
+
+      // すべての意見メッセージを表示するか否か
+      ShowAllMessage = receiverService.IsAllReceiverId(Target);
+
     }
   }
 }
