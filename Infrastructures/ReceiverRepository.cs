@@ -47,7 +47,7 @@ namespace Infrastructures
     public List<Receiver> GetReceivers()
     {
       CheckAndLoadFiles();
-      return receivers;
+      return new List<Receiver>(receivers);
     }
 
 
