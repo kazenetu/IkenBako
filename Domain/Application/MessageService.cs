@@ -14,12 +14,18 @@ namespace Domain.Application
     private readonly IMessageRepository repository;
 
     /// <summary>
+    /// 送信者サービス
+    /// </summary>
+    private readonly ReceiverService receiverService;
+
+    /// <summary>
     /// コンストラクタ
     /// </summary>
     /// <param name="repository">意見メッセージリポジトリ</param>
-    public MessageService(IMessageRepository repository)
+    public MessageService(IMessageRepository repository, ReceiverService receiverService)
     {
       this.repository = repository;
+      this.receiverService = receiverService;
     }
 
     /// <summary>
@@ -37,10 +43,22 @@ namespace Domain.Application
     /// </summary>
     /// <param name="receiverId">送信対象ID</param>
     /// <returns>意見メッセージリスト</returns>
-    public List<MessageModel> Find(string receiverId)
+    public List<DisplayMessageModel> Find(string receiverId)
     {
       var messages = repository.Find(new ReceiverId(receiverId));
-      return messages.Select(message => new MessageModel(message)).ToList();
+      var receivers = receiverService.GetList();
+      return messages.Select(message => new DisplayMessageModel(message, GetSendTargetName(message.SendTo.Value))).ToList();
+
+      // 送信対象者の名称を取得
+      string GetSendTargetName(string receiverId)
+      {
+        var result = receivers.Where(receiver => receiver.ID == receiverId);
+        if (result.Any())
+        {
+          return result.First().DisplayName;
+        }
+        return string.Empty;
+      }
     }
 
   }
