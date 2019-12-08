@@ -11,6 +11,11 @@
     public string SendTo { get; set; }
 
     /// <summary>
+    /// メッセージ対象名称
+    /// </summary>
+    public string SendTargetName { get; set; }
+
+    /// <summary>
     /// メッセージ本文
     /// </summary>
     public string Detail { get; set; }
