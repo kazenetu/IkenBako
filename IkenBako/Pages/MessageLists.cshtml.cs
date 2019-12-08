@@ -73,6 +73,7 @@ namespace IkenBako.Pages
       Messages = messageService.Find(Target).Select(item => new MessageViewModel
       {
         SendTo = item.SendTo,
+        SendTargetName = item.SendTargetName,
         Detail = item.Detail
       }).ToList();
 
