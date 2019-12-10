@@ -39,7 +39,7 @@
           <tr>
             @if (Model.ShowAllMessage)
             {
-              <td>@message.SendTo</td>
+              <td>@message.SendTargetName</td>
             }
             <td>
               @foreach (var item in message.Detail.Split(Environment.NewLine))
