@@ -50,9 +50,9 @@ namespace Domain.Application
       return messages.Select(message => new DisplayMessageModel(message, GetSendTargetName(message.SendTo.Value))).ToList();
 
       // 送信対象者の名称を取得
-      string GetSendTargetName(string receiverId)
+      string GetSendTargetName(string sendToId)
       {
-        var result = receivers.Where(receiver => receiver.ID == receiverId);
+        var result = receivers.Where(receiver => receiver.ID == sendToId);
         if (result.Any())
         {
           return result.First().DisplayName;
