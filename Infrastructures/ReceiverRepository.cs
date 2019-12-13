@@ -35,7 +35,7 @@ namespace Infrastructures
     /// </summary>
     public ReceiverRepository()
     {
-      CurrentPath = Path.Join(Directory.GetCurrentDirectory(), ReceiverDirectoryName);
+      CurrentPath = Path.Combine(Directory.GetCurrentDirectory(), ReceiverDirectoryName);
 
       CheckAndLoadFiles();
     }

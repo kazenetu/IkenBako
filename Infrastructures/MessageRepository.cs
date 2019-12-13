@@ -27,7 +27,7 @@ namespace Infrastructures
     /// </summary>
     public MessageRepository()
     {
-      CurrentPath = Path.Join(Directory.GetCurrentDirectory(), SendResultDirectoryName);
+      CurrentPath = Path.Combine(Directory.GetCurrentDirectory(), SendResultDirectoryName);
 
       // 起点パスが存在しない場合はディレクトリを作成する
       if (!Directory.Exists(CurrentPath))
@@ -43,7 +43,7 @@ namespace Infrastructures
     public void Save(Message message)
     {
       // 格納ディレクトリパスを作成
-      var targetPath = Path.Join(CurrentPath, message.SendTo.Value);
+      var targetPath = Path.Combine(CurrentPath, message.SendTo.Value);
 
       // 格納ディレクトリパスが存在しない場合はディレクトリを作成する
       if (!Directory.Exists(targetPath))
@@ -55,7 +55,7 @@ namespace Infrastructures
       var jsonBytes = ConvartJsonBytes();
 
       // ファイルパスを作成
-      var filePath = Path.Join(targetPath, $"{DateTime.Now.ToString("yyyyMMddHHmmss")}.txt");
+      var filePath = Path.Combine(targetPath, $"{DateTime.Now.ToString("yyyyMMddHHmmss")}.txt");
 
       // ファイルを作成
       using (FileStream stream = new FileStream(filePath, FileMode.Create))
@@ -125,7 +125,7 @@ namespace Infrastructures
         return CurrentPath;
       }
 
-      return Path.Join(CurrentPath, receiverId.Value);
+      return Path.Combine(CurrentPath, receiverId.Value);
     }
 
     /// <summary>
