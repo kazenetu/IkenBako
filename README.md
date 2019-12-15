@@ -17,10 +17,10 @@
 
 ## 開発環境
 * Visual Studio 2019 Community
-* .NET Core 3.0.100
+* .NET Core 3.1.100
 
 ## 実行環境
-* .NET Core 3.0.100
+* .NET Core 3.1.100
 
 ## 実行方法
 * Visual Studio(2019以上)を利用する場合  
