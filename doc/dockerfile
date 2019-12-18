@@ -1,0 +1,33 @@
+FROM ubuntu:18.04
+
+RUN apt-get update && apt-get install -y curl libunwind8 gettext apt-transport-https wget gpg software-properties-common git
+
+# install dotnet-sdk-3.1.0
+RUN wget -q https://packages.microsoft.com/config/ubuntu/18.04/packages-microsoft-prod.deb -O packages-microsoft-prod.deb
+RUN dpkg -i packages-microsoft-prod.deb
+
+RUN apt-get update
+RUN add-apt-repository universe
+RUN apt-get update
+RUN apt-get install -y dotnet-sdk-3.1
+
+# clone IkenBako
+WORKDIR /IkenBako
+RUN git clone https://github.com/kazenetu/IkenBako.git
+WORKDIR /IkenBako/IkenBako
+
+# publish ＆ copy
+RUN dotnet publish -c Release
+RUN mkdir /app && cp /IkenBako/IkenBako/IkenBako/bin/Release/netcoreapp3.1/publish/* /app -r
+RUN cp /IkenBako/IkenBako/IkenBako/Receivers /app -r
+
+# port 5000
+EXPOSE 5000
+
+# set ENV
+ENV ASPNETCORE_ENVIRONMENT=Development
+ENV ASPNETCORE_URLS=http://*:5000
+
+# run app
+WORKDIR /app
+ENTRYPOINT  [ "dotnet","IkenBako.dll"]
