@@ -40,6 +40,23 @@
 
   ```
 
+## Dockerでの実行
+dockerがインストール済みであること  
+また、下記のファイルを利用する
+* doc/dockerfile
+* doc/docker-compose.yml
+
+### 手順
+1. 本リポジトリをclone
+2. ```cd doc```を実行
+3. 初回のみビルドを実行  
+   ```docker-compose build```
+4. コンテナ起動（アプリケーションの実行）  
+   ```docker-compose up -d```
+5. コンテナ停止・削除（アプリケーションの終了）
+   ```docker-compose down```
+
+
 ## 設定フォルダ・出力フォルダ
 **簡易版のため、すべてテキストファイルで永続化**  
 ※DBに格納する場合は下記を実行する。  
