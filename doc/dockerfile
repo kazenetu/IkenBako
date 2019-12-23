@@ -13,13 +13,14 @@ RUN apt-get install -y dotnet-sdk-3.1
 
 # clone IkenBako
 WORKDIR /IkenBako
-RUN git clone https://github.com/kazenetu/IkenBako.git
+COPY Domain Domain
+COPY Infrastructures Infrastructures
+COPY IkenBako IkenBako
 WORKDIR /IkenBako/IkenBako
 
 # publish ＆ copy
-RUN dotnet publish -c Release
-RUN mkdir /app && cp /IkenBako/IkenBako/IkenBako/bin/Release/netcoreapp3.1/publish/* /app -r
-RUN cp /IkenBako/IkenBako/IkenBako/Receivers /app -r
+RUN dotnet publish -c Release -o /app
+RUN cp /IkenBako/IkenBako/Receivers /app -r
 
 # port 5000
 EXPOSE 5000
