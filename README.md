@@ -43,12 +43,12 @@
 ## Dockerでの実行
 dockerがインストール済みであること  
 また、下記のファイルを利用する
-* doc/dockerfile
-* doc/docker-compose.yml
+* docker/dockerfile
+* docker/docker-compose.yml
 
 ### 手順
 1. 本リポジトリをclone
-2. ```cd doc```を実行
+2. ```cd docker```を実行
 3. 初回のみビルドを実行  
    ```docker-compose build```
 4. コンテナ起動（アプリケーションの実行）  
