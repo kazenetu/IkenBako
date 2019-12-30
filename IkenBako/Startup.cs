@@ -24,8 +24,8 @@ namespace IkenBako
     {
       services.AddRazorPages();
 
-      // DIİ’è
-      // ƒŠƒ|ƒWƒgƒŠ
+      // DIè¨­å®š
+      // ãƒªãƒã‚¸ãƒˆãƒª
       services.AddSingleton<IMessageRepository, MessageRepository>();
       services.AddSingleton<IReceiverRepository, ReceiverRepository>();
 
