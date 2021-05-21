@@ -68,11 +68,8 @@ namespace Infrastructures
       {
         // 各要素をDictionaryに格納
         var target = new Dictionary<string, string>();
-        var properties = message.GetType().GetProperties();
-        foreach (var p in properties)
-        {
-          target.Add(p.Name, p.GetValue(message) as string);
-        }
+        target.Add(nameof(message.SendTo), message.SendTo.Value);
+        target.Add(nameof(message.Detail), message.Detail);
 
         // Dictionaryをシリアライズ
         using (MemoryStream ms = new MemoryStream())
