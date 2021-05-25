@@ -1,4 +1,5 @@
-﻿using Domain.Domain.OpinionMessages;
+﻿using Microsoft.Extensions.Options;
+using Domain.Domain.OpinionMessages;
 using Domain.Domain.Receivers;
 using System;
 using System.Collections.Generic;
@@ -10,7 +11,7 @@ namespace Infrastructures
   /// <summary>
   /// 意見メッセージリポジトリ
   /// </summary>
-  public class MessageRepository: IMessageRepository
+  public class MessageRepository: RepositoryBase,IMessageRepository
   {
     /// <summary>
     /// 投稿結果ディレクトリ名
@@ -25,7 +26,7 @@ namespace Infrastructures
     /// <summary>
     /// コンストラクタ
     /// </summary>
-    public MessageRepository()
+    public MessageRepository(IOptions<DatabaseConfigModel> config):base(config)
     {
       CurrentPath = Path.Combine(Directory.GetCurrentDirectory(), SendResultDirectoryName);
 

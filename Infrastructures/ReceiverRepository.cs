@@ -1,4 +1,5 @@
-﻿using Domain.Domain.Receivers;
+﻿using Microsoft.Extensions.Options;
+using Domain.Domain.Receivers;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -8,7 +9,7 @@ namespace Infrastructures
   /// <summary>
   /// 送信対象者リポジトリ
   /// </summary>
-  public class ReceiverRepository: IReceiverRepository
+  public class ReceiverRepository: RepositoryBase,IReceiverRepository
   {
     /// <summary>
     /// 送信者ディレクトリ名
@@ -33,7 +34,7 @@ namespace Infrastructures
     /// <summary>
     /// コンストラクタ
     /// </summary>
-    public ReceiverRepository()
+    public ReceiverRepository(IOptions<DatabaseConfigModel> config):base(config)
     {
       CurrentPath = Path.Combine(Directory.GetCurrentDirectory(), ReceiverDirectoryName);
 
