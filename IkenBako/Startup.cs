@@ -29,6 +29,9 @@ namespace IkenBako
       services.AddSingleton<IMessageRepository, MessageRepository>();
       services.AddSingleton<IReceiverRepository, ReceiverRepository>();
 
+      // Configを専用Modelに設定
+      services.Configure<DatabaseConfigModel>(Configuration.GetSection("DB"));
+
       // ApplicationService
       services.AddTransient<MessageService>();
       services.AddTransient<ReceiverService>();
