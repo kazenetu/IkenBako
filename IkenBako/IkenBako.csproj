@@ -9,4 +9,10 @@
     <ProjectReference Include="..\Infrastructures\Infrastructures.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="Resource\Test.db">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>
