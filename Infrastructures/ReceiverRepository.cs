@@ -1,8 +1,8 @@
-﻿using Microsoft.Extensions.Options;
-using Domain.Domain.Receivers;
-using System;
+﻿using Domain.Domain.Receivers;
+using Microsoft.Extensions.Options;
 using System.Collections.Generic;
-using System.IO;
+using System.Data;
+using System.Text;
 
 namespace Infrastructures
 {
@@ -12,33 +12,10 @@ namespace Infrastructures
   public class ReceiverRepository: RepositoryBase,IReceiverRepository
   {
     /// <summary>
-    /// 送信者ディレクトリ名
-    /// </summary>
-    private const string ReceiverDirectoryName = "Receivers";
-
-    /// <summary>
-    /// ファイルの起点パス
-    /// </summary>
-    private string CurrentPath;
-
-    /// <summary>
-    /// 対象ファイル名
-    /// </summary>
-    private List<string> files = new List<string>();
-
-    /// <summary>
-    /// 送信者リスト
-    /// </summary>
-    private List<Receiver> receivers = new List<Receiver>();
-
-    /// <summary>
     /// コンストラクタ
     /// </summary>
     public ReceiverRepository(IOptions<DatabaseConfigModel> config):base(config)
     {
-      CurrentPath = Path.Combine(Directory.GetCurrentDirectory(), ReceiverDirectoryName);
-
-      CheckAndLoadFiles();
     }
 
     /// <summary>
@@ -47,39 +24,25 @@ namespace Infrastructures
     /// <returns>送信対象者メッセージリスト</returns>
     public List<Receiver> GetReceivers()
     {
-      CheckAndLoadFiles();
-      return new List<Receiver>(receivers);
-    }
+      var result = new List<Receiver>();
 
+      var sql = new StringBuilder();
+      sql.AppendLine("SELECT");
+      sql.AppendLine("  unique_name");
+      sql.AppendLine("  , fullname");
+      sql.AppendLine("FROM");
+      sql.AppendLine("  m_receiver");
 
-    /// <summary>
-    /// 送信対象者ディレクトリのチェックと読み出し
-    /// </summary>
-    private void CheckAndLoadFiles()
-    {
-      // 対象ファイルを取得
-      var targetFiles = Directory.GetFiles(CurrentPath, "*.txt");
-      foreach (var filePath in targetFiles)
+      var sqlResult = db.Fill(sql.ToString());
+      foreach(DataRow row in sqlResult.Rows)
       {
-        // 既存確認
-        if (files.Contains(filePath))
-        {
-          continue;
-        }
-
-        // ファイルの存在確認
-        if (!File.Exists(filePath))
-        {
-          throw new Exception($"送信対象者情報「{filePath}」が存在しません。");
-        }
-
-        var receiverId = (new FileInfo(filePath)).Name.Replace(".txt", string.Empty);
-        var displayName = File.ReadAllText(filePath);
-        receivers.Add(Receiver.Create(displayName, receiverId));
-
-        files.Add(filePath);
+        var id = row["unique_name"].ToString();
+        var name = row["fullname"].ToString();
+        result.Add(Receiver.Create(name, id));
       }
 
+      return result;
     }
+
   }
 }

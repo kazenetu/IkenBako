@@ -1,10 +1,9 @@
-﻿using Microsoft.Extensions.Options;
-using Domain.Domain.OpinionMessages;
+﻿using Domain.Domain.OpinionMessages;
 using Domain.Domain.Receivers;
-using System;
+using Microsoft.Extensions.Options;
 using System.Collections.Generic;
-using System.IO;
-using System.Runtime.Serialization.Json;
+using System.Data;
+using System.Text;
 
 namespace Infrastructures
 {
@@ -14,27 +13,10 @@ namespace Infrastructures
   public class MessageRepository: RepositoryBase,IMessageRepository
   {
     /// <summary>
-    /// 投稿結果ディレクトリ名
-    /// </summary>
-    private const string SendResultDirectoryName = "SendResult";
-
-    /// <summary>
-    /// ファイル作成の起点パス
-    /// </summary>
-    private string CurrentPath;
-
-    /// <summary>
     /// コンストラクタ
     /// </summary>
     public MessageRepository(IOptions<DatabaseConfigModel> config):base(config)
     {
-      CurrentPath = Path.Combine(Directory.GetCurrentDirectory(), SendResultDirectoryName);
-
-      // 起点パスが存在しない場合はディレクトリを作成する
-      if (!Directory.Exists(CurrentPath))
-      {
-        Directory.CreateDirectory(CurrentPath);
-      }
     }
 
     /// <summary>
@@ -43,44 +25,18 @@ namespace Infrastructures
     /// <param name="message">意見メッセージクラス</param>
     public void Save(Message message)
     {
-      // 格納ディレクトリパスを作成
-      var targetPath = Path.Combine(CurrentPath, message.SendTo.Value);
+      var sql = new StringBuilder();
+      sql.AppendLine("INSERT ");
+      sql.AppendLine("INTO t_message(send_to, detail) ");
+      sql.AppendLine("VALUES (@send_to, @detail) ");
 
-      // 格納ディレクトリパスが存在しない場合はディレクトリを作成する
-      if (!Directory.Exists(targetPath))
-      {
-        Directory.CreateDirectory(targetPath);
-      }
+      // Param設定
+      db.ClearParam();
+      db.AddParam("@send_to", message.SendTo.Value);
+      db.AddParam("@detail", message.Detail);
 
-      // 意見メッセージクラスインスタンスをjsonに変換
-      var jsonBytes = ConvartJsonBytes();
-
-      // ファイルパスを作成
-      var filePath = Path.Combine(targetPath, $"{DateTime.Now.ToString("yyyyMMddHHmmss")}.txt");
-
-      // ファイルを作成
-      using (FileStream stream = new FileStream(filePath, FileMode.Create))
-      {
-        stream.Write(jsonBytes, 0, jsonBytes.Length);
-      }
-
-      // Json変換メソッド
-      Byte[] ConvartJsonBytes()
-      {
-        // 各要素をDictionaryに格納
-        var target = new Dictionary<string, string>();
-        target.Add(nameof(message.SendTo), message.SendTo.Value);
-        target.Add(nameof(message.Detail), message.Detail);
-
-        // Dictionaryをシリアライズ
-        using (MemoryStream ms = new MemoryStream())
-        {
-          var jsonSerializer = new DataContractJsonSerializer(typeof(Dictionary<string, string>));
-          jsonSerializer.WriteObject(ms, target);
-          return ms.ToArray();
-        }
-      }
-
+      // SQL発行
+      db.ExecuteNonQuery(sql.ToString());
     }
 
     /// <summary>
@@ -92,57 +48,23 @@ namespace Infrastructures
     {
       var result = new List<Message>();
 
-      // 対象ディレクトリパスを設定
-      var targetPath = GetReceiverDirectory(receiverId);
+      var sql = new StringBuilder();
+      sql.AppendLine("SELECT");
+      sql.AppendLine("  send_to");
+      sql.AppendLine("  , detail");
+      sql.AppendLine("FROM");
+      sql.AppendLine("  t_message");
 
-      // 対象ディレクトリパスの存在確認
-      if (!Directory.Exists(targetPath))
+      var sqlResult = db.Fill(sql.ToString());
+      foreach (DataRow row in sqlResult.Rows)
       {
-        return result;
-      }
-
-      // 対象ディレクトリからJSONファイルを取得する
-      var targetFiles = Directory.GetFiles(targetPath, "*.txt", SearchOption.AllDirectories);
-      foreach (var filePath in targetFiles)
-      {
-        result.Add(ConvertJsonToMessage(filePath));
+        var sendTo = row["send_to"].ToString();
+        var detail = row["detail"].ToString();
+        result.Add(Message.Create(sendTo, detail));
       }
 
       return result;
     }
 
-    /// <summary>
-    /// 送信対象宛てのディレクトリパスの取得
-    /// </summary>
-    /// <param name="receiverId">送信対象ID</param>
-    /// <returns>ディレクトリパス</returns>
-    private string GetReceiverDirectory(ReceiverId receiverId)
-    {
-      if (receiverId.Value == ReceiverId.AllReceiverId)
-      {
-        return CurrentPath;
-      }
-
-      return Path.Combine(CurrentPath, receiverId.Value);
-    }
-
-    /// <summary>
-    /// JsonファイルをMessageクラスインスタンスに変換
-    /// </summary>
-    /// <param name="filePath">JSONファイルのフルパス</param>
-    /// <returns>意見メッセージインスタンス</returns>
-    private Message ConvertJsonToMessage(string filePath)
-    {
-      using (var stream = new FileStream(filePath, FileMode.Open))
-      {
-        // Dictionaryにデシリアライズ
-        var jsonSerializer = new DataContractJsonSerializer(typeof(Dictionary<string, string>));
-        var messageModel = jsonSerializer.ReadObject(stream) as Dictionary<string, string>;
-
-        // 意見メッセージインスタンスを生成する
-        return Message.Create(messageModel["SendTo"], messageModel["Detail"]);
-      }
-
-    }
   }
 }
