@@ -1,6 +1,6 @@
-﻿using Microsoft.Extensions.Options;
+﻿using Infrastructures.DB;
+using Microsoft.Extensions.Options;
 using System;
-using Infrastructures.DB;
 
 namespace Infrastructures
 {
@@ -26,12 +26,13 @@ namespace Infrastructures
     public RepositoryBase(IOptions<DatabaseConfigModel> config)
     {
       this.config = config;
+      Initialize();
     }
 
     /// <summary>
     /// 初期化処理
     /// </summary>
-    public void Initialize()
+    private void Initialize()
     {
       // 設定されていない場合は終了
       if(config == null)
@@ -83,6 +84,7 @@ namespace Infrastructures
     {
       db.Rollback();
     }
+
 
     /// <summary>
     /// サブクラスへのキャスト

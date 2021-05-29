@@ -6,11 +6,6 @@
   public interface IRepositoryBase
   {
     /// <summary>
-    /// 初期化処理
-    /// </summary>
-    void Initialize();
-
-    /// <summary>
     /// トランザクション設定
     /// </summary>
     void BeginTransaction();
