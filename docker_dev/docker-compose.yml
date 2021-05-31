@@ -22,6 +22,7 @@ services:
       POSTGRES_USER: test
       POSTGRES_DB: testDB
       POSTGRES_PASSWORD: test
+    container_name: postgresql_server
     volumes:
       - ./docker-entrypoint-initdb.d:/docker-entrypoint-initdb.d
       - postgresql_data:/var/lib/postgresql/data:rw
