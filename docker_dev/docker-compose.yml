@@ -1,0 +1,31 @@
+version: '3.3'
+services:
+  ikenbako:
+    build: 
+      context: .
+      dockerfile: dotnet_dockerfile
+    ports:
+      - "5000:5000"
+    volumes:
+      - type: bind
+        source: ../
+        target: /source
+    tty: true
+
+  db:
+    build: 
+      context: .
+      dockerfile: postgresql_dockerfile
+    ports:
+      - 5432:5432
+    environment:
+      POSTGRES_USER: test
+      POSTGRES_DB: testDB
+      POSTGRES_PASSWORD: test
+    container_name: postgresql_server
+    volumes:
+      - ./docker-entrypoint-initdb.d:/docker-entrypoint-initdb.d
+      - postgresql_data:/var/lib/postgresql/data:rw
+
+volumes:
+  postgresql_data:
