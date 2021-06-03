@@ -12,5 +12,12 @@ namespace Domain.Domain.Receivers
     /// </summary>
     /// <returns>送信対象者メッセージリスト</returns>
     List<Receiver> GetReceivers();
+
+    /// <summary>
+    /// 送信担当者を取得
+    /// </summary>
+    /// <param name="unique_name">ユニーク名</param>
+    /// <returns>送信担当者</returns>
+    Receiver GetReceiver(string unique_name);
   }
 }
