@@ -6,7 +6,7 @@
     <title>@ViewData["Title"]</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" />
-</head>
+ </head>
 <body>
     <header>
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
@@ -22,10 +22,14 @@
                       <a class="nav-link text-dark" asp-area="" asp-page="/Index">意見投稿</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link text-dark" asp-area="" asp-page="/MessageLists">メッセージ一覧</a>
+                        <a class="nav-link text-dark" asp-area="" asp-page="/Login">メッセージ一覧</a>
                     </li>
                   </ul>
                 </div>
+            @if (Context.Session.Keys.Contains(LoginModel.KEY_LOGIN_ID))
+            {
+                <a class="btn btn-primary mb-2 float-right" asp-area="" asp-page="/Logout">ログアウト</a>
+            }
             </div>
         </nav>
     </header>

@@ -40,6 +40,16 @@ namespace Domain.Application
     }
 
     /// <summary>
+    /// 送信担当者を取得
+    /// </summary>
+    /// <param name="unique_name">ユニーク名</param>
+    /// <returns>送信担当者</returns>
+    public ReceiverModel GetReceiver(string unique_name)
+    {
+      return new ReceiverModel(repository.GetReceiver(unique_name));
+    }
+
+    /// <summary>
     /// すべての送信対象か否か
     /// </summary>
     /// <param name="id">確認対象のID</param>

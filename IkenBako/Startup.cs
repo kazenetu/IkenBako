@@ -24,6 +24,8 @@ namespace IkenBako
     {
       services.AddRazorPages();
 
+      services.AddSession();
+
       // DI設定
       // リポジトリ
       services.AddSingleton<IMessageRepository, MessageRepository>();
@@ -52,6 +54,8 @@ namespace IkenBako
       app.UseStaticFiles();
 
       app.UseRouting();
+
+      app.UseSession();
 
       app.UseAuthorization();
 

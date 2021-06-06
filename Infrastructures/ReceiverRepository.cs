@@ -44,5 +44,40 @@ namespace Infrastructures
       return result;
     }
 
+    /// <summary>
+    /// 送信担当者を取得
+    /// </summary>
+    /// <param name="unique_name">ユニーク名</param>
+    /// <returns>送信担当者</returns>
+    public Receiver GetReceiver(string unique_name)
+    {
+      Receiver result = null;
+
+      var sql = new StringBuilder();
+      sql.AppendLine("SELECT");
+      sql.AppendLine(" * ");
+      sql.AppendLine("FROM");
+      sql.AppendLine("  m_receiver");
+      sql.AppendLine("WHERE");
+      sql.AppendLine("  unique_name = @unique_name");
+
+      // Param設定
+      db.ClearParam();
+      db.AddParam("@unique_name", unique_name);
+
+      var sqlResult = db.Fill(sql.ToString());
+      foreach (DataRow row in sqlResult.Rows)
+      {
+        var id = row["unique_name"].ToString();
+        var name = row["fullname"].ToString();
+        var password = row["password"].ToString();
+        var salt = row["salt"].ToString();
+        result = Receiver.Create(name, id, password, salt);
+        break;
+      }
+
+      return result;
+    }
+
   }
 }

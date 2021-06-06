@@ -16,6 +16,16 @@ namespace Domain.Application.Models
     public string ID { get; private set; }
 
     /// <summary>
+    /// パスワード
+    /// </summary>
+    public string Password { get; private set; } = string.Empty;
+
+    /// <summary>
+    /// ソルト
+    /// </summary>
+    public string Salt { get; private set; } = string.Empty;
+
+    /// <summary>
     /// コンストラクタ
     /// </summary>
     /// <param name="source">送信対象インスタンス</param>
@@ -23,6 +33,8 @@ namespace Domain.Application.Models
     {
       DisplayName = source.DisplayName;
       ID = source.ID.Value;
+      Password = source.Password;
+      Salt = source.Salt;
     }
   }
 }
