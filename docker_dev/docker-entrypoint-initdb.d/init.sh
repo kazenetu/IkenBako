@@ -22,10 +22,12 @@ CREATE TABLE t_message(
 comment on column m_receiver             is '上司マスタ';
 comment on column m_receiver.unique_name is 'ユニークな略称';
 comment on column m_receiver.fullname    is '氏名';
+comment on column m_receiver.password    is '暗号化したパスワード';
+comment on column m_receiver.salt        is '暗号化パラメータ';
 
 comment on column t_message                    is 'メッセージテーブル';
 comment on column t_message.id                  is '連番';
-comment on column t_message.send_to            is '送信対象の上司名';
+comment on column t_message.send_to            is '送信対象の上司略称';
 comment on column t_message.detail             is '送信メッセージ';
 
 INSERT INTO m_receiver("unique_name", "fullname", "password", "salt") 
