@@ -56,33 +56,85 @@ dockerがインストール済みであること
 5. コンテナ停止・削除（アプリケーションの終了）
    ```docker-compose down```
 
+## Dockerコンテナ上での開発
+Dockerコンテナ上で.NET Core開発環境を構築する  
+dockerがインストール済みであること  
+また、下記のファイルを利用する  
+* docker_dev/dotnet_dockerfile  
+  .NET Core用
+* docker_dev/postgresql_dockerfile  
+  PostgreSQL用
+* docker_dev/docker-entrypoint-initdb.d/init.sh  
+  PostgreSQL初回実行用SQL
+* docker_div/docker-compose.yml
 
-## 設定フォルダ・出力フォルダ
-**簡易版のため、すべてテキストファイルで永続化**  
-※DBに格納する場合は下記を実行する。  
-  　・Infrastructures内にDB利用Repositoryクラスを追加  
-  　・Startup#ConfigureServicesメソッドでDI設定変更  
-  　・接続情報の設定と取得処理を追加
+### 手順
+1. 本リポジトリをclone
+2. ```cd docker_div```を実行
+3. 初回のみビルドを実行  
+   ```docker-compose build```
+4. コンテナ起動（アプリケーションの実行）  
+   ```docker-compose up -d```
+5. コンテナ停止・削除（アプリケーションの終了）
+   ```docker-compose down```
 
-### 設定フォルダ  
-   **Receivers/** *ID(物理ファイル名)*.txt  
-   ※内容は**選択表示用名**  
-     
-   例：aa.txt  
-   ```
-   Aさん
-   ```
+※Visual Studio Codeの拡張機能「Docker for Visual Studio Code」の利用を推奨する
 
-### 出力フォルダ  
-   **SendResult** */送信者ID/* *送信日時*.txt  
-   ※内容は**意見メッセージJSON**(プロパティ名と値のペアリスト)  
-     
-   例：20191116131403.txt
-   ```json
-   [{"Key":"SendTo","Value":"aa"},{"Key":"Detail","Value":"11"}]
-   ```
+## 利用可能DB
+下記DBの利用が可能。
+* SQLite  
+  ※サンプルとして「IkenBako/Resource/Test.db」をビルド時にコピーしている
+* PostgreSQL
+* SQLServer
+
+### DB設定
+「IkenBako/appsettings.json」または環境変数に記述する  
+* appsettings.json  
+  ```json
+  "DB": {
+    "ConnectionStrings": {
+      "sqlite": "Resource/Test.db",
+      "postgres": "Server=postgresql_server;Port=5432;User Id=test;Password=test;Database=testDB",
+      "sqlserver": "Data Source=.\\SQLEXPRESS;Database=master;Integrated Security=True;"
+    },
+    "Target": "sqlite"
+  }
+  ```  
+  * DB/ConnectionStrings  
+    DBごとの接続文字列(SQLiteはファイルパス)
+  * DB/Target  
+    利用するDB(sqlite/postgres/sqlserver)  
+
+* 環境変数  
+  コロン(:)で区切る
+  ```YAML
+   "DB:ConnectionStrings:sqlite": "Resource/Test.db"
+   "DB:ConnectionStrings:postgres": "Server=postgresql_server;Port=5432;User Id=test;Password=test;Database=testDB"
+   "DB:Target": "sqlite"
+  ```  
+
+### テーブルレイアウト  
+現時点のテーブルレイアウトは下記の通り
+
+**m_receiver**(上司マスタ)
+|カラム名|論理名|型|NOT NULL|備考|
+|-------|-------|-----|:----:|-------|
+|unique_name|ユニークな略称|varchar(255)|〇|主キー|
+|fullname|氏名|varchar(255)|〇||
+|password|暗号化したパスワード|varchar(255)|〇||
+|salt|暗号化パラメータ|varchar(255)|〇||
+
+**t_message**(メッセージテーブル)
+|カラム名|論理名|型|NOT NULL|備考|
+|-------|-------|-----|:----:|-------|
+|id|連番|SERIAL|〇|主キー|
+|send_to|送信対象の上司略称|varchar(255)|〇||
+|detail|送信メッセージ|varchar(255)|〇||
 
 ## 画面イメージ
+* ログイン画面  
+  ![](doc/images/login.png)  
+
 * 意見投稿画面  
   ![](doc/images/send_message.png)  
 
