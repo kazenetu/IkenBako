@@ -26,7 +26,12 @@ namespace Domain.Application
     /// <returns>ユーザー</returns>
     public UserModel GetUser(string unique_name)
     {
-      return new UserModel(repository.GetUser(unique_name));
+      var user = repository.GetUser(unique_name);
+      if(user is null){
+        return null;
+      }
+
+      return new UserModel(user);
     }
   }
 }
