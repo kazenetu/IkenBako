@@ -1,6 +1,7 @@
 using Domain.Application;
 using Domain.Domain.OpinionMessages;
 using Domain.Domain.Receivers;
+using Domain.Domain.Users;
 using Infrastructures;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -30,6 +31,7 @@ namespace IkenBako
       // リポジトリ
       services.AddSingleton<IMessageRepository, MessageRepository>();
       services.AddSingleton<IReceiverRepository, ReceiverRepository>();
+      services.AddSingleton<IUserRepository, UserRepository>();
 
       // Configを専用Modelに設定
       services.Configure<DatabaseConfigModel>(Configuration.GetSection("DB"));
@@ -37,6 +39,7 @@ namespace IkenBako
       // ApplicationService
       services.AddTransient<MessageService>();
       services.AddTransient<ReceiverService>();
+      services.AddTransient<UserService>();
     }
 
     // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
