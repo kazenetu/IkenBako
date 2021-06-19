@@ -75,6 +75,11 @@ namespace IkenBako.Pages
         Response.Redirect("/Login");
         return;
       }
+      var target = HttpContext.Session.GetString(LoginModel.KEY_LOGIN_ID);
+      if(receiverService.GetReceiver(target) is null){
+        Response.Redirect("/Login");
+        return;
+      }
     }
 
     public void OnPost()
