@@ -59,6 +59,11 @@ namespace IkenBako.Pages
 
     public void OnGet()
     {
+      if (!HttpContext.Session.Keys.Contains(LoginModel.KEY_LOGIN_ID))
+      {
+        Response.Redirect("/Login");
+        return;
+      }
     }
 
     public IActionResult OnPost()
