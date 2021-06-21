@@ -128,8 +128,6 @@ dockerがインストール済みであること
 |-------|-------|-----|:----:|-------|
 |unique_name|ユニークな略称|varchar(255)|〇|主キー|
 |fullname|氏名|varchar(255)|〇||
-|password|暗号化したパスワード|varchar(255)|〇||
-|salt|暗号化パラメータ|varchar(255)|〇||
 
 **t_message**(メッセージテーブル)
 |カラム名|論理名|型|NOT NULL|備考|
