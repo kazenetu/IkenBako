@@ -8,14 +8,25 @@ namespace IkenBako.Pages
   {
     private readonly ILogger<SendSuccessModel> _logger;
 
-    public SendSuccessModel(ILogger<SendSuccessModel> logger)
+    /// <summary>
+    /// 設定情報
+    /// </summary>
+    private SettingConfigModel config;
+
+    /// <summary>
+    /// コンストラクタ
+    /// </summary>
+    /// <param name="logger">ログインスタンス</param>
+    /// <param name="config">設定情報</param>
+    public SendSuccessModel(ILogger<SendSuccessModel> logger, IOptions<SettingConfigModel> config)
     {
       _logger = logger;
+      this.config = config.Value;
     }
 
     public void OnGet()
     {
-      if (!HttpContext.Session.Keys.Contains(LoginModel.KEY_LOGIN_ID))
+      if (config.AllLogin && !HttpContext.Session.Keys.Contains(LoginModel.KEY_LOGIN_ID))
       {
         Response.Redirect("/Login");
         return;
