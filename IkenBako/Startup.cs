@@ -35,6 +35,7 @@ namespace IkenBako
 
       // Configを専用Modelに設定
       services.Configure<DatabaseConfigModel>(Configuration.GetSection("DB"));
+      services.Configure<SettingConfigModel>(Configuration.GetSection("Setting"));
 
       // ApplicationService
       services.AddTransient<MessageService>();
