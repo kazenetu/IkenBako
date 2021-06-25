@@ -46,7 +46,11 @@ namespace Domain.Application
     /// <returns>送信担当者</returns>
     public ReceiverModel GetReceiver(string unique_name)
     {
-      return new ReceiverModel(repository.GetReceiver(unique_name));
+      var receiver = repository.GetReceiver(unique_name);
+      if(receiver is null){
+        return null;
+      }
+      return new ReceiverModel(receiver);
     }
 
     /// <summary>

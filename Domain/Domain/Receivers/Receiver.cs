@@ -1,4 +1,6 @@
-﻿namespace Domain.Domain.Receivers
+﻿using System;
+
+namespace Domain.Domain.Receivers
 {
   /// <summary>
   /// 送信対象
@@ -19,11 +21,13 @@
     /// <summary>
     /// パスワード
     /// </summary>
+    [Obsolete]
     public string Password { get; private set; } = string.Empty;
 
     /// <summary>
     /// ソルト
     /// </summary>
+    [Obsolete]
     public string Salt { get; private set; } = string.Empty;
 
     /// <summary>

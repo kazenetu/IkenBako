@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -24,6 +25,11 @@ namespace IkenBako.Pages
     private readonly ReceiverService receiverService;
 
     /// <summary>
+    /// 設定情報
+    /// </summary>
+    private SettingConfigModel config;
+
+    /// <summary>
     /// 意見メッセージViewModel
     /// </summary>
     [BindProperty]
@@ -35,11 +41,13 @@ namespace IkenBako.Pages
     /// <param name="logger">ログインスタンス</param>
     /// <param name="messageService">意見メッセージサービス</param>
     /// <param name="receiverService">送信者サービス</param>
-    public IndexModel(ILogger<IndexModel> logger, MessageService messageService, ReceiverService receiverService)
+    /// <param name="config">設定情報</param>
+    public IndexModel(ILogger<IndexModel> logger, MessageService messageService, ReceiverService receiverService, IOptions<SettingConfigModel> config)
     {
       _logger = logger;
       this.messageService = messageService;
       this.receiverService = receiverService;
+      this.config = config.Value;
     }
 
     /// <summary>
@@ -59,6 +67,11 @@ namespace IkenBako.Pages
 
     public void OnGet()
     {
+      if (config.AllLogin && !HttpContext.Session.Keys.Contains(LoginModel.KEY_LOGIN_ID))
+      {
+        Response.Redirect("/Login");
+        return;
+      }
     }
 
     public IActionResult OnPost()
