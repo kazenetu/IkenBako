@@ -2,21 +2,24 @@
 @model IkenBako.Pages.LoginModel
 @{
     ViewData["Title"] = "ログイン";
+
+    // エラーメッセージリスト
+    var errorMessages = ViewData["ErrorMessages"] as List<string>;
 }
 
 <div class="container">
     <div class="text-center">
         <h1>@ViewData["Title"]</h1>
     </div>
-    <h3 id="error"  class="text-center" style="color:red;">
-        @if (Model.ErrorMessages != null)
+    <h2 id="error" style="color:red;">
+        @if (errorMessages != null)
         {
-            foreach (var item in Model.ErrorMessages)
+            foreach (var item in errorMessages)
             {
                 @item <br>
             }
         }
-    </h3>
+    </h2>
 
     <form method="POST">
         <div class="form-row">
@@ -28,7 +31,7 @@
 
         <div class="form-row">
             <div class="form-group col-md-6 offset-md-3">
-                <label for="Password">Password</label>
+                <label for="Target">Password</label>
                 <input asp-for="Password" />
             </div>
         </div>

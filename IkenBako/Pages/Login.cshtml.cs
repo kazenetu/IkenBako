@@ -16,8 +16,6 @@ namespace IkenBako.Pages
   {
     public const string KEY_LOGIN_ID = "KEY_LOGIN_ID";
 
-    private const string KEY_ERROR_ID_OR_PASS = "KEY_ERROR_ID_OR_PASS";
-
     private readonly ILogger<LoginModel> _logger;
 
     /// <summary>
@@ -37,11 +35,6 @@ namespace IkenBako.Pages
     [BindProperty]
     public string Password { set; get; }
 
-    /// <summary>
-    /// エラーメッセージ
-    /// </summary>
-    public List<string> ErrorMessages {get;private set;} = null;
-
     /// コンストラクタ
     /// </summary>
     /// <param name="logger">ログインスタンス</param>
@@ -60,44 +53,20 @@ namespace IkenBako.Pages
          Response.Redirect("/index");
          return;
        }
-
-      if (HttpContext.Session.Keys.Contains(KEY_ERROR_ID_OR_PASS))
-       {
-          ErrorMessages = new List<string>();
-          ErrorMessages.Add(HttpContext.Session.GetString(KEY_ERROR_ID_OR_PASS));
-          HttpContext.Session.Remove(KEY_ERROR_ID_OR_PASS);
-       }
     }
 
     public IActionResult OnPost()
     {
-      var errorMessage = string.Empty;
-      if(string.IsNullOrEmpty(errorMessage) && string.IsNullOrEmpty(Target))
+      if(!EqalsPassword(Target, Password))
       {
-        errorMessage = "IDが入力されていません。";
-      }
-      if(string.IsNullOrEmpty(errorMessage) && string.IsNullOrEmpty(Password))
-      {
-        errorMessage = "パスワードが入力されていません。";
-      }
-
-      if(string.IsNullOrEmpty(errorMessage) && !EqalsPassword(Target, Password))
-      {
-        errorMessage = "IDまたはパスワードが間違っています。";
-        HttpContext.Session.SetString(KEY_ERROR_ID_OR_PASS,errorMessage);
+        ViewData["ErrorMessages"] = "IDまたはパスワードが間違っています。";
+        Target = string.Empty;
+        Password = string.Empty;
         return RedirectToPage("/Login");
       }
+      HttpContext.Session.SetString(KEY_LOGIN_ID, Target);
 
-      if(string.IsNullOrEmpty(errorMessage))
-      {
-        HttpContext.Session.SetString(KEY_LOGIN_ID, Target);
-        return RedirectToPage("/index");
-      }
-
-      ErrorMessages = new List<string>();
-      ErrorMessages.Add(errorMessage);
-
-      return Page();
+      return RedirectToPage("/index");
     }
 
     /// <summary>
@@ -109,9 +78,6 @@ namespace IkenBako.Pages
     private bool EqalsPassword(string unique_name, string password)
     {
       var target = userService.GetUser(unique_name);
-      if(target is null){
-        return false;
-      }
 
       var salt = Convert.FromBase64String(target.Salt);
 
