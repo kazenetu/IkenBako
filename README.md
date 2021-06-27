@@ -113,6 +113,24 @@ dockerがインストール済みであること
    "DB:Target": "sqlite"
   ```  
 
+### アプリケーション設定
+「IkenBako/appsettings.json」または環境変数に記述する  
+* appsettings.json  
+  ```json
+  "Setting": {
+    "AllLogin": "true"
+  }
+  ```  
+  * Setting/AllLogin  
+    すべてのユーザーはログイン必須(true/false)  
+    省略時：false
+
+* 環境変数  
+  コロン(:)で区切る
+  ```YAML
+   "Setting:AllLogin": "true"
+  ```  
+
 ### テーブルレイアウト  
 現時点のテーブルレイアウトは下記の通り
 
