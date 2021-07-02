@@ -169,3 +169,32 @@ dockerがインストール済みであること
 
 * 意見一覧：メッセージなし  
   ![](doc/images/message_list3.png)  
+
+## ツール
+* 暗号化済パスワード、ソルトの取得ツール：tools/createPassword  
+  パスワードを入力するとソルト、暗号化済パスワードが表示される。  
+  ※
+  パスワード未入力の場合は処理を終了する。  
+  ```sh
+  cd tools/createPassword/createPassword
+  
+  dotnet run  
+  ```  
+  実行例)  
+  ```sh
+  > dotnet run
+  Enter a password: test
+  Salt: rQkt7trGTiXBpvC216gSOw==
+  Encrypted Password: zBZQ8SZt420B4KoP/m/98g7qbESsYpLm7R8fxkFL6zE=
+
+  Enter a password:
+  ```  
+  また、outputフォルダに「*パスワード*.txt」を作成し、暗号化済パスワードとソルトを書き込む  
+  例)output/test.txt  
+  ```
+  > Encrypted Password:
+  GO7PZAxjVWVYCeDcVdIkW5zVrUXL7lHOqWa+u6axcw8=
+  > Salt:
+  B1QhbD/UUcvt6+p68tWXTQ==
+  ```
+
