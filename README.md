@@ -198,3 +198,9 @@ dockerがインストール済みであること
   B1QhbD/UUcvt6+p68tWXTQ==
   ```
 
+## 使用パッケージとライセンス通知
+本ソフトウェアで使用しているパッケージとライセンス通知は[THIRD-PARTY-NOTICES.txt](THIRD-PARTY-NOTICES.txt)を参照。
+
+## 利用ツール
+* [nuget-license](https://github.com/tomchavakis/nuget-license)  
+  プロジェクトで使用しているパッケージのライセンス調査・出力ツール
