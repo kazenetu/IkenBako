@@ -71,10 +71,7 @@ namespace Infrastructures
         var id = row["unique_name"].ToString();
         var name = row["fullname"].ToString();
 
-        // HACK 不要なプロパティの代入を削除
-        var password = "";//row["password"].ToString();
-        var salt = "";// row["salt"].ToString();
-        result = Receiver.Create(name, id, password, salt);
+        result = Receiver.Create(name, id);
         break;
       }
 
