@@ -19,6 +19,18 @@ namespace Domain.Domain.Receivers
     public ReceiverId ID { get; private set; }
 
     /// <summary>
+    /// 送信元表示
+    /// </summary>
+    /// <remarks>送信先に表示するか</remarks>
+    public bool DisplayList { get; private set; } = true;
+
+    /// <summary>
+    /// 管理者権限
+    /// </summary>
+    /// <remarks>一覧ですべてを選択できるか</remarks>
+    public bool IsAdminRole { get; private set; } = false;
+
+    /// <summary>
     /// コンストラクタ
     /// </summary>
     /// <param name="displayName">送信対象表示名</param>
