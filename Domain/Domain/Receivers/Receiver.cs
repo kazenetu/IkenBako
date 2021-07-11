@@ -50,5 +50,17 @@ namespace Domain.Domain.Receivers
     {
       return new Receiver(displayName, new ReceiverId(id));
     }
+
+    /// <summary>
+    /// 送信対象インスタンスの作成
+    /// </summary>
+    /// <param name="displayName">送信対象表示名</param>
+    /// <param name="id">送信対象ID</param>
+    /// <param name="displayList">送信先に表示するか</param>
+    /// <param name="isAdminRole">一覧ですべてを選択できるか</param>
+    public static Receiver Create(string displayName, string id, bool displayList, bool isAdminRole)
+    {
+      return new Receiver(displayName, new ReceiverId(id)){DisplayList = displayList, IsAdminRole= isAdminRole};
+    }
   }
 }
