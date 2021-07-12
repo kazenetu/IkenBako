@@ -32,6 +32,8 @@ namespace Infrastructures
       sql.AppendLine("  , fullname");
       sql.AppendLine("FROM");
       sql.AppendLine("  m_receiver");
+      sql.AppendLine("WHERE ");
+      sql.AppendLine("  display_list = true");
 
       var sqlResult = db.Fill(sql.ToString());
       foreach(DataRow row in sqlResult.Rows)
@@ -70,8 +72,16 @@ namespace Infrastructures
       {
         var id = row["unique_name"].ToString();
         var name = row["fullname"].ToString();
+        var displayList = false;
+        var isAdminRole = false;
 
-        result = Receiver.Create(name, id);
+        if(bool.TryParse(row["display_list"].ToString(), out displayList) &&  bool.TryParse(row["is_admin_role"].ToString(), out isAdminRole))
+        {
+          result = Receiver.Create(name, id, displayList, isAdminRole);
+        } else {
+          result = Receiver.Create(name, id);
+        }
+
         break;
       }
 
