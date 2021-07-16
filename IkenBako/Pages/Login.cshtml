@@ -8,18 +8,20 @@
 }
 
 <div class="container">
-    <div class="text-center">
+    <div class="text-center" style="margin-bottom: 2em;">
         <h1>@ViewData["Title"]</h1>
     </div>
-    <h2 id="error" style="color:red;">
-        @if (errorMessages != null)
-        {
-            foreach (var item in errorMessages)
+    @if (errorMessages != null)
+    {
+        <div class=" col-md-6 offset-md-3" style="border: 1px red solid; margin-bottom: 1em;color:red;">
+            <ul>
+            @foreach (var item in errorMessages)
             {
-                @item <br>
+                <li>@item </li>
             }
-        }
-    </h2>
+            </ul>
+        </div>
+    }
 
     <form method="POST">
         <div class="form-row">

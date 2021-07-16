@@ -16,12 +16,19 @@ namespace IkenBako.Pages
   {
     public const string KEY_LOGIN_ID = "KEY_LOGIN_ID";
 
+    public const string KEY_RECEIVER = "KEY_RECEIVER";
+
     private readonly ILogger<LoginModel> _logger;
 
     /// <summary>
     /// ユーザーサービス
     /// </summary>
     private readonly UserService userService;
+
+    /// <summary>
+    /// 送信者サービス
+    /// </summary>
+    private readonly ReceiverService receiverService;
 
     /// <summary>
     /// 確認者
@@ -38,12 +45,14 @@ namespace IkenBako.Pages
     /// コンストラクタ
     /// </summary>
     /// <param name="logger">ログインスタンス</param>
+    /// <param name="userService">ユーザーサービス</param>
     /// <param name="receiverService">送信者サービス</param>
-    public LoginModel(ILogger<LoginModel> logger, UserService userService)
+    public LoginModel(ILogger<LoginModel> logger, UserService userService,ReceiverService receiverService)
     {
       _logger = logger;
 
       this.userService = userService;
+      this.receiverService = receiverService;
     }
 
     public void OnGet()
@@ -57,14 +66,41 @@ namespace IkenBako.Pages
 
     public IActionResult OnPost()
     {
-      if(!EqalsPassword(Target, Password))
+      HttpContext.Session.Clear();
+
+      var errorMessages = new List<string>();
+      if(string.IsNullOrEmpty(Target))
       {
-        ViewData["ErrorMessages"] = "IDまたはパスワードが間違っています。";
+        errorMessages.Add("IDを入力してください。");
+      }
+      if (string.IsNullOrEmpty(Password))
+      {
+        errorMessages.Add("パスワードを入力してください。");
+      }
+
+      if (!errorMessages.Any())
+      {
+        if (!EqalsPassword(Target, Password))
+        {
+          errorMessages.Add("IDまたはパスワードが間違っています。");
+        }
+      }
+
+      if (errorMessages.Any())
+      {
+        ViewData["ErrorMessages"] = errorMessages;
         Target = string.Empty;
         Password = string.Empty;
-        return RedirectToPage("/Login");
+        return Page();
       }
+
       HttpContext.Session.SetString(KEY_LOGIN_ID, Target);
+
+      // 一覧表示権限のチェック
+      var receiver = receiverService.GetReceiver(Target);
+      if(receiver != null){
+        HttpContext.Session.SetString(KEY_RECEIVER, receiver.ID);
+      }
 
       return RedirectToPage("/index");
     }
