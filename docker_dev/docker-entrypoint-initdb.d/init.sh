@@ -1,5 +1,5 @@
 set -e
-psql testDB -U test test << EOSQL
+psql -d testDB -U test << EOSQL
 
 DROP TABLE IF EXISTS m_user;
 DROP TABLE IF EXISTS m_receiver;
@@ -30,18 +30,18 @@ CREATE TABLE t_message(
  primary key(id)
 );
 
-comment on column m_user             is 'ユーザーマスタ';
+comment on table m_user              is 'ユーザーマスタ';
 comment on column m_user.unique_name is 'ユニークな略称';
 comment on column m_user.password    is '暗号化したパスワード';
 comment on column m_user.salt        is '暗号化パラメータ';
 
-comment on column m_receiver               is '上司マスタ';
+comment on table m_receiver                is '上司マスタ';
 comment on column m_receiver.unique_name   is 'ユニークな略称';
 comment on column m_receiver.fullname      is '氏名';
 comment on column m_receiver.display_list  is 'リスト表示可否';
 comment on column m_receiver.is_admin_role is '管理者権限';
 
-comment on column t_message                    is 'メッセージテーブル';
+comment on table t_message                     is 'メッセージテーブル';
 comment on column t_message.id                 is '連番';
 comment on column t_message.send_to            is '送信対象の上司略称';
 comment on column t_message.detail             is '送信メッセージ';
