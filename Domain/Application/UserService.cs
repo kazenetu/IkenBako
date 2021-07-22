@@ -33,5 +33,15 @@ namespace Domain.Application
 
       return new UserModel(user);
     }
+
+    /// <summary>
+    /// ユーザーの保存
+    /// </summary>
+    /// <param name="target">ユーザーエンティティ</param>
+    /// <returns>保存可否</returns>
+    public bool Save(User target)
+    {
+      return repository.Save(target);
+    }
   }
 }
