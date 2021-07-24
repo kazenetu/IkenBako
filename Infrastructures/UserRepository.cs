@@ -51,5 +51,45 @@ namespace Infrastructures
       return result;
     }
 
+    /// <summary>
+    /// ユーザーの保存
+    /// </summary>
+    /// <param name="target">ユーザーエンティティ</param>
+    /// <returns>保存可否</returns>
+    public bool Save(User target)
+    {
+      // 更新
+      var sql = new StringBuilder();
+      sql.AppendLine("Update m_user");
+      sql.AppendLine("SET");
+      sql.AppendLine("password = @password,");
+      sql.AppendLine("salt = @salt");
+      sql.AppendLine("WHERE");
+      sql.AppendLine("  unique_name = @unique_name");
+
+      // Param設定
+      db.ClearParam();
+      db.AddParam("@password", target.Password);
+      db.AddParam("@salt", target.Salt);
+      db.AddParam("@unique_name", target.ID.Value);
+
+      // SQL発行
+      if(db.ExecuteNonQuery(sql.ToString()) == 1){
+        return true;
+      }
+
+      // 更新対象がいない場合は登録
+      sql = new StringBuilder();
+      sql.AppendLine("INSERT into m_user(unique_name, password, salt)");
+      sql.AppendLine("VALUE(@unique_name, @password, @salt)");
+
+      // SQL発行
+      if(db.ExecuteNonQuery(sql.ToString()) == 1){
+        return true;
+      }
+
+      return false;
+    }
+
   }
 }
