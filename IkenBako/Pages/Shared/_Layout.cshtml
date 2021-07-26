@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
@@ -27,13 +27,19 @@
                             <a class="nav-link text-dark" asp-area="" asp-page="/MessageLists">メッセージ一覧</a>
                         </li>
                     }
+                    @if (Context.Session.Keys.Contains(LoginModel.KEY_LOGIN_ID))
+                    {
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-page="/ChangePassword">パスワード変更</a>
+                        </li>
+                    }
                   </ul>
                 </div>
-            @if (Context.Session.Keys.Contains(LoginModel.KEY_LOGIN_ID))
-            {
-                <a class="btn btn-primary mb-2 float-right" asp-area="" asp-page="/Logout">ログアウト</a>
-            }
-            </div>
+                @if (Context.Session.Keys.Contains(LoginModel.KEY_LOGIN_ID))
+                {
+                    <a class="btn btn-primary mb-2 float-right" asp-area="" asp-page="/Logout">ログアウト</a>
+                }
+                </div>
         </nav>
     </header>
     <div class="container">
