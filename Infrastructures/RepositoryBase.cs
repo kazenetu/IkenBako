@@ -1,4 +1,5 @@
-﻿using Infrastructures.DB;
+﻿using Domain.Domain;
+using Infrastructures.DB;
 using Microsoft.Extensions.Options;
 using System;
 
