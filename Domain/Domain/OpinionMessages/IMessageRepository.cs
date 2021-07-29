@@ -6,13 +6,14 @@ namespace Domain.Domain.OpinionMessages
   /// <summary>
   /// 意見メッセージリポジトリインターフェース
   /// </summary>
-  public interface IMessageRepository
+  public interface IMessageRepository: IRepositoryBase
   {
     /// <summary>
     /// 保存
     /// </summary>
     /// <param name="message">意見メッセージクラス</param>
-    void Save(Message message);
+    /// <returns>保存可否</returns>
+    bool Save(Message message);
 
     /// <summary>
     /// 送信対象宛ての意見メッセージ取得

@@ -23,7 +23,8 @@ namespace Infrastructures
     /// 保存
     /// </summary>
     /// <param name="message">意見メッセージクラス</param>
-    public void Save(Message message)
+    /// <returns>保存可否</returns>
+    public bool Save(Message message)
     {
       var sql = new StringBuilder();
       sql.AppendLine("INSERT ");
@@ -36,7 +37,12 @@ namespace Infrastructures
       db.AddParam("@detail", message.Detail);
 
       // SQL発行
-      db.ExecuteNonQuery(sql.ToString());
+      if (db.ExecuteNonQuery(sql.ToString()) == 1)
+      {
+        return true;
+      }
+
+      return false;
     }
 
     /// <summary>
