@@ -1,6 +1,7 @@
 ﻿using Domain.Application.Models;
 using Domain.Domain.OpinionMessages;
 using Domain.Domain.Receivers;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -33,9 +34,35 @@ namespace Domain.Application
     /// </summary>
     /// <param name="sendTo">送信対象者</param>
     /// <param name="detail">メッセージ本文</param>
-    public void Save(string sendTo, string detail)
+    public bool Save(string sendTo, string detail)
     {
-      repository.Save(Message.Create(sendTo, detail));
+      try
+      {
+        var result = false;
+
+        // トランザクション開始
+        repository.BeginTransaction();
+
+        // DB更新
+        result = repository.Save(Message.Create(sendTo, detail));
+
+        // 更新結果を受けてCommit/Rollback
+        if (result)
+        {
+          repository.Commit();
+        }
+        else
+        {
+          repository.Rollback();
+        }
+
+        return result;
+      }
+      catch (Exception ex)
+      {
+        repository.Rollback();
+        throw ex;
+      }
     }
 
     /// <summary>
