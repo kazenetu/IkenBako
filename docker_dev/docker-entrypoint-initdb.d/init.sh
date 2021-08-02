@@ -10,6 +10,7 @@ CREATE TABLE m_user(
  unique_name varchar(255) NOT NULL,
  password varchar(255) NOT NULL,
  salt varchar(255) NOT NULL,
+ version　integer default 1,
  primary key(unique_name)
 );
 
@@ -19,6 +20,7 @@ CREATE TABLE m_receiver(
  fullname varchar(255) NOT NULL,
  display_list boolean default true,
  is_admin_role boolean default false,
+ version　integer default 1,
  primary key(unique_name)
 );
 
@@ -34,12 +36,14 @@ comment on table m_user              is 'ユーザーマスタ';
 comment on column m_user.unique_name is 'ユニークな略称';
 comment on column m_user.password    is '暗号化したパスワード';
 comment on column m_user.salt        is '暗号化パラメータ';
+comment on column m_user.version     is '更新バージョン';
 
 comment on table m_receiver                is '上司マスタ';
 comment on column m_receiver.unique_name   is 'ユニークな略称';
 comment on column m_receiver.fullname      is '氏名';
 comment on column m_receiver.display_list  is 'リスト表示可否';
 comment on column m_receiver.is_admin_role is '管理者権限';
+comment on column m_receiver.version     is '更新バージョン';
 
 comment on table t_message                     is 'メッセージテーブル';
 comment on column t_message.id                 is '連番';
