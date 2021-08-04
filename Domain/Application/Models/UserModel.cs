@@ -21,6 +21,11 @@ namespace Domain.Application.Models
     public string Salt { get; private set; } = string.Empty;
 
     /// <summary>
+    /// 更新バージョン
+    /// </summary>
+    public int Version{ get; private set; } = 1;
+
+    /// <summary>
     /// コンストラクタ
     /// </summary>
     /// <param name="source">ユーザーインスタンス</param>
@@ -29,6 +34,7 @@ namespace Domain.Application.Models
       ID = source.ID.Value;
       Password = source.Password;
       Salt = source.Salt;
+      Version = source.Version;
     }
   }
 }

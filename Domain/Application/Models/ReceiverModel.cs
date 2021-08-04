@@ -28,6 +28,11 @@ namespace Domain.Application.Models
     public bool IsAdminRole { get; private set; } = false;
 
     /// <summary>
+    /// 更新バージョン
+    /// </summary>
+    public int Version{ get; private set; } = 1;
+
+    /// <summary>
     /// コンストラクタ
     /// </summary>
     /// <param name="source">送信対象インスタンス</param>
@@ -37,6 +42,7 @@ namespace Domain.Application.Models
       ID = source.ID.Value;
       DisplayList = source.DisplayList;
       IsAdminRole = source.IsAdminRole;
+      Version = source.Version;
     }
   }
 }
