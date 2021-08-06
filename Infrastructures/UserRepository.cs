@@ -44,7 +44,8 @@ namespace Infrastructures
         var id = row["unique_name"].ToString();
         var password = row["password"].ToString();
         var salt = row["salt"].ToString();
-        result = User.Create(id, password, salt);
+        var version = int.Parse(row["version"].ToString());
+        result = User.Create(id, password, salt, version);
         break;
       }
 
@@ -58,33 +59,43 @@ namespace Infrastructures
     /// <returns>保存可否</returns>
     public bool Save(User target)
     {
-      // 更新
-      var sql = new StringBuilder();
-      sql.AppendLine("Update m_user");
-      sql.AppendLine("SET");
-      sql.AppendLine("password = @password,");
-      sql.AppendLine("salt = @salt");
-      sql.AppendLine("WHERE");
-      sql.AppendLine("  unique_name = @unique_name");
+      // DBから最新のユーザーマスタを取得
+      var dbUser = GetUser(target.ID.Value);
 
-      // Param設定
+      // 共通Param設定
       db.ClearParam();
       db.AddParam("@password", target.Password);
       db.AddParam("@salt", target.Salt);
       db.AddParam("@unique_name", target.ID.Value);
 
-      // SQL発行
-      if(db.ExecuteNonQuery(sql.ToString()) == 1){
-        return true;
+      if(dbUser is null){
+        // 更新対象がいない場合は登録
+        var insrtSQL = new StringBuilder();
+        insrtSQL.AppendLine("INSERT into m_user(unique_name, password, salt)");
+        insrtSQL.AppendLine("VALUE(@unique_name, @password, @salt)");
+
+        // SQL発行
+        if(db.ExecuteNonQuery(insrtSQL.ToString()) == 1){
+          return true;
+        }
+      }
+      else if(dbUser.Version != target.Version)
+      {
+        return false;
       }
 
-      // 更新対象がいない場合は登録
-      sql = new StringBuilder();
-      sql.AppendLine("INSERT into m_user(unique_name, password, salt)");
-      sql.AppendLine("VALUE(@unique_name, @password, @salt)");
+      // 更新
+      var updateSQL = new StringBuilder();
+      updateSQL.AppendLine("Update m_user");
+      updateSQL.AppendLine("SET");
+      updateSQL.AppendLine("password = @password,");
+      updateSQL.AppendLine("salt = @salt,");
+      updateSQL.AppendLine("version = version+1");
+      updateSQL.AppendLine("WHERE");
+      updateSQL.AppendLine("  unique_name = @unique_name");
 
       // SQL発行
-      if(db.ExecuteNonQuery(sql.ToString()) == 1){
+      if(db.ExecuteNonQuery(updateSQL.ToString()) == 1){
         return true;
       }
 
