@@ -22,16 +22,23 @@ namespace Domain.Domain.Users
     public string Salt { get; private set; } = string.Empty;
 
     /// <summary>
+    /// 更新バージョン
+    /// </summary>
+    public int Version{ get; private set; } = 1;
+
+    /// <summary>
     /// コンストラクタ
     /// </summary>
     /// <param name="id">送信対象ID</param>
     /// <param name="password">パスワード</param>
     /// <param name="salt">ソルト</param>
-    private User(UserId id, string password, string salt)
+    /// <param name="version">更新バージョン</param>
+    private User(UserId id, string password, string salt, int version)
     {
       ID = id;
       Password = password;
       Salt = salt;
+      Version = version;
     }
 
     /// <summary>
@@ -40,9 +47,10 @@ namespace Domain.Domain.Users
     /// <param name="id">送信対象ID</param>
     /// <param name="password">パスワード</param>
     /// <param name="salt">ソルト</param>
-    public static User Create( string id, string password, string salt)
+    /// <param name="version">更新バージョン</param>
+    public static User Create(string id, string password, string salt, int version = 1)
     {
-      return new User(new UserId(id), password, salt);
+      return new User(new UserId(id), password, salt, version);
     }
   }
 }

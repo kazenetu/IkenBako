@@ -1,5 +1,6 @@
 using Domain.Application.Models;
 using Domain.Domain.Users;
+using System;
 
 namespace Domain.Application
 {
@@ -41,7 +42,33 @@ namespace Domain.Application
     /// <returns>保存可否</returns>
     public bool Save(User target)
     {
-      return repository.Save(target);
+      try
+      {
+        var result = false;
+
+        // トランザクション開始
+        repository.BeginTransaction();
+        
+        // DB更新
+        result = repository.Save(target);
+
+        // 更新結果を受けてCommit/Rollback
+        if (result)
+        {
+          repository.Commit();
+        }
+        else
+        {
+          repository.Rollback();
+        }
+
+        return result;
+      }
+      catch (Exception ex)
+      {
+        repository.Rollback();
+        throw ex;
+      }
     }
   }
 }

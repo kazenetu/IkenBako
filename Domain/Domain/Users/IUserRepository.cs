@@ -3,7 +3,7 @@ namespace Domain.Domain.Users
   /// <summary>
   /// ユーザーリポジトリインターフェース
   /// </summary>
-  public interface IUserRepository
+  public interface IUserRepository: IRepositoryBase
   {
     /// <summary>
     /// ユーザーを取得

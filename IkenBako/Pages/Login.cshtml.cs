@@ -15,6 +15,7 @@ namespace IkenBako.Pages
   public class LoginModel : PageModel
   {
     public const string KEY_LOGIN_ID = "KEY_LOGIN_ID";
+    public const string KEY_LOGIN_VERSION = "KEY_LOGIN_VERSION";
 
     public const string KEY_RECEIVER = "KEY_RECEIVER";
 

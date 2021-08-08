@@ -50,6 +50,16 @@ namespace IkenBako.Pages
         Response.Redirect("/index");
         return;
       }
+
+      // ユーザーの更新バージョンを取得する
+      var dbUser = userService.GetUser(HttpContext.Session.GetString(LoginModel.KEY_LOGIN_ID));
+      if(dbUser is null){
+        // ユーザーが存在しない場合はindexに戻る
+        Response.Redirect("/index");
+        return;
+      }
+      // 更新バージョンをセッションに格納
+      HttpContext.Session.SetInt32(LoginModel.KEY_LOGIN_VERSION, dbUser.Version);
     }
 
     public IActionResult OnPost()
@@ -86,12 +96,24 @@ namespace IkenBako.Pages
         }
       }
 
-      // パスワード変更
-      if (!errorMessages.Any())
+      // ページ表示時の更新バージョンの取得
+      var modifiedMessage = "すでに更新されています。ページを開きなおしてください。";
+      if (!HttpContext.Session.Keys.Contains(LoginModel.KEY_LOGIN_VERSION))
       {
-        if (!ChangePassword(id, NewPassword))
+          errorMessages.Add(modifiedMessage);
+      }
+      var version = HttpContext.Session.GetInt32(LoginModel.KEY_LOGIN_VERSION);
+      if(!version.HasValue)
+      {
+          errorMessages.Add(modifiedMessage);
+      }
+
+      // パスワード変更
+      if (!errorMessages.Any() && version.HasValue)
+      {
+        if (!ChangePassword(id, NewPassword, version.Value))
         {
-          errorMessages.Add("パスワード変更が失敗しました。");
+          errorMessages.Add(modifiedMessage);
         }
       }
 
@@ -134,8 +156,9 @@ namespace IkenBako.Pages
     /// </summary>
     /// <param name="unique_name">ユーザーID</param>
     /// <param name="password">新パスワード</param>
+    /// <param name="version">更新バージョン</param>
     /// <returns>更新可否</returns>
-    private bool ChangePassword(string unique_name, string password)
+    private bool ChangePassword(string unique_name, string password, int version)
     {
       // 128ビットのソルトを生成する
       byte[] salt = new byte[128 / 8];
@@ -154,7 +177,7 @@ namespace IkenBako.Pages
           numBytesRequested: 256 / 8));
 
       // DB更新
-      return userService.Save(Domain.Domain.Users.User.Create(unique_name, encryptedPassword, saltBase64));
+      return userService.Save(Domain.Domain.Users.User.Create(unique_name, encryptedPassword, saltBase64, version));
     }
   }
 }

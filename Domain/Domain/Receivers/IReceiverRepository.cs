@@ -5,7 +5,7 @@ namespace Domain.Domain.Receivers
   /// <summary>
   /// 送信対象者リポジトリインターフェース
   /// </summary>
-  public interface IReceiverRepository
+  public interface IReceiverRepository: IRepositoryBase
   {
     /// <summary>
     /// 送信対象者リストを取得

@@ -74,12 +74,13 @@ namespace Infrastructures
         var name = row["fullname"].ToString();
         var displayList = false;
         var isAdminRole = false;
+        var version = int.Parse(row["version"].ToString());
 
         if(bool.TryParse(row["display_list"].ToString(), out displayList) &&  bool.TryParse(row["is_admin_role"].ToString(), out isAdminRole))
         {
-          result = Receiver.Create(name, id, displayList, isAdminRole);
+          result = Receiver.Create(name, id, displayList, isAdminRole, version);
         } else {
-          result = Receiver.Create(name, id);
+          result = Receiver.Create(name, id, version);
         }
 
         break;

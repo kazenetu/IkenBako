@@ -1,4 +1,4 @@
-﻿namespace Infrastructures
+﻿namespace Domain.Domain
 {
   /// <summary>
   /// Repositoryのスーパークラス

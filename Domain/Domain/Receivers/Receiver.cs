@@ -31,14 +31,21 @@ namespace Domain.Domain.Receivers
     public bool IsAdminRole { get; private set; } = false;
 
     /// <summary>
+    /// 更新バージョン
+    /// </summary>
+    public int Version{ get; private set; } = 1;
+
+    /// <summary>
     /// コンストラクタ
     /// </summary>
     /// <param name="displayName">送信対象表示名</param>
     /// <param name="id">送信対象ID</param>
-    private Receiver(string displayName, ReceiverId id)
+    /// <param name="version">更新バージョン</param>
+    private Receiver(string displayName, ReceiverId id, int version)
     {
       DisplayName = displayName;
       ID = id;
+      Version = version;
     }
 
     /// <summary>
@@ -46,9 +53,10 @@ namespace Domain.Domain.Receivers
     /// </summary>
     /// <param name="displayName">送信対象表示名</param>
     /// <param name="id">送信対象ID</param>
-    public static Receiver Create(string displayName, string id)
+    /// <param name="version">更新バージョン</param>
+    public static Receiver Create(string displayName, string id, int version = 1)
     {
-      return new Receiver(displayName, new ReceiverId(id));
+      return new Receiver(displayName, new ReceiverId(id), version);
     }
 
     /// <summary>
@@ -58,9 +66,10 @@ namespace Domain.Domain.Receivers
     /// <param name="id">送信対象ID</param>
     /// <param name="displayList">送信先に表示するか</param>
     /// <param name="isAdminRole">一覧ですべてを選択できるか</param>
-    public static Receiver Create(string displayName, string id, bool displayList, bool isAdminRole)
+    /// <param name="version">更新バージョン</param>
+    public static Receiver Create(string displayName, string id, bool displayList, bool isAdminRole, int version = 1)
     {
-      return new Receiver(displayName, new ReceiverId(id)){DisplayList = displayList, IsAdminRole= isAdminRole};
+      return new Receiver(displayName, new ReceiverId(id), version){DisplayList = displayList, IsAdminRole= isAdminRole};
     }
   }
 }
