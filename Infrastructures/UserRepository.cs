@@ -1,7 +1,10 @@
 using Domain.Domain.Users;
+using Microsoft.AspNetCore.Cryptography.KeyDerivation;
 using Microsoft.Extensions.Options;
 using System.Data;
 using System.Text;
+using System;
+using System.Security.Cryptography;
 
 namespace Infrastructures
 {
@@ -102,5 +105,53 @@ namespace Infrastructures
       return false;
     }
 
+    /// <summary>
+    /// パスワードチェック
+    /// </summary>
+    /// <param name="unique_name">ユーザーID</param>
+    /// <param name="password">パスワード</param>
+    /// <returns>パスワード一致か否か</returns>
+    public bool EqalsPassword(string unique_name, string password)
+    {
+      var target = GetUser(unique_name);
+
+      var salt = Convert.FromBase64String(target.Salt);
+
+      string hashed = Convert.ToBase64String(KeyDerivation.Pbkdf2(
+        password: password,
+        salt: salt,
+        prf: KeyDerivationPrf.HMACSHA1,
+        iterationCount: 10000,
+        numBytesRequested: 256 / 8));
+
+      return hashed == target.Password;
+    }
+
+    /// <summary>
+    /// パスワード作成
+    /// </summary>
+    /// <param name="password">パスワード</param>
+    /// <returns>暗号化済パスワードとソルトのタプル</returns>
+    public (string encryptedPassword, string salt) CreateEncryptedPassword(string password)
+    {
+      // 128ビットのソルトを生成する
+      byte[] salt = new byte[128 / 8];
+      using (var rng = RandomNumberGenerator.Create())
+      {
+        rng.GetBytes(salt);
+      }
+      var saltBase64 = Convert.ToBase64String(salt);
+
+      // 256ビットのサブキーを導出
+      string encryptedPassword = Convert.ToBase64String(KeyDerivation.Pbkdf2(
+          password: password,
+          salt: salt,
+          prf: KeyDerivationPrf.HMACSHA1,
+          iterationCount: 10000,
+          numBytesRequested: 256 / 8));
+
+      // 暗号化済パスワードとソルトを返す
+      return (encryptedPassword, saltBase64);
+    }
   }
 }
