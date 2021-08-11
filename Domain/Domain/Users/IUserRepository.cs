@@ -18,5 +18,20 @@ namespace Domain.Domain.Users
     /// <param name="target">ユーザーエンティティ</param>
     /// <returns>保存可否</returns>
     bool Save(User target);
+
+    /// <summary>
+    /// パスワードチェック
+    /// </summary>
+    /// <param name="unique_name">ユーザーID</param>
+    /// <param name="password">パスワード</param>
+    /// <returns>パスワード一致か否か</returns>
+    bool EqalsPassword(string unique_name, string password);
+
+    /// <summary>
+    /// パスワード作成
+    /// </summary>
+    /// <param name="password">パスワード</param>
+    /// <returns>暗号化済パスワードとソルトのタプル</returns>
+    (string encryptedPassword, string salt) CreateEncryptedPassword(string password);
   }
 }
