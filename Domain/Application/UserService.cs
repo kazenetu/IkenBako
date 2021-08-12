@@ -70,5 +70,33 @@ namespace Domain.Application
         throw ex;
       }
     }
+
+    /// <summary>
+    /// パスワードチェック
+    /// </summary>
+    /// <param name="unique_name">ID</param>
+    /// <param name="password">パスワード</param>
+    /// <returns></returns>
+    public bool EqalsPassword(string unique_name, string password)
+    {
+      // 暗号化してDBの暗号化済パスワードと一致確認
+      return repository.EqalsPassword(unique_name, password);
+    }
+
+    /// <summary>
+    /// パスワード変更
+    /// </summary>
+    /// <param name="unique_name">ユーザーID</param>
+    /// <param name="password">新パスワード</param>
+    /// <param name="version">更新バージョン</param>
+    /// <returns>更新可否</returns>
+    public bool ChangePassword(string unique_name, string password, int version)
+    {
+      // 暗号化済みパスワード、ソルトの生成
+      var encryptedPasswordAndSalt = repository.CreateEncryptedPassword(password);
+
+      // DB更新
+      return Save(User.Create(unique_name, encryptedPasswordAndSalt.encryptedPassword, encryptedPasswordAndSalt.salt, version));
+    }
   }
 }
