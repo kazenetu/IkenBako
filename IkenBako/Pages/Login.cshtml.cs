@@ -1,10 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using Domain.Application;
-using IkenBako.ViewModels;
-using Microsoft.AspNetCore.Cryptography.KeyDerivation;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Http;
@@ -81,7 +78,7 @@ namespace IkenBako.Pages
 
       if (!errorMessages.Any())
       {
-        if (!EqalsPassword(Target, Password))
+        if (!userService.EqalsPassword(Target, Password))
         {
           errorMessages.Add("IDまたはパスワードが間違っています。");
         }
@@ -104,28 +101,6 @@ namespace IkenBako.Pages
       }
 
       return RedirectToPage("/index");
-    }
-
-    /// <summary>
-    /// ユーザーログインチェック
-    /// </summary>
-    /// <param name="unique_name">ID</param>
-    /// <param name="password">パスワード</param>
-    /// <returns></returns>
-    private bool EqalsPassword(string unique_name, string password)
-    {
-      var target = userService.GetUser(unique_name);
-
-      var salt = Convert.FromBase64String(target.Salt);
-
-      string hashed = Convert.ToBase64String(KeyDerivation.Pbkdf2(
-        password: password,
-        salt: salt,
-        prf: KeyDerivationPrf.HMACSHA1,
-        iterationCount: 10000,
-        numBytesRequested: 256 / 8));
-
-      return hashed == target.Password;
     }
   }
 }
