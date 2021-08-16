@@ -1,5 +1,4 @@
 using Domain.Application;
-using Microsoft.AspNetCore.Cryptography.KeyDerivation;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -7,7 +6,6 @@ using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Security.Cryptography;
 
 namespace IkenBako.Pages
 {
@@ -90,7 +88,7 @@ namespace IkenBako.Pages
       // 旧パスワードの確認
       if (!errorMessages.Any())
       {
-        if (!EqalsPassword(id, OldPassword))
+        if (!userService.EqalsPassword(id, OldPassword))
         {
           errorMessages.Add("旧パスワードが間違っています。");
         }
@@ -111,7 +109,7 @@ namespace IkenBako.Pages
       // パスワード変更
       if (!errorMessages.Any() && version.HasValue)
       {
-        if (!ChangePassword(id, NewPassword, version.Value))
+        if (!userService.ChangePassword(id, NewPassword, version.Value))
         {
           errorMessages.Add(modifiedMessage);
         }
@@ -127,57 +125,6 @@ namespace IkenBako.Pages
       }
 
       return RedirectToPage("/index");
-    }
-
-    /// <summary>
-    /// ユーザーログインチェック
-    /// </summary>
-    /// <param name="unique_name">ID</param>
-    /// <param name="password">パスワード</param>
-    /// <returns></returns>
-    private bool EqalsPassword(string unique_name, string password)
-    {
-      var target = userService.GetUser(unique_name);
-
-      var salt = Convert.FromBase64String(target.Salt);
-
-      string hashed = Convert.ToBase64String(KeyDerivation.Pbkdf2(
-        password: password,
-        salt: salt,
-        prf: KeyDerivationPrf.HMACSHA1,
-        iterationCount: 10000,
-        numBytesRequested: 256 / 8));
-
-      return hashed == target.Password;
-    }
-
-    /// <summary>
-    /// パスワード変更
-    /// </summary>
-    /// <param name="unique_name">ユーザーID</param>
-    /// <param name="password">新パスワード</param>
-    /// <param name="version">更新バージョン</param>
-    /// <returns>更新可否</returns>
-    private bool ChangePassword(string unique_name, string password, int version)
-    {
-      // 128ビットのソルトを生成する
-      byte[] salt = new byte[128 / 8];
-      using (var rng = RandomNumberGenerator.Create())
-      {
-        rng.GetBytes(salt);
-      }
-      var saltBase64 = Convert.ToBase64String(salt);
-
-      // 256ビットのサブキーを導出
-      string encryptedPassword = Convert.ToBase64String(KeyDerivation.Pbkdf2(
-          password: password,
-          salt: salt,
-          prf: KeyDerivationPrf.HMACSHA1,
-          iterationCount: 10000,
-          numBytesRequested: 256 / 8));
-
-      // DB更新
-      return userService.Save(Domain.Domain.Users.User.Create(unique_name, encryptedPassword, saltBase64, version));
     }
   }
 }
