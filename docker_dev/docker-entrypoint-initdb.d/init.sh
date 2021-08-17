@@ -10,7 +10,7 @@ CREATE TABLE m_user(
  unique_name varchar(255) NOT NULL,
  password varchar(255) NOT NULL,
  salt varchar(255) NOT NULL,
- version　integer default 1,
+ version integer default 1,
  primary key(unique_name)
 );
 
@@ -20,7 +20,7 @@ CREATE TABLE m_receiver(
  fullname varchar(255) NOT NULL,
  display_list boolean default true,
  is_admin_role boolean default false,
- version　integer default 1,
+ version integer default 1,
  primary key(unique_name)
 );
 
