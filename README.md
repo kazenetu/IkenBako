@@ -140,12 +140,16 @@ dockerがインストール済みであること
 |unique_name|ユニークな略称|varchar(255)|〇|主キー|
 |password|暗号化したパスワード|varchar(255)|〇||
 |salt|暗号化パラメータ|varchar(255)|〇||
+|version|更新バージョン|integer|〇|default 1|
 
 **m_receiver**(上司マスタ)
 |カラム名|論理名|型|NOT NULL|備考|
 |-------|-------|-----|:----:|-------|
 |unique_name|ユニークな略称|varchar(255)|〇|主キー|
 |fullname|氏名|varchar(255)|〇||
+|display_list|更新バージョン|boolean|〇|default true|
+|is_admin_role|リスト表示可否|boolean|〇|default false|
+|version|管理者権限|integer|〇|default 1|
 
 **t_message**(メッセージテーブル)
 |カラム名|論理名|型|NOT NULL|備考|
