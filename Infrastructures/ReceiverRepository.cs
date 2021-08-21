@@ -76,12 +76,23 @@ namespace Infrastructures
         var isAdminRole = false;
         var version = int.Parse(row["version"].ToString());
 
-        if(bool.TryParse(row["display_list"].ToString(), out displayList) &&  bool.TryParse(row["is_admin_role"].ToString(), out isAdminRole))
+        if(!bool.TryParse(row["display_list"].ToString(), out displayList))
         {
-          result = Receiver.Create(name, id, displayList, isAdminRole, version);
-        } else {
-          result = Receiver.Create(name, id, version);
+          if (int.TryParse(row["display_list"].ToString(), out var displayListValue))
+          {
+            displayList = displayListValue == 1;
+          }
         }
+
+        if (!bool.TryParse(row["is_admin_role"].ToString(), out isAdminRole))
+        {
+          if (int.TryParse(row["is_admin_role"].ToString(), out var isAdminRoleValue))
+          {
+            isAdminRole = isAdminRoleValue == 1;
+          }
+        }
+
+        result = Receiver.Create(name, id, displayList, isAdminRole, version);
 
         break;
       }
