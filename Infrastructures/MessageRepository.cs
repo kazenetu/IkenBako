@@ -61,6 +61,15 @@ namespace Infrastructures
       sql.AppendLine("FROM");
       sql.AppendLine("  t_message");
 
+      // 「すべて」以外の場合は対象を絞り込む
+      if(receiverId.Value != ReceiverId.AllReceiverId)
+      {
+        sql.AppendLine("WHERE ");
+        sql.AppendLine("  send_to = @send_to");
+        db.ClearParam();
+        db.AddParam("@send_to", receiverId.Value);
+      }
+
       var sqlResult = db.Fill(sql.ToString());
       foreach (DataRow row in sqlResult.Rows)
       {
