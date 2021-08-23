@@ -59,9 +59,12 @@ namespace IkenBako.Pages
       get
       {
         var target = HttpContext.Session.GetString(LoginModel.KEY_LOGIN_ID);
-        if(target is null) target = string.Empty;
+        if (target is null) target = string.Empty;
+
+        var targetReceiver = receiverService.GetReceiver(target);
+
         var sendTargetViewModels = receiverService.GetList(true).
-          Where(item=>item.ID == target).
+          Where(item=>item.ID == target || (targetReceiver != null && targetReceiver.IsAdminRole && receiverService.IsAllReceiverId(item.ID))).
           Select(item => new SendTargetViewModel { DisplayName = item.DisplayName, ID = item.ID });
 
         return sendTargetViewModels.Select(target => new SelectListItem(target.DisplayName, target.ID, false)).ToList();
