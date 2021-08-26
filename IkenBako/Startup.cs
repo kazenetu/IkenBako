@@ -35,14 +35,18 @@ namespace IkenBako
 
       // Configを専用Modelに設定
       var dbRoot = Configuration.GetSection("DB");
+
+#if DEBUG
       var dbConnectionStrings = dbRoot.GetSection("ConnectionStrings");
       var dbTarget = dbRoot.GetSection("Target");
       if (dbConnectionStrings.Value is null || dbTarget.Value is null)
       {
-        // 未設定の場合はSQLiteを選択
+        // デバッグ時のみ未設定の場合はSQLiteを選択
         dbConnectionStrings.GetSection("sqlite").Value = "Resource/Test.db";
         dbTarget.Value = "sqlite";
       }
+#endif
+
       services.Configure<DatabaseConfigModel>(dbRoot);
       services.Configure<SettingConfigModel>(Configuration.GetSection("Setting"));
 
