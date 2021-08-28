@@ -14,7 +14,7 @@ services:
     environment:
       "DB:ConnectionStrings:sqlite": "Resource/Test.db"
       "DB:ConnectionStrings:postgres": "Server=postgresql_server;Port=5432;User Id=test;Password=test;Database=testDB"
-      "DB:Target": "sqlite"
+      "DB:Target": "postgres"
       "Setting:AllLogin": "true"
 
 

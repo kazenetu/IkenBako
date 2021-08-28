@@ -34,7 +34,20 @@ namespace IkenBako
       services.AddSingleton<IUserRepository, UserRepository>();
 
       // Configを専用Modelに設定
-      services.Configure<DatabaseConfigModel>(Configuration.GetSection("DB"));
+      var dbRoot = Configuration.GetSection("DB");
+
+#if DEBUG
+      var dbConnectionStrings = dbRoot.GetSection("ConnectionStrings");
+      var dbTarget = dbRoot.GetSection("Target");
+      if (dbConnectionStrings.Value is null || dbTarget.Value is null)
+      {
+        // デバッグ時のみ未設定の場合はSQLiteを選択
+        dbConnectionStrings.GetSection("sqlite").Value = "Resource/Test.db";
+        dbTarget.Value = "sqlite";
+      }
+#endif
+
+      services.Configure<DatabaseConfigModel>(dbRoot);
       services.Configure<SettingConfigModel>(Configuration.GetSection("Setting"));
 
       // ApplicationService
