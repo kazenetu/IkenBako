@@ -14,7 +14,7 @@ CREATE TABLE m_user(
  primary key(unique_name)
 );
 
--- 上司マスタ
+-- 受信者マスタ
 CREATE TABLE m_receiver(
  unique_name varchar(255) NOT NULL,
  fullname varchar(255) NOT NULL,
@@ -38,7 +38,7 @@ comment on column m_user.password    is '暗号化したパスワード';
 comment on column m_user.salt        is '暗号化パラメータ';
 comment on column m_user.version     is '更新バージョン';
 
-comment on table m_receiver                is '上司マスタ';
+comment on table m_receiver                is '受信者マスタ';
 comment on column m_receiver.unique_name   is 'ユニークな略称';
 comment on column m_receiver.fullname      is '氏名';
 comment on column m_receiver.display_list  is 'リスト表示可否';
@@ -47,7 +47,7 @@ comment on column m_receiver.version     is '更新バージョン';
 
 comment on table t_message                     is 'メッセージテーブル';
 comment on column t_message.id                 is '連番';
-comment on column t_message.send_to            is '送信対象の上司略称';
+comment on column t_message.send_to            is '送信対象の受信者略称';
 comment on column t_message.detail             is '送信メッセージ';
 
 -- ユーザーマスタ登録
@@ -66,7 +66,7 @@ VALUES ('guest', 'XN+YezObIVLTzVT3jBNtrQSfjtaHXL5zWqW/ci50u6g=', '7Hi5ZraAGng7gQ
 INSERT INTO m_user("unique_name", "password", "salt") 
 VALUES ('admin', 're/aFXSjfuKtSeBkCoxAImeQ2Mb6fbunb30EmXpODLc=', ' R2ujDXTjQvUbD4BQRvtbdQ==');
 
--- 上司マスタ登録
+-- 受信者マスタ登録
 INSERT INTO m_receiver("unique_name", "fullname") 
 VALUES ('aa', 'Aさん');
 
