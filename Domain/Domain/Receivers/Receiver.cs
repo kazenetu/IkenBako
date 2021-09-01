@@ -3,23 +3,23 @@
 namespace Domain.Domain.Receivers
 {
   /// <summary>
-  /// 送信対象
+  /// 受信者マスタ
   /// </summary>
   public class Receiver
   {
     /// <summary>
-    /// 送信表示象名称
+    /// 受信者表示象名称
     /// </summary>
     public string DisplayName { get; private set; }
 
     /// <summary>
-    /// 送信対象ID
+    /// 受信者ID
     /// </summary>
     /// <remarks>アルファベットで表現すること</remarks>
     public ReceiverId ID { get; private set; }
 
     /// <summary>
-    /// 送信元表示
+    /// 送信先表示
     /// </summary>
     /// <remarks>送信先に表示するか</remarks>
     public bool DisplayList { get; private set; } = true;
@@ -38,8 +38,8 @@ namespace Domain.Domain.Receivers
     /// <summary>
     /// コンストラクタ
     /// </summary>
-    /// <param name="displayName">送信対象表示名</param>
-    /// <param name="id">送信対象ID</param>
+    /// <param name="displayName">受信者表示名</param>
+    /// <param name="id">受信者ID</param>
     /// <param name="version">更新バージョン</param>
     private Receiver(string displayName, ReceiverId id, int version)
     {
@@ -49,10 +49,10 @@ namespace Domain.Domain.Receivers
     }
 
     /// <summary>
-    /// 送信対象インスタンスの作成
+    /// 受信者インスタンスの作成
     /// </summary>
-    /// <param name="displayName">送信対象表示名</param>
-    /// <param name="id">送信対象ID</param>
+    /// <param name="displayName">受信者表示名</param>
+    /// <param name="id">受信者ID</param>
     /// <param name="version">更新バージョン</param>
     public static Receiver Create(string displayName, string id, int version = 1)
     {
@@ -60,10 +60,10 @@ namespace Domain.Domain.Receivers
     }
 
     /// <summary>
-    /// 送信対象インスタンスの作成
+    /// 受信者インスタンスの作成
     /// </summary>
-    /// <param name="displayName">送信対象表示名</param>
-    /// <param name="id">送信対象ID</param>
+    /// <param name="displayName">受信者表示名</param>
+    /// <param name="id">受信者ID</param>
     /// <param name="displayList">送信先に表示するか</param>
     /// <param name="isAdminRole">一覧ですべてを選択できるか</param>
     /// <param name="version">更新バージョン</param>

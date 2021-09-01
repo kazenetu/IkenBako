@@ -3,24 +3,24 @@
 namespace Domain.Domain.Receivers
 {
   /// <summary>
-  /// 送信対象ID
+  /// 受信者ID
   /// </summary>
   public class ReceiverId : IEquatable<ReceiverId>
   {
     /// <summary>
-    /// すべての送信対象取得用ID
+    /// すべての受信者用ID
     /// </summary>
     public const string AllReceiverId = ".";
 
     /// <summary>
-    /// 送信対象ID
+    /// 受信者ID
     /// </summary>
     public string Value { get; }
 
     /// <summary>
     /// コンストラクタ
     /// </summary>
-    /// <param name="id">送信対象ID</param>
+    /// <param name="id">受信者ID</param>
     public ReceiverId(string id)
     {
       if (string.IsNullOrEmpty(id))
