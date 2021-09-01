@@ -7,7 +7,7 @@ using System.Text;
 namespace Infrastructures
 {
   /// <summary>
-  /// 送信対象者リポジトリ
+  /// 受信者リポジトリ
   /// </summary>
   public class ReceiverRepository: RepositoryBase,IReceiverRepository
   {
@@ -19,9 +19,9 @@ namespace Infrastructures
     }
 
     /// <summary>
-    /// 送信対象者リストを取得
+    /// 受信者リストを取得
     /// </summary>
-    /// <returns>送信対象者メッセージリスト</returns>
+    /// <returns>受信者メッセージリスト</returns>
     public List<Receiver> GetReceivers()
     {
       var result = new List<Receiver>();
@@ -47,10 +47,10 @@ namespace Infrastructures
     }
 
     /// <summary>
-    /// 送信担当者を取得
+    /// 受信者を取得
     /// </summary>
     /// <param name="unique_name">ユニーク名</param>
-    /// <returns>送信担当者</returns>
+    /// <returns>受信者</returns>
     public Receiver GetReceiver(string unique_name)
     {
       Receiver result = null;
