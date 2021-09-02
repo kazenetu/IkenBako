@@ -15,6 +15,7 @@ namespace IkenBako.Pages
     public const string KEY_LOGIN_VERSION = "KEY_LOGIN_VERSION";
 
     public const string KEY_RECEIVER = "KEY_RECEIVER";
+    public const string KEY_ADMIN = "KEY_ADMIN";
 
     private readonly ILogger<LoginModel> _logger;
 
@@ -94,10 +95,14 @@ namespace IkenBako.Pages
 
       HttpContext.Session.SetString(KEY_LOGIN_ID, Target);
 
-      // 一覧表示権限のチェック
+      // 一覧表示権限・管理者権限のチェック
       var receiver = receiverService.GetReceiver(Target);
       if(receiver != null){
         HttpContext.Session.SetString(KEY_RECEIVER, receiver.ID);
+
+        // 管理者権限がある場合のみ設定
+        if(receiver.IsAdminRole)
+          HttpContext.Session.SetString(KEY_ADMIN, receiver.IsAdminRole.ToString());
       }
 
       return RedirectToPage("/index");
