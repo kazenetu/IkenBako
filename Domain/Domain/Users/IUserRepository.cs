@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+
 namespace Domain.Domain.Users
 {
   /// <summary>
@@ -11,6 +13,12 @@ namespace Domain.Domain.Users
     /// <param name="unique_name">ユニーク名</param>
     /// <returns>ユーザー</returns>
     User GetUser(string unique_name);
+
+    /// <summary>
+    /// ユーザーリストを取得
+    /// </summary>
+    /// <returns>ユーザーリスト</returns>
+    List<User> GetUsers();
 
     /// <summary>
     /// ユーザーの保存
