@@ -1,6 +1,8 @@
 using Domain.Application.Models;
 using Domain.Domain.Users;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Domain.Application
 {
@@ -33,6 +35,15 @@ namespace Domain.Application
       }
 
       return new UserModel(user);
+    }
+
+    /// <summary>
+    /// ユーザーリストを取得
+    /// </summary>
+    /// <returns>ユーザーリスト</returns>
+    public List<UserModel> GetList()
+    {
+      return repository.GetUsers().Select(user => new UserModel(user)).ToList();
     }
 
     /// <summary>
