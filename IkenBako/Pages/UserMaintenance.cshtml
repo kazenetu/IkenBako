@@ -1,0 +1,83 @@
+﻿@page
+@model IkenBako.Pages.UserMaintenanceModel
+@{
+    ViewData["Title"] = "ユーザーメンテナンス";
+
+    // エラーメッセージリスト
+    var errorMessages = ViewData["ErrorMessages"] as List<string>;
+}
+
+<div class="container">
+    <div class="text-center" style="margin-bottom: 2em;">
+        <h1>@ViewData["Title"]</h1>
+    </div>
+    @if (errorMessages != null)
+    {
+        <div class=" col-md-6 offset-md-3" style="border: 1px red solid; margin-bottom: 1em;color:red;">
+            <ul>
+                @foreach (var item in errorMessages)
+                {
+                    <li>@item </li>
+                }
+            </ul>
+        </div>
+    }
+
+    @if (Model.Users.Any())
+    {
+        <form method="POST" name="list">
+            <table class="table table-bordered mx-sm-auto">
+                <tr>
+                    <th>削除</th>
+                    <th>ID</th>
+                    <th>受信者</th>
+                    <th>受信者名</th>
+                    <th>送信対象に表示</th>
+                    <th>管理者権限</th>
+                </tr>
+                @foreach (var user in Model.Users)
+                {
+                    <tr>
+                        <td>
+                            <input type="checkbox" id="remove_@user.ID" class="remove"/>
+                        </td>
+                        <td>@user.ID</td>
+                        <td>@user.ViewIsReceiver</td>
+                        <td>@user.ViewDisplayName</td>
+                        <td>@user.ViewDisplayList</td>
+                        <td>@user.ViewIsAdminRole</td>
+                    </tr>
+                }
+            </table>
+            <input class="btn btn-primary mb-2 float-right" id="remove"  name="remove" type="submit" value="削除" />
+            <input type="hidden" asp-for="RemoveItemsJson" />
+            <script>
+                $("#remove").click(function () {
+                    const removeItems = $(".remove:checked").map(function () {
+                        return '"' + $(this).prop("id").replace("remove_", "") + '"';
+                    });
+
+                    if (removeItems.length <= 0) {
+                        $("#RemoveItemsJson").val("");
+                        return;
+                    }
+
+                    let json = '{"data":[';
+
+                    let index = 0;
+                    while (index < removeItems.length) {
+                        if (index > 0) {
+                            json += ',';
+                        }
+                        json += removeItems[index];
+                        index++;
+                    }
+                    json += ']}';
+
+                    $("#RemoveItemsJson").val(JSON.stringify(json));
+                });
+            </script>
+        </form>
+    }
+</div>
+
