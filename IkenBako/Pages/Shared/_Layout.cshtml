@@ -28,6 +28,12 @@
                             <a class="nav-link text-dark" asp-area="" asp-page="/MessageLists">メッセージ一覧</a>
                         </li>
                     }
+                    @if (Context.Session.Keys.Contains(LoginModel.KEY_ADMIN))
+                    {
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-page="/UserMaintenance">ユーザーメンテナンス</a>
+                        </li>
+                    }
                     @if (Context.Session.Keys.Contains(LoginModel.KEY_LOGIN_ID))
                     {
                         <li class="nav-item">
