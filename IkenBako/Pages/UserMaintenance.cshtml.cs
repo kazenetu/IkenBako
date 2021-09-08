@@ -28,8 +28,43 @@ namespace IkenBako.Pages
     /// </summary>
     private readonly ReceiverService receiverService;
 
+    /// <summary>
+    /// ユーザーリスト
+    /// </summary>
     public List<UserViewModel> Users { get; private set; } = new List<UserViewModel>();
 
+    /// <summary>
+    /// 編集ユーザー情報
+    /// </summary>
+    [BindProperty]
+    public UserViewModel EditTarget { set; get; } = new UserViewModel();
+
+    /// <summary>
+    /// 編集か否か
+    /// </summary>
+    [BindProperty]
+    public bool IsEdit { set; get; } = false;
+
+    /// <summary>
+    /// 編集中のユーザーマスタのバージョン
+    /// </summary>
+    [BindProperty]
+    public int EditTargetUserVersion { set; get; }
+
+    /// <summary>
+    /// 編集中の受信者マスタのバージョン
+    /// </summary>
+    [BindProperty]
+    public int EditTargetReceiverVersion { set; get; }
+
+    /// <summary>
+    /// 変更/新規ボタンのボタン名
+    /// </summary>
+    public string SaveButtonText { get { return IsEdit ? "変更" : "新規作成"; } }
+
+    /// <summary>
+    /// 削除対象ユーザーリスト用JSON
+    /// </summary>
     [BindProperty]
     public string RemoveItemsJson { set; get; }
 
@@ -46,6 +81,9 @@ namespace IkenBako.Pages
       this.receiverService = receiverService;
     }
 
+    /// <summary>
+    /// ページ表示
+    /// </summary>
     public void OnGet()
     {
       // TODO:ページの権限チェック
@@ -80,7 +118,10 @@ namespace IkenBako.Pages
       }
     }
 
-    public void OnPost()
+    /// <summary>
+    /// ユーザー削除
+    /// </summary>
+    public void OnPostRemove()
     {
       // TODO:ページの権限チェック
 
@@ -96,7 +137,74 @@ namespace IkenBako.Pages
       {
         var json = this.RemoveItemsJson.Replace("\\", string.Empty).Replace("\"{", "{").Replace("}\"","}");
         var removeItems = JsonSerializer.Deserialize<Dictionary<string, List<string>>>(json);
+
+        // TODO 削除
       }
     }
+
+    /// <summary>
+    /// ユーザー一覧から編集クリック
+    /// </summary>
+    /// <param name="id">ユーザーID</param>
+    public void OnPostEdit(string id)
+    {
+      // TODO:ページの権限チェック
+
+      // 一覧復元
+      if (HttpContext.Session.Keys.Contains(KEY_USER_LIST))
+      {
+        Users.Clear();
+        var bytes = HttpContext.Session.Get(KEY_USER_LIST);
+        Users.AddRange(JsonSerializer.Deserialize<List<UserViewModel>>(bytes));
+      }
+
+      if (string.IsNullOrEmpty(id))
+      {
+        return;
+      }
+
+      // ユーザーを反映
+      IsEdit = true;
+      var editTarget = userService.GetUser(id);
+      var receiver = receiverService.GetReceiver(id);
+      EditTarget.ID = editTarget.ID;
+      EditTargetUserVersion = editTarget.Version;
+      EditTargetReceiverVersion = -1;
+      if (receiver != null)
+      {
+        EditTarget.IsReceiver = true;
+        EditTarget.DisplayName = receiver.DisplayName;
+        EditTarget.DisplayList = receiver.DisplayList;
+        EditTarget.IsAdminRole= receiver.IsAdminRole;
+        EditTargetReceiverVersion = receiver.Version;
+      }
+    }
+
+    /// <summary>
+    /// 編集項目クリア
+    /// </summary>
+    public void OnPostClear()
+    {
+      // TODO:ページの権限チェック
+
+      // 一覧復元
+      if (HttpContext.Session.Keys.Contains(KEY_USER_LIST))
+      {
+        Users.Clear();
+        var bytes = HttpContext.Session.Get(KEY_USER_LIST);
+        Users.AddRange(JsonSerializer.Deserialize<List<UserViewModel>>(bytes));
+      }
+
+      // 編集項目をクリア
+      IsEdit = false;
+      EditTarget.ID = string.Empty;
+      EditTarget.IsReceiver = false;
+      EditTarget.DisplayName = string.Empty;
+      EditTarget.DisplayList = false;
+      EditTarget.IsAdminRole = false;
+      EditTargetUserVersion = -1;
+      EditTargetReceiverVersion = -1;
+    }
+
   }
 }

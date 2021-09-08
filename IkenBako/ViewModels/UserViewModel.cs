@@ -11,7 +11,7 @@ namespace IkenBako.ViewModels
     /// ユーザーID
     /// </summary>
     /// <remarks>アルファベットで表現すること</remarks>
-    public string ID { get; set; }
+    public string ID { get; set; } = "";
 
     /// <summary>
     /// 受信者か否か
@@ -21,19 +21,19 @@ namespace IkenBako.ViewModels
     /// <summary>
     /// 送信表示象名称
     /// </summary>
-    public string DisplayName { get; set; }
+    public string DisplayName { get; set; } = "";
 
     /// <summary>
     /// 送信元表示
     /// </summary>
     /// <remarks>送信先に表示するか</remarks>
-    public bool DisplayList { get; set; }
+    public bool DisplayList { get; set; } = false;
 
     /// <summary>
     /// 管理者権限
     /// </summary>
     /// <remarks>一覧ですべてを選択できるか</remarks>
-    public bool IsAdminRole { get; set; }
+    public bool IsAdminRole { get; set; } = false;
 
     #region 表示用
     /// <summary>
@@ -83,5 +83,6 @@ namespace IkenBako.ViewModels
       }
     }
     #endregion
+
   }
 }
