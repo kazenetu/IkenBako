@@ -1,4 +1,5 @@
 using Domain.Application;
+using Domain.Domain.Receivers;
 using IkenBako.ViewModels;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -14,7 +15,8 @@ namespace IkenBako.Pages
 {
   public class UserMaintenanceModel : PageModel
   {
-    public const string KEY_USER_LIST = "KEY_USER_LIST";
+    private const string KEY_USER_LIST = "KEY_USER_LIST";
+    private const int VERSION_NONE = -1;
 
     private readonly ILogger<UserMaintenanceModel> _logger;
 
@@ -46,16 +48,28 @@ namespace IkenBako.Pages
     public bool IsEdit { set; get; } = false;
 
     /// <summary>
+    /// パスワード設定を実施するか否か
+    /// </summary>
+    [BindProperty]
+    public bool EditIsSetPassword { get; set; } = false;
+
+    /// <summary>
+    /// パスワード
+    /// </summary>
+    [BindProperty]
+    public string EditPassword { get; set; } = "";
+
+    /// <summary>
     /// 編集中のユーザーマスタのバージョン
     /// </summary>
     [BindProperty]
-    public int EditTargetUserVersion { set; get; }
+    public int EditTargetUserVersion { set; get; } = VERSION_NONE;
 
     /// <summary>
     /// 編集中の受信者マスタのバージョン
     /// </summary>
     [BindProperty]
-    public int EditTargetReceiverVersion { set; get; }
+    public int EditTargetReceiverVersion { set; get; } = VERSION_NONE;
 
     /// <summary>
     /// 変更/新規ボタンのボタン名
@@ -197,14 +211,90 @@ namespace IkenBako.Pages
 
       // 編集項目をクリア
       IsEdit = false;
+      EditPassword = string.Empty;
+      EditIsSetPassword = false;
       EditTarget.ID = string.Empty;
       EditTarget.IsReceiver = false;
       EditTarget.DisplayName = string.Empty;
       EditTarget.DisplayList = false;
       EditTarget.IsAdminRole = false;
-      EditTargetUserVersion = -1;
-      EditTargetReceiverVersion = -1;
+      EditTargetUserVersion = VERSION_NONE;
+      EditTargetReceiverVersion = VERSION_NONE;
     }
 
+    /// <summary>
+    /// 保存
+    /// </summary>
+    public IActionResult OnPostSave()
+    {
+      // TODO:ページの権限チェック
+
+      // 一覧復元
+      if (HttpContext.Session.Keys.Contains(KEY_USER_LIST))
+      {
+        Users.Clear();
+        var bytes = HttpContext.Session.Get(KEY_USER_LIST);
+        Users.AddRange(JsonSerializer.Deserialize<List<UserViewModel>>(bytes));
+      }
+
+      // 入力チェック
+      var errorMessages = new List<string>();
+      if (IsEdit)
+      {
+        // 既存ユーザー
+        if(string.IsNullOrEmpty(EditTarget.ID) || EditTargetUserVersion == VERSION_NONE)
+        {
+          errorMessages.Add("ユーザーが正しく取得されませんでした。");
+        }
+      }
+      else
+      {
+        // 新規登録
+        if(string.IsNullOrEmpty(EditTarget.ID))
+        {
+          errorMessages.Add("IDを入力してください。");
+        }
+        else
+        {
+          // 既存にユーザーと同名か確認
+          if(userService.GetUser(EditTarget.ID) != null)
+          {
+            errorMessages.Add("IDを変更してください。すでにユーザーが存在します。");
+          }
+        }
+
+        // パスワード
+        if (!EditIsSetPassword || string.IsNullOrEmpty(EditPassword))
+        {
+          errorMessages.Add("パスワードは必須です。");
+        }
+      }
+      // 共通
+      if (!string.IsNullOrEmpty(EditTarget.ID) && EditTarget.ID.Trim() == ReceiverId.AllReceiverId)
+      {
+        errorMessages.Add($"IDに{ReceiverId.AllReceiverId}は使えません。");
+      }
+      if (EditIsSetPassword && string.IsNullOrEmpty(EditPassword))
+      {
+        errorMessages.Add("パスワードを入力してください。");
+      }
+      if (EditTarget.IsReceiver)
+      {
+        if (string.IsNullOrEmpty(EditTarget.DisplayName))
+        {
+          errorMessages.Add("受信者名を入力してください。");
+        }
+      }
+      if (errorMessages.Any())
+      {
+        ViewData["ErrorMessages"] = errorMessages;
+        return Page();
+      }
+
+      // TODO 保存処理
+
+      // 登録成功時は一覧の再表示
+      return RedirectToPage();
+    }
   }
 }

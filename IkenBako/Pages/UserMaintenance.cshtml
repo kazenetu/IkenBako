@@ -64,41 +64,49 @@
                 </div>
 
                 <div style="padding-top:3em"></div>
-
                 <form method="POST">
-                    <div class="card col-8 offset-2">
+                    <div class="card col-md-8 offset-md-2">
                         <div class="card-body">
-                            <div class="form-row">
-                                <div class="form-group col-md-8 offset-md-4">
-                                    <label class="col-md-3">ID</label>
+                            <div class="row">
+                                <div class="col">
+                                    <label class="col-md-4" for="EditDisplayID">ID</label>
                                     <input class="col-md-5" asp-for="EditTarget.ID" id="EditDisplayID" value="@Model.EditTarget.ID" readonly="@Model.IsEdit" />
                                 </div>
                             </div>
-                            <div class="form-row">
-                                <div class="form-group col-md-8 offset-md-4">
-                                    <label class="col-md-3">受信者</label>
+                            <div class="row">
+                                <div class="col">
+                                    <label class="col-md-4" for="PasswordControl">パスワード設定</label>
+                                    <span id="PasswordControl">
+                                        <input asp-for="EditIsSetPassword" id="EditIsSetPassword" />
+                                        <label class="col-md-2" for="EditIsSetPassword" id="EditIsSetPassword" readonly="@Model.IsEdit">設定</label>
+                                        <input class="col-md-4" asp-for="EditPassword" id="EditPassword" style="display:none" value="@Model.EditPassword" readonly="@Model.IsEdit" />
+                                    </span>                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col">
+                                    <label class="col-md-4">受信者</label>
                                     <input asp-for="EditTarget.IsReceiver" id="EditReceiver" />
-                                    <label class="col-md-4" for="EditReceiver">受信対象</label>
+                                    <label class="col-md-5" for="EditReceiver">受信対象</label>
                                 </div>
                             </div>
-                            <div class="form-row">
-                                <div class="form-group col-md-8 offset-md-4">
-                                    <label class="col-md-3">受信者名</label>
+                            <div class="row">
+                                <div class="col">
+                                    <label class="col-md-4" for="EditDisplayName">受信者名</label>
                                     <input class="col-md-5 receiverItem" asp-for="EditTarget.DisplayName" id="EditDisplayName" value="@Model.EditTarget.DisplayName" />
                                 </div>
                             </div>
-                            <div class="form-row">
-                                <div class="form-group col-md-8 offset-md-4">
-                                    <label class="col-md-3">送信対象</label>
-                                    <input asp-for="EditTarget.DisplayList" id="EditDisplayList" class = "receiverItem" />
-                                    <label class="col-md-4" for="EditDisplayList">送信リスト表示</label>
+                            <div class="row">
+                                <div class="col">
+                                    <label class="col-md-4">送信対象</label>
+                                    <input asp-for="EditTarget.DisplayList" id="EditDisplayList" class="receiverItem" />
+                                    <label class="col-md-5" for="EditDisplayList">送信リスト表示</label>
                                 </div>
                             </div>
-                            <div class="form-row">
-                                <div class="form-group col-md-8 offset-md-4">
-                                    <label class="col-md-3">管理者</label>
+                            <div class="row">
+                                <div class="col">
+                                    <label class="col-md-4">管理者</label>
                                     <input asp-for="EditTarget.IsAdminRole" id="EditAdminRole" class="receiverItem" />
-                                    <label class="col-md-4" for="EditAdminRole">権限あり</label>
+                                    <label class="col-md-5" for="EditAdminRole">権限あり</label>
                                 </div>
                             </div>
                         </div>
@@ -148,10 +156,20 @@
                         $("#RemoveItemsJson").val(JSON.stringify(json));
                     });
 
+                    // パスワード設定切り替え
+                    $("#EditIsSetPassword").change(function () {
+                        var checked = $("#EditIsSetPassword:checked").length > 0;
+                        if (checked) {
+                            $("#EditPassword").show();
+                        } else {
+                            $("#EditPassword").hide();
+                        }
+                    });
+
                     // クリア
                     $("#clear").click(function () {
                         // チェックボックスクリア
-                        $("#EditReceiver:checked,.receiverItem:checked").prop("checked", "");
+                        $("#EditIsSetPassword:checked,#EditReceiver:checked,.receiverItem:checked").prop("checked", "");
                     });
 
                     // 送信者設定チェックボックス連携
