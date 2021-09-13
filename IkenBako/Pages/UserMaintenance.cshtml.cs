@@ -1,5 +1,6 @@
 using Domain.Application;
 using Domain.Domain.Receivers;
+using Domain.Domain.Users;
 using IkenBako.ViewModels;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -21,73 +22,73 @@ namespace IkenBako.Pages
     private readonly ILogger<UserMaintenanceModel> _logger;
 
     /// <summary>
-    /// ƒ†[ƒU[ƒT[ƒrƒX
+    /// ï¿½ï¿½ï¿½[ï¿½Uï¿½[ï¿½Tï¿½[ï¿½rï¿½X
     /// </summary>
     private readonly UserService userService;
 
     /// <summary>
-    /// ‘—MÒƒT[ƒrƒX
+    /// ï¿½ï¿½ï¿½Mï¿½ÒƒTï¿½[ï¿½rï¿½X
     /// </summary>
     private readonly ReceiverService receiverService;
 
     /// <summary>
-    /// ƒ†[ƒU[ƒŠƒXƒg
+    /// ï¿½ï¿½ï¿½[ï¿½Uï¿½[ï¿½ï¿½ï¿½Xï¿½g
     /// </summary>
     public List<UserViewModel> Users { get; private set; } = new List<UserViewModel>();
 
     /// <summary>
-    /// •ÒWƒ†[ƒU[î•ñ
+    /// ï¿½ÒWï¿½ï¿½ï¿½[ï¿½Uï¿½[ï¿½ï¿½ï¿½
     /// </summary>
     [BindProperty]
     public UserViewModel EditTarget { set; get; } = new UserViewModel();
 
     /// <summary>
-    /// •ÒW‚©”Û‚©
+    /// ï¿½ÒWï¿½ï¿½ï¿½Û‚ï¿½
     /// </summary>
     [BindProperty]
     public bool IsEdit { set; get; } = false;
 
     /// <summary>
-    /// ƒpƒXƒ[ƒhİ’è‚ğÀ{‚·‚é‚©”Û‚©
+    /// ï¿½pï¿½Xï¿½ï¿½ï¿½[ï¿½hï¿½İ’ï¿½ï¿½ï¿½ï¿½ï¿½{ï¿½ï¿½ï¿½é‚©ï¿½Û‚ï¿½
     /// </summary>
     [BindProperty]
     public bool EditIsSetPassword { get; set; } = false;
 
     /// <summary>
-    /// ƒpƒXƒ[ƒh
+    /// ï¿½pï¿½Xï¿½ï¿½ï¿½[ï¿½h
     /// </summary>
     [BindProperty]
     public string EditPassword { get; set; } = "";
 
     /// <summary>
-    /// •ÒW’†‚Ìƒ†[ƒU[ƒ}ƒXƒ^‚Ìƒo[ƒWƒ‡ƒ“
+    /// ï¿½ÒWï¿½ï¿½ï¿½Ìƒï¿½ï¿½[ï¿½Uï¿½[ï¿½}ï¿½Xï¿½^ï¿½Ìƒoï¿½[ï¿½Wï¿½ï¿½ï¿½ï¿½
     /// </summary>
     [BindProperty]
     public int EditTargetUserVersion { set; get; } = VERSION_NONE;
 
     /// <summary>
-    /// •ÒW’†‚ÌóMÒƒ}ƒXƒ^‚Ìƒo[ƒWƒ‡ƒ“
+    /// ï¿½ÒWï¿½ï¿½ï¿½Ìï¿½Mï¿½Òƒ}ï¿½Xï¿½^ï¿½Ìƒoï¿½[ï¿½Wï¿½ï¿½ï¿½ï¿½
     /// </summary>
     [BindProperty]
     public int EditTargetReceiverVersion { set; get; } = VERSION_NONE;
 
     /// <summary>
-    /// •ÏX/V‹Kƒ{ƒ^ƒ“‚Ìƒ{ƒ^ƒ“–¼
+    /// ï¿½ÏX/ï¿½Vï¿½Kï¿½{ï¿½^ï¿½ï¿½ï¿½Ìƒ{ï¿½^ï¿½ï¿½ï¿½ï¿½
     /// </summary>
-    public string SaveButtonText { get { return IsEdit ? "•ÏX" : "V‹Kì¬"; } }
+    public string SaveButtonText { get { return IsEdit ? "ï¿½ÏX" : "ï¿½Vï¿½Kï¿½ì¬"; } }
 
     /// <summary>
-    /// íœ‘ÎÛƒ†[ƒU[ƒŠƒXƒg—pJSON
+    /// ï¿½íœï¿½ÎÛƒï¿½ï¿½[ï¿½Uï¿½[ï¿½ï¿½ï¿½Xï¿½gï¿½pJSON
     /// </summary>
     [BindProperty]
     public string RemoveItemsJson { set; get; }
 
     /// <summary>
-    /// ƒRƒ“ƒXƒgƒ‰ƒNƒ^
+    /// ï¿½Rï¿½ï¿½ï¿½Xï¿½gï¿½ï¿½ï¿½Nï¿½^
     /// </summary>
-    /// <param name="logger">ƒƒOƒCƒ“ƒXƒ^ƒ“ƒX</param>
-    /// <param name="userService">ƒ†[ƒU[ƒƒbƒZ[ƒWƒT[ƒrƒX</param>
-    /// <param name="receiverService">‘—MÒƒT[ƒrƒX</param>
+    /// <param name="logger">ï¿½ï¿½ï¿½Oï¿½Cï¿½ï¿½ï¿½Xï¿½^ï¿½ï¿½ï¿½X</param>
+    /// <param name="userService">ï¿½ï¿½ï¿½[ï¿½Uï¿½[ï¿½ï¿½ï¿½bï¿½Zï¿½[ï¿½Wï¿½Tï¿½[ï¿½rï¿½X</param>
+    /// <param name="receiverService">ï¿½ï¿½ï¿½Mï¿½ÒƒTï¿½[ï¿½rï¿½X</param>
     public UserMaintenanceModel(ILogger<UserMaintenanceModel> logger, UserService userService, ReceiverService receiverService)
     {
       _logger = logger;
@@ -96,50 +97,47 @@ namespace IkenBako.Pages
     }
 
     /// <summary>
-    /// ƒy[ƒW•\¦
+    /// ï¿½yï¿½[ï¿½Wï¿½\ï¿½ï¿½
     /// </summary>
     public void OnGet()
     {
-      // TODO:ƒy[ƒW‚ÌŒ ŒÀƒ`ƒFƒbƒN
+      // TODO:ï¿½yï¿½[ï¿½Wï¿½ÌŒï¿½ï¿½ï¿½ï¿½`ï¿½Fï¿½bï¿½N
 
-      // ƒ†[ƒU[ˆê——æ“¾
-      var users = userService.GetList();
-      var receivers = receiverService.GetList();
-      var userMaintenanceModels = users.Select(user =>
+      // ï¿½ï¿½ï¿½[ï¿½Uï¿½[ï¿½ê——ï¿½æ“¾
+      var userMaintenanceModels = userService.GetList().Select(user =>
       {
-        var receiver = receivers.FirstOrDefault(receiver=>receiver.ID == user.ID);
         return new UserViewModel() {
           ID = user.ID,
-          IsReceiver = receiver != null,
-          DisplayName = receiver != null ? receiver.DisplayName : string.Empty,
-          DisplayList = receiver != null && receiver.DisplayList,
-          IsAdminRole = receiver != null && receiver.IsAdminRole
+          IsReceiver = user.Receiver != null,
+          DisplayName = user.Receiver != null ? user.Receiver.DisplayName : string.Empty,
+          DisplayList = user.Receiver != null && user.Receiver.DisplayList,
+          IsAdminRole = user.Receiver != null && user.Receiver.IsAdminRole
         };
       });
 
-      // ƒZƒbƒVƒ‡ƒ“‚Éˆê——‚ğŠi”[
+      // ï¿½Zï¿½bï¿½Vï¿½ï¿½ï¿½ï¿½ï¿½Éˆê——ï¿½ï¿½ï¿½iï¿½[
       var userList = userMaintenanceModels.ToList();
       HttpContext.Session.Set(KEY_USER_LIST, JsonSerializer.SerializeToUtf8Bytes(userList));
 
       Users.Clear();
       Users.AddRange(userList);
 
-      // ƒ[ƒŒ‚Ìê‡‚ÍƒGƒ‰[
+      // ï¿½[ï¿½ï¿½ï¿½ï¿½ï¿½Ìê‡ï¿½ÍƒGï¿½ï¿½ï¿½[
       if (!Users.Any())
       {
-        ViewData["Message"] = "ƒ†[ƒU[‚Í‚ ‚è‚Ü‚¹‚ñB";
+        ViewData["Message"] = "ï¿½ï¿½ï¿½[ï¿½Uï¿½[ï¿½Í‚ï¿½ï¿½ï¿½Ü‚ï¿½ï¿½ï¿½B";
         return;
       }
     }
 
     /// <summary>
-    /// ƒ†[ƒU[íœ
+    /// ï¿½ï¿½ï¿½[ï¿½Uï¿½[ï¿½íœ
     /// </summary>
     public void OnPostRemove()
     {
-      // TODO:ƒy[ƒW‚ÌŒ ŒÀƒ`ƒFƒbƒN
+      // TODO:ï¿½yï¿½[ï¿½Wï¿½ÌŒï¿½ï¿½ï¿½ï¿½`ï¿½Fï¿½bï¿½N
 
-      // ˆê——•œŒ³
+      // ï¿½ê——ï¿½ï¿½ï¿½ï¿½
       if (HttpContext.Session.Keys.Contains(KEY_USER_LIST))
       {
         Users.Clear();
@@ -152,19 +150,19 @@ namespace IkenBako.Pages
         var json = this.RemoveItemsJson.Replace("\\", string.Empty).Replace("\"{", "{").Replace("}\"","}");
         var removeItems = JsonSerializer.Deserialize<Dictionary<string, List<string>>>(json);
 
-        // TODO íœ
+        // TODO ï¿½íœ
       }
     }
 
     /// <summary>
-    /// ƒ†[ƒU[ˆê——‚©‚ç•ÒWƒNƒŠƒbƒN
+    /// ï¿½ï¿½ï¿½[ï¿½Uï¿½[ï¿½ê——ï¿½ï¿½ï¿½ï¿½ÒWï¿½Nï¿½ï¿½ï¿½bï¿½N
     /// </summary>
-    /// <param name="id">ƒ†[ƒU[ID</param>
+    /// <param name="id">ï¿½ï¿½ï¿½[ï¿½Uï¿½[ID</param>
     public void OnPostEdit(string id)
     {
-      // TODO:ƒy[ƒW‚ÌŒ ŒÀƒ`ƒFƒbƒN
+      // TODO:ï¿½yï¿½[ï¿½Wï¿½ÌŒï¿½ï¿½ï¿½ï¿½`ï¿½Fï¿½bï¿½N
 
-      // ˆê——•œŒ³
+      // ï¿½ê——ï¿½ï¿½ï¿½ï¿½
       if (HttpContext.Session.Keys.Contains(KEY_USER_LIST))
       {
         Users.Clear();
@@ -177,7 +175,7 @@ namespace IkenBako.Pages
         return;
       }
 
-      // ƒ†[ƒU[‚ğ”½‰f
+      // ï¿½ï¿½ï¿½[ï¿½Uï¿½[ï¿½ğ”½‰f
       IsEdit = true;
       var editTarget = userService.GetUser(id);
       var receiver = receiverService.GetReceiver(id);
@@ -195,13 +193,13 @@ namespace IkenBako.Pages
     }
 
     /// <summary>
-    /// •ÒW€–ÚƒNƒŠƒA
+    /// ï¿½ÒWï¿½ï¿½ï¿½ÚƒNï¿½ï¿½ï¿½A
     /// </summary>
     public void OnPostClear()
     {
-      // TODO:ƒy[ƒW‚ÌŒ ŒÀƒ`ƒFƒbƒN
+      // TODO:ï¿½yï¿½[ï¿½Wï¿½ÌŒï¿½ï¿½ï¿½ï¿½`ï¿½Fï¿½bï¿½N
 
-      // ˆê——•œŒ³
+      // ï¿½ê——ï¿½ï¿½ï¿½ï¿½
       if (HttpContext.Session.Keys.Contains(KEY_USER_LIST))
       {
         Users.Clear();
@@ -209,7 +207,7 @@ namespace IkenBako.Pages
         Users.AddRange(JsonSerializer.Deserialize<List<UserViewModel>>(bytes));
       }
 
-      // •ÒW€–Ú‚ğƒNƒŠƒA
+      // ï¿½ÒWï¿½ï¿½ï¿½Ú‚ï¿½ï¿½Nï¿½ï¿½ï¿½A
       IsEdit = false;
       EditPassword = string.Empty;
       EditIsSetPassword = false;
@@ -223,13 +221,13 @@ namespace IkenBako.Pages
     }
 
     /// <summary>
-    /// •Û‘¶
+    /// ï¿½Û‘ï¿½
     /// </summary>
     public IActionResult OnPostSave()
     {
-      // TODO:ƒy[ƒW‚ÌŒ ŒÀƒ`ƒFƒbƒN
+      // TODO:ï¿½yï¿½[ï¿½Wï¿½ÌŒï¿½ï¿½ï¿½ï¿½`ï¿½Fï¿½bï¿½N
 
-      // ˆê——•œŒ³
+      // ï¿½ê——ï¿½ï¿½ï¿½ï¿½
       if (HttpContext.Session.Keys.Contains(KEY_USER_LIST))
       {
         Users.Clear();
@@ -237,52 +235,52 @@ namespace IkenBako.Pages
         Users.AddRange(JsonSerializer.Deserialize<List<UserViewModel>>(bytes));
       }
 
-      // “ü—Íƒ`ƒFƒbƒN
+      // ï¿½ï¿½ï¿½Íƒ`ï¿½Fï¿½bï¿½N
       var errorMessages = new List<string>();
       if (IsEdit)
       {
-        // Šù‘¶ƒ†[ƒU[
+        // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½[ï¿½Uï¿½[
         if(string.IsNullOrEmpty(EditTarget.ID) || EditTargetUserVersion == VERSION_NONE)
         {
-          errorMessages.Add("ƒ†[ƒU[‚ª³‚µ‚­æ“¾‚³‚ê‚Ü‚¹‚ñ‚Å‚µ‚½B");
+          errorMessages.Add("ï¿½ï¿½ï¿½[ï¿½Uï¿½[ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½æ“¾ï¿½ï¿½ï¿½ï¿½Ü‚ï¿½ï¿½ï¿½Å‚ï¿½ï¿½ï¿½ï¿½B");
         }
       }
       else
       {
-        // V‹K“o˜^
+        // ï¿½Vï¿½Kï¿½oï¿½^
         if(string.IsNullOrEmpty(EditTarget.ID))
         {
-          errorMessages.Add("ID‚ğ“ü—Í‚µ‚Ä‚­‚¾‚³‚¢B");
+          errorMessages.Add("IDï¿½ï¿½ï¿½ï¿½Í‚ï¿½ï¿½Ä‚ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½B");
         }
         else
         {
-          // Šù‘¶‚Éƒ†[ƒU[‚Æ“¯–¼‚©Šm”F
+          // ï¿½ï¿½ï¿½ï¿½ï¿½Éƒï¿½ï¿½[ï¿½Uï¿½[ï¿½Æ“ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½mï¿½F
           if(userService.GetUser(EditTarget.ID) != null)
           {
-            errorMessages.Add("ID‚ğ•ÏX‚µ‚Ä‚­‚¾‚³‚¢B‚·‚Å‚Éƒ†[ƒU[‚ª‘¶İ‚µ‚Ü‚·B");
+            errorMessages.Add("IDï¿½ï¿½ÏXï¿½ï¿½ï¿½Ä‚ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Bï¿½ï¿½ï¿½Å‚Éƒï¿½ï¿½[ï¿½Uï¿½[ï¿½ï¿½ï¿½ï¿½ï¿½İ‚ï¿½ï¿½Ü‚ï¿½ï¿½B");
           }
         }
 
-        // ƒpƒXƒ[ƒh
+        // ï¿½pï¿½Xï¿½ï¿½ï¿½[ï¿½h
         if (!EditIsSetPassword || string.IsNullOrEmpty(EditPassword))
         {
-          errorMessages.Add("ƒpƒXƒ[ƒh‚Í•K{‚Å‚·B");
+          errorMessages.Add("ï¿½pï¿½Xï¿½ï¿½ï¿½[ï¿½hï¿½Í•Kï¿½{ï¿½Å‚ï¿½ï¿½B");
         }
       }
-      // ‹¤’Ê
+      // ï¿½ï¿½ï¿½ï¿½
       if (!string.IsNullOrEmpty(EditTarget.ID) && EditTarget.ID.Trim() == ReceiverId.AllReceiverId)
       {
-        errorMessages.Add($"ID‚É{ReceiverId.AllReceiverId}‚Íg‚¦‚Ü‚¹‚ñB");
+        errorMessages.Add($"IDï¿½ï¿½{ReceiverId.AllReceiverId}ï¿½Ígï¿½ï¿½ï¿½Ü‚ï¿½ï¿½ï¿½B");
       }
       if (EditIsSetPassword && string.IsNullOrEmpty(EditPassword))
       {
-        errorMessages.Add("ƒpƒXƒ[ƒh‚ğ“ü—Í‚µ‚Ä‚­‚¾‚³‚¢B");
+        errorMessages.Add("ï¿½pï¿½Xï¿½ï¿½ï¿½[ï¿½hï¿½ï¿½ï¿½ï¿½Í‚ï¿½ï¿½Ä‚ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½B");
       }
       if (EditTarget.IsReceiver)
       {
         if (string.IsNullOrEmpty(EditTarget.DisplayName))
         {
-          errorMessages.Add("óMÒ–¼‚ğ“ü—Í‚µ‚Ä‚­‚¾‚³‚¢B");
+          errorMessages.Add("ï¿½ï¿½Mï¿½Ò–ï¿½ï¿½ï¿½ï¿½ï¿½Í‚ï¿½ï¿½Ä‚ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½B");
         }
       }
       if (errorMessages.Any())
@@ -291,9 +289,9 @@ namespace IkenBako.Pages
         return Page();
       }
 
-      // TODO •Û‘¶ˆ—
+      // TODO ï¿½Û‘ï¿½ï¿½ï¿½ï¿½ï¿½
 
-      // “o˜^¬Œ÷‚Íˆê——‚ÌÄ•\¦
+      // ï¿½oï¿½^ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Íˆê——ï¿½ÌÄ•\ï¿½ï¿½
       return RedirectToPage();
     }
   }
