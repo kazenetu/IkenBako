@@ -1,4 +1,5 @@
 using Domain.Application.Models;
+using Domain.Domain.UserAndReceivers;
 using Domain.Domain.Users;
 using System;
 using System.Collections.Generic;
@@ -12,14 +13,17 @@ namespace Domain.Application
   public class UserService
   {
     private readonly IUserRepository repository;
+    private readonly IUserAndReceiverRepository userAndReceiverRepository;
 
     /// <summary>
     /// コンストラクタ
     /// </summary>
     /// <param name="repository">ユーザーリポジトリ</param>
-    public UserService(IUserRepository repository)
+    /// <param name="userAndReceiverRepository">ユーザーと受信者の集約Entityインターフェース</param>
+    public UserService(IUserRepository repository, IUserAndReceiverRepository userAndReceiverRepository)
     {
       this.repository = repository;
+      this.userAndReceiverRepository = userAndReceiverRepository;
     }
 
     /// <summary>
@@ -38,12 +42,17 @@ namespace Domain.Application
     }
 
     /// <summary>
-    /// ユーザーリストを取得
+    /// ユーザーと受信者の集約リストを取得
     /// </summary>
-    /// <returns>ユーザーリスト</returns>
-    public List<UserModel> GetList()
+    /// <returns>ユーザーと受信者の集約リスト</returns>
+    public List<UserAndReceiverModel> GetList()
     {
-      return repository.GetUsers().Select(user => new UserModel(user)).ToList();
+      var userAndReceiverModels = userAndReceiverRepository.GetUserAndReceivers().Select(user =>
+      {
+        return new UserAndReceiverModel(user, user.UserReceiver);
+      });
+
+      return userAndReceiverModels.ToList();
     }
 
     /// <summary>
