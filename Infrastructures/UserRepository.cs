@@ -5,7 +5,6 @@ using System.Data;
 using System.Text;
 using System;
 using System.Security.Cryptography;
-using System.Collections.Generic;
 
 namespace Infrastructures
 {
@@ -51,36 +50,6 @@ namespace Infrastructures
         var version = int.Parse(row["version"].ToString());
         result = User.Create(id, password, salt, version);
         break;
-      }
-
-      return result;
-    }
-
-    /// <summary>
-    /// ユーザーリストを取得
-    /// </summary>
-    /// <returns>ユーザーリスト</returns>
-    public List<User> GetUsers()
-    {
-      var result = new List<User>();
-
-      var sql = new StringBuilder();
-      sql.AppendLine("SELECT");
-      sql.AppendLine(" * ");
-      sql.AppendLine("FROM");
-      sql.AppendLine("  m_user");
-
-      // Param設定
-      db.ClearParam();
-
-      var sqlResult = db.Fill(sql.ToString());
-      foreach (DataRow row in sqlResult.Rows)
-      {
-        var id = row["unique_name"].ToString();
-        var password = row["password"].ToString();
-        var salt = row["salt"].ToString();
-        var version = int.Parse(row["version"].ToString());
-        result.Add(User.Create(id, password, salt, version));
       }
 
       return result;
