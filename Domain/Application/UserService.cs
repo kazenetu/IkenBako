@@ -118,5 +118,85 @@ namespace Domain.Application
       // DB更新
       return Save(User.Create(unique_name, encryptedPasswordAndSalt.encryptedPassword, encryptedPasswordAndSalt.salt, version));
     }
+
+    #region ユーザー削除
+
+    /// <summary>
+    /// ユーザー削除
+    /// </summary>
+    /// <param name="userId">ユーザーID</param>
+    /// <returns>削除成否</returns>
+    public bool Remove(UserId userId)
+    {
+      try
+      {
+        var result = false;
+
+        // トランザクション開始
+        repository.BeginTransaction();
+
+        result = userAndReceiverRepository.Remove(userId);
+
+        // 更新結果を受けてCommit/Rollback
+        if (result)
+        {
+          repository.Commit();
+        }
+        else
+        {
+          repository.Rollback();
+        }
+
+        return result;
+      }
+      catch (Exception ex)
+      {
+        repository.Rollback();
+        throw ex;
+      }
+    }
+
+    /// <summary>
+    /// ユーザー一括削除
+    /// </summary>
+    /// <param name="userId">ユーザーID</param>
+    /// <returns>削除成否</returns>
+    public bool RemoveAll(List<UserId> userIds)
+    {
+      try
+      {
+        var result = true;
+
+        // トランザクション開始
+        userAndReceiverRepository.BeginTransaction();
+
+        foreach (var userId in userIds)
+        {
+          result = userAndReceiverRepository.Remove(userId);
+
+          // 更新失敗の場合は終了
+          if (!result)
+            break;
+        }
+
+        // 更新結果を受けてCommit/Rollback
+        if (result)
+        {
+          userAndReceiverRepository.Commit();
+        }
+        else
+        {
+          userAndReceiverRepository.Rollback();
+        }
+
+        return result;
+      }
+      catch (Exception ex)
+      {
+        userAndReceiverRepository.Rollback();
+        throw ex;
+      }
+    }
+    #endregion
   }
 }
