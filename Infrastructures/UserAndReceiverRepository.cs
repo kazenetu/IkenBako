@@ -117,7 +117,7 @@ namespace Infrastructures
             }
           }
 
-          receiver = Receiver.Create(name, id, displayList, isAdminRole, version);
+          receiver = Receiver.Create(name, id, displayList, isAdminRole, r_version);
         }
 
         // 集約エンティティ作成
@@ -135,9 +135,149 @@ namespace Infrastructures
     /// <returns>保存成否</returns>
     public bool Save(UserAndReceiver target)
     {
-      // TODO 更新 OR 新規作成
-      return false;
+      // DBから最新のユーザーマスタを取得
+      var dbUserAndReceiver = GetUserAndReceiver(target.ID);
+
+      // ユーザーマスタの保存
+      if (!UserSave(dbUserAndReceiver))
+      {
+        return false;
+      }
+
+      // 受信者マスタの保存・削除
+      Receiver receiver = null;
+      if(dbUserAndReceiver != null)
+      {
+        receiver = dbUserAndReceiver.UserReceiver;
+      }
+      if (target.UserReceiver is null && receiver != null)
+      {
+        // 受信者マスタを廃止する場合、受信者マスタの削除を行う
+        if (!RemoveReceiver(target.ID))
+        {
+          return false;
+        }
+      }
+      else
+      {
+        // 受信マスタを更新・元々使用しない場合、受信者マスタの登録・更新を行う
+        if (!UserReceiver(receiver))
+        {
+          return false;
+        }
+      }
+
+      // 保存成功
+      return true;
+
+      // ユーザーマスタの保存
+      bool UserSave(UserAndReceiver dbUser)
+      {
+        // 共通Param設定
+        db.ClearParam();
+        db.AddParam("@password", target.Password);
+        db.AddParam("@salt", target.Salt);
+        db.AddParam("@unique_name", target.ID.Value);
+
+        if (dbUser is null)
+        {
+          // 新規登録時にパスワードやソルトが存在しない場合はエラーとする
+          if(string.IsNullOrEmpty(target.Password) || string.IsNullOrEmpty(target.Salt))
+          {
+            return false;
+          }
+
+          // 更新対象がいない場合は登録
+          var insrtSQL = new StringBuilder();
+          insrtSQL.AppendLine("INSERT into m_user(unique_name, password, salt)");
+          insrtSQL.AppendLine("VALUES(@unique_name, @password, @salt)");
+
+          // SQL発行
+          if (db.ExecuteNonQuery(insrtSQL.ToString()) == 1)
+          {
+            return true;
+          }
+        }
+        else if (dbUser is null || dbUser.Version != target.Version)
+        {
+          return false;
+        }
+
+        // 更新
+        var updateSQL = new StringBuilder();
+        updateSQL.AppendLine("Update m_user");
+        updateSQL.AppendLine("SET");
+        updateSQL.AppendLine("password = @password,");
+        updateSQL.AppendLine("salt = @salt,");
+        updateSQL.AppendLine("version = version+1");
+        updateSQL.AppendLine("WHERE");
+        updateSQL.AppendLine("  unique_name = @unique_name");
+
+        // SQL発行
+        if (db.ExecuteNonQuery(updateSQL.ToString()) == 1)
+        {
+          return true;
+        }
+
+        return false;
+      }
+
+      // 受信者マスタの保存
+      bool UserReceiver(Receiver dbReceiver)
+      {
+        // 受信者マスタを作成しない場合はtrueを返して終了
+        if(target.UserReceiver is null)
+        {
+          return true;
+        }
+
+        // 共通Param設定
+        db.ClearParam();
+        db.AddParam("@unique_name", target.ID.Value);
+        db.AddParam("@fullname", target.UserReceiver.DisplayName);
+        db.AddParam("@display_list", target.UserReceiver.DisplayList);
+        db.AddParam("@is_admin_role", target.UserReceiver.IsAdminRole);
+
+        if (dbReceiver is null)
+        {
+          // 更新対象がいない場合は登録
+          var insrtSQL = new StringBuilder();
+          insrtSQL.AppendLine("INSERT INTO m_receiver(unique_name, fullname, display_list, is_admin_role)");
+          insrtSQL.AppendLine("VALUES(@unique_name, @fullname, @display_list, @is_admin_role)");
+
+          // SQL発行
+          if (db.ExecuteNonQuery(insrtSQL.ToString()) == 1)
+          {
+            return true;
+          }
+        }
+        else if (dbReceiver is null || dbReceiver.Version != target.UserReceiver.Version)
+        {
+          return false;
+        }
+
+        // 更新
+        var updateSQL = new StringBuilder();
+        updateSQL.AppendLine("Update m_receiver");
+        updateSQL.AppendLine("SET");
+        updateSQL.AppendLine("fullname = @fullname,");
+        updateSQL.AppendLine("display_list = @display_list,");
+        updateSQL.AppendLine("is_admin_role = @is_admin_role,");
+        updateSQL.AppendLine("version = version+1");
+        updateSQL.AppendLine("WHERE");
+        updateSQL.AppendLine("  unique_name = @unique_name");
+
+        // SQL発行
+        if (db.ExecuteNonQuery(updateSQL.ToString()) == 1)
+        {
+          return true;
+        }
+
+        return false;
+      }
     }
+
+    #region 削除処理
 
     /// <summary>
     /// ユーザーの削除
@@ -149,30 +289,23 @@ namespace Infrastructures
       // 削除対象レコード追加
       var target = GetUserAndReceiver(userId);
 
-      // 削除
-      var deleteSQL = new StringBuilder();
-
-      // 共通Param設定
-      db.ClearParam();
-      db.AddParam("@unique_name", target.ID.Value);
-
       // 受信者が存在する場合は削除する
       if (target.UserReceiver != null)
       {
         // 削除
-        deleteSQL.Clear();
-        deleteSQL.AppendLine("DELETE FROM m_receiver");
-        deleteSQL.AppendLine("WHERE");
-        deleteSQL.AppendLine("  unique_name = @unique_name");
-
-        // SQL発行
-        if (db.ExecuteNonQuery(deleteSQL.ToString()) != 1)
+        if (!RemoveReceiver(target.ID))
         {
           return false;
         }
       }
 
       // ユーザーの削除
+      var deleteSQL = new StringBuilder();
+
+      // Param設定
+      db.ClearParam();
+      db.AddParam("@unique_name", target.ID.Value);
+
       // 削除
       deleteSQL.Clear();
       deleteSQL.AppendLine("DELETE FROM m_user");
@@ -188,5 +321,34 @@ namespace Infrastructures
       return true;
     }
 
+    /// <summary>
+    /// 受信者の削除
+    /// </summary>
+    /// <param name="userId">ユーザーID</param>
+    /// <returns>削除成否</returns>
+    private bool RemoveReceiver(UserId userId)
+    {
+      var deleteSQL = new StringBuilder();
+
+      // Param設定
+      db.ClearParam();
+      db.AddParam("@unique_name", userId.Value);
+
+      // 削除
+      deleteSQL.Clear();
+      deleteSQL.AppendLine("DELETE FROM m_receiver");
+      deleteSQL.AppendLine("WHERE");
+      deleteSQL.AppendLine("  unique_name = @unique_name");
+
+      // SQL発行
+      if (db.ExecuteNonQuery(deleteSQL.ToString()) != 1)
+      {
+        return false;
+      }
+
+      return true;
+    }
+
+    #endregion
   }
 }
