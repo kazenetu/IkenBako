@@ -1,4 +1,5 @@
 using Domain.Application.Models;
+using Domain.Domain.Receivers;
 using Domain.Domain.UserAndReceivers;
 using Domain.Domain.Users;
 using System;
@@ -60,7 +61,7 @@ namespace Domain.Application
     /// </summary>
     /// <param name="target">ユーザーエンティティ</param>
     /// <returns>保存可否</returns>
-    public bool Save(User target)
+    private bool Save(User target)
     {
       try
       {
@@ -89,6 +90,78 @@ namespace Domain.Application
         repository.Rollback();
         throw ex;
       }
+    }
+
+    /// <summary>
+    /// ユーザー情報の保存
+    /// </summary>
+    /// <param name="ID">ユーザーID</param>
+    /// <param name="userVersion">取得時のユーザーマスタのバージョン</param>
+    /// <param name="useReceiver">受信者マスタ利用か否か</param>
+    /// <param name="displayName">受信者名</param>
+    /// <param name="displayList">送信元表示</param>
+    /// <param name="isAdminRole">管理者権限</param>
+    /// <param name="receiverVersion">取得時の受信マスタのバージョン</param>
+    /// <param name="newPassword">再設定のパスワード(平文)</param>
+    /// <returns>登録成功・失敗</returns>
+    /// <remarks>newPasswordがnullの場合はパスワード変更を行わない</remarks>
+    public bool Save(string ID, int userVersion,
+                     bool useReceiver, string displayName, bool displayList, bool isAdminRole, int receiverVersion,
+                     string newPassword)
+    {
+      try
+      {
+        var result = false;
+
+        // トランザクション開始
+        userAndReceiverRepository.BeginTransaction();
+
+        // パスワードの取得または再設定
+        var password = string.Empty;
+        var salt = string.Empty;
+        if (string.IsNullOrEmpty(newPassword))
+        {
+          var user = userAndReceiverRepository.GetUserAndReceiver(new UserId(ID));
+          password = user.Password;
+          salt = user.Salt;
+        }
+        else
+        {
+          // 新しいパスワードで暗号化済みパスワードとソルトを取得
+          var encryptedPasswordAndSalt = repository.CreateEncryptedPassword(newPassword);
+          password = encryptedPasswordAndSalt.encryptedPassword;
+          salt = encryptedPasswordAndSalt.salt;
+        }
+
+        // 登録するエンティティを生成
+        var targetUser = User.Create(ID, password, salt, userVersion);
+        Receiver targetReceiver = null;
+        if (useReceiver)
+        {
+          targetReceiver = Receiver.Create(displayName, ID, displayList, isAdminRole, receiverVersion);
+        }
+
+        // DB更新
+        result = userAndReceiverRepository.Save(UserAndReceiver.Create(targetUser, targetReceiver));
+
+        // 更新結果を受けてCommit/Rollback
+        if (result)
+        {
+          userAndReceiverRepository.Commit();
+        }
+        else
+        {
+          userAndReceiverRepository.Rollback();
+        }
+
+        return result;
+      }
+      catch (Exception ex)
+      {
+        userAndReceiverRepository.Rollback();
+        throw ex;
+      }
+
     }
 
     /// <summary>
