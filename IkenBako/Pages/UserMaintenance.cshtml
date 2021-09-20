@@ -71,6 +71,7 @@
                                 <div class="col">
                                     <label class="col-md-4" for="EditDisplayID">ID</label>
                                     <input class="col-md-5" asp-for="EditTarget.ID" id="EditDisplayID" value="@Model.EditTarget.ID" readonly="@Model.IsEdit" />
+                                    <input type="hidden" asp-for="IsEdit" />
                                 </div>
                             </div>
                             <div class="row">
@@ -78,8 +79,8 @@
                                     <label class="col-md-4" for="PasswordControl">パスワード設定</label>
                                     <span id="PasswordControl">
                                         <input asp-for="EditIsSetPassword" id="EditIsSetPassword" />
-                                        <label class="col-md-2" for="EditIsSetPassword" id="EditIsSetPassword" readonly="@Model.IsEdit">設定</label>
-                                        <input class="col-md-4" asp-for="EditPassword" id="EditPassword" style="display:none" value="@Model.EditPassword" readonly="@Model.IsEdit" />
+                                        <label class="col-md-2" for="EditIsSetPassword" id="EditIsSetPassword">設定</label>
+                                        <input class="col-md-4" asp-for="EditPassword" id="EditPassword" style="display:none" value="@Model.EditPassword" />
                                     </span>                                </div>
                             </div>
                             <div class="row">

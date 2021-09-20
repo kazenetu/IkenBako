@@ -1,5 +1,4 @@
 using Domain.Application;
-using Domain.Domain.Receivers;
 using Domain.Domain.Users;
 using IkenBako.ViewModels;
 using Microsoft.AspNetCore.Http;
@@ -270,6 +269,21 @@ namespace IkenBako.Pages
         {
           errorMessages.Add("ユーザーが正しく取得されませんでした。");
         }
+        else
+        {
+          // バージョンチェック
+          var userModel = userService.GetUser(EditTarget.ID);
+          if(EditTargetUserVersion != userModel.Version)
+          {
+            errorMessages.Add("すでに更新されています。一覧の編集ボタンから再度編集してください。");
+          }
+
+          var receiverModel = receiverService.GetReceiver(EditTarget.ID);
+          if (receiverModel != null && EditTargetReceiverVersion != receiverModel.Version)
+          {
+            errorMessages.Add("すでに更新されています。一覧の編集ボタンから再度編集してください。");
+          }
+        }
       }
       else
       {
@@ -294,9 +308,9 @@ namespace IkenBako.Pages
         }
       }
       // 共通
-      if (!string.IsNullOrEmpty(EditTarget.ID) && EditTarget.ID.Trim() == ReceiverId.AllReceiverId)
+      if (receiverService.IsAllReceiverId(EditTarget.ID))
       {
-        errorMessages.Add($"IDに{ReceiverId.AllReceiverId}は使えません。");
+        errorMessages.Add($"このIDは使えません。");
       }
       if (EditIsSetPassword && string.IsNullOrEmpty(EditPassword))
       {
@@ -315,10 +329,27 @@ namespace IkenBako.Pages
         return Page();
       }
 
-      // TODO 保存処理
+      // 保存処理
+      string newPassword = null;
+      if (EditIsSetPassword)
+      {
+        newPassword = EditPassword;
+      }
+      var dbResult = userService.Save(EditTarget.ID, EditTargetUserVersion, 
+                                      EditTarget.IsReceiver, EditTarget.DisplayName, EditTarget.DisplayList, EditTarget.IsAdminRole, EditTargetReceiverVersion, 
+                                      newPassword);
 
-      // 登録成功時は一覧の再表示
-      return RedirectToPage();
+      if (dbResult)
+      {
+        // 登録成功時は一覧の再表示
+        return RedirectToPage();
+      }
+
+      // 失敗時はエラーメッセージを追加して表示
+      errorMessages.Add("保存に失敗しました。");
+      ViewData["ErrorMessages"] = errorMessages;
+      return Page();
+
     }
   }
 }
