@@ -98,9 +98,13 @@ namespace IkenBako.Pages
     /// <summary>
     /// ページ表示
     /// </summary>
-    public void OnGet()
+    public IActionResult OnGet()
     {
-      // TODO:ページの権限チェック
+      // ページの閲覧権限チェック
+      if (!CanUsePage())
+      {
+        return RedirectToPage("/Login");
+      }
 
       // ユーザー一覧取得
       var userMaintenanceModels = userService.GetList().Select(user =>
@@ -125,8 +129,9 @@ namespace IkenBako.Pages
       if (!Users.Any())
       {
         ViewData["Message"] = "ユーザーはありません。";
-        return;
       }
+
+      return Page();
     }
 
     /// <summary>
@@ -134,7 +139,11 @@ namespace IkenBako.Pages
     /// </summary>
     public IActionResult OnPostRemove()
     {
-      // TODO:ページの権限チェック
+      // ページの閲覧権限チェック
+      if (!CanUsePage())
+      {
+        return RedirectToPage("/Login");
+      }
 
       // 一覧復元
       if (HttpContext.Session.Keys.Contains(KEY_USER_LIST))
@@ -183,9 +192,13 @@ namespace IkenBako.Pages
     /// ユーザー一覧から編集クリック
     /// </summary>
     /// <param name="id">ユーザーID</param>
-    public void OnPostEdit(string id)
+    public IActionResult OnPostEdit(string id)
     {
-      // TODO:ページの権限チェック
+      // ページの閲覧権限チェック
+      if (!CanUsePage())
+      {
+        return RedirectToPage("/Login");
+      }
 
       // 一覧復元
       if (HttpContext.Session.Keys.Contains(KEY_USER_LIST))
@@ -197,7 +210,7 @@ namespace IkenBako.Pages
 
       if (string.IsNullOrEmpty(id))
       {
-        return;
+        return Page();
       }
 
       // ユーザーを反映
@@ -215,14 +228,21 @@ namespace IkenBako.Pages
         EditTarget.IsAdminRole= receiver.IsAdminRole;
         EditTargetReceiverVersion = receiver.Version;
       }
+
+      // 表示
+      return Page();
     }
 
     /// <summary>
     /// 編集項目クリア
     /// </summary>
-    public void OnPostClear()
+    public IActionResult OnPostClear()
     {
-      // TODO:ページの権限チェック
+      // ページの閲覧権限チェック
+      if (!CanUsePage())
+      {
+        return RedirectToPage("/Login");
+      }
 
       // 一覧復元
       if (HttpContext.Session.Keys.Contains(KEY_USER_LIST))
@@ -243,6 +263,9 @@ namespace IkenBako.Pages
       EditTarget.IsAdminRole = false;
       EditTargetUserVersion = VERSION_NONE;
       EditTargetReceiverVersion = VERSION_NONE;
+
+      // 表示
+      return Page();
     }
 
     /// <summary>
@@ -250,7 +273,11 @@ namespace IkenBako.Pages
     /// </summary>
     public IActionResult OnPostSave()
     {
-      // TODO:ページの権限チェック
+      // ページの閲覧権限チェック
+      if (!CanUsePage())
+      {
+        return RedirectToPage("/Login");
+      }
 
       // 一覧復元
       if (HttpContext.Session.Keys.Contains(KEY_USER_LIST))
@@ -350,6 +377,20 @@ namespace IkenBako.Pages
       ViewData["ErrorMessages"] = errorMessages;
       return Page();
 
+    }
+
+    /// <summary>
+    /// 本ページが利用可能か
+    /// </summary>
+    /// <returns>利用可能/不可</returns>
+    private bool CanUsePage()
+    {
+      if (!HttpContext.Session.Keys.Contains(LoginModel.KEY_ADMIN))
+      {
+        return false;
+      }
+
+      return true;
     }
   }
 }
