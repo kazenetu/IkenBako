@@ -155,11 +155,11 @@ dockerがインストール済みであること
 |カラム名|論理名|型|NOT NULL|備考|
 |-------|-------|-----|:----:|-------|
 |id|連番|SERIAL|〇|主キー|
-|send_to|送信対象の受信者略称|varchar(255)|〇||
+|send_to|送信対象の上司略称|varchar(255)|〇||
 |detail|送信メッセージ|varchar(255)|〇||
 
 ## 画面イメージ
-* ログイン画面  
+* ログイン画面(AllLoginがfalseの場合は一般ユーザーはログイン不要)  
   ![](doc/images/login.png)  
 
 * 意見投稿画面  
@@ -173,6 +173,12 @@ dockerがインストール済みであること
 
 * 意見一覧：メッセージなし  
   ![](doc/images/message_list3.png)  
+
+* ユーザーメンテナンス  
+  ![](doc/images/userMainte.png)  
+
+* パスワード変更  
+  ![](doc/images/changePassword.png)  
 
 ## ツール
 * 暗号化済パスワード、ソルトの取得ツール：tools/createPassword  
