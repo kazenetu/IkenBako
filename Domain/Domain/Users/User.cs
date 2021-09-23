@@ -33,7 +33,7 @@ namespace Domain.Domain.Users
     /// <param name="password">パスワード</param>
     /// <param name="salt">ソルト</param>
     /// <param name="version">更新バージョン</param>
-    private User(UserId id, string password, string salt, int version)
+    protected User(UserId id, string password, string salt, int version)
     {
       ID = id;
       Password = password;

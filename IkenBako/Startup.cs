@@ -1,6 +1,7 @@
 using Domain.Application;
 using Domain.Domain.OpinionMessages;
 using Domain.Domain.Receivers;
+using Domain.Domain.UserAndReceivers;
 using Domain.Domain.Users;
 using Infrastructures;
 using Microsoft.AspNetCore.Builder;
@@ -32,6 +33,7 @@ namespace IkenBako
       services.AddSingleton<IMessageRepository, MessageRepository>();
       services.AddSingleton<IReceiverRepository, ReceiverRepository>();
       services.AddSingleton<IUserRepository, UserRepository>();
+      services.AddSingleton<IUserAndReceiverRepository, UserAndReceiverRepository>();
 
       // Configを専用Modelに設定
       var dbRoot = Configuration.GetSection("DB");

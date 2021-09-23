@@ -1,0 +1,208 @@
+﻿@page "{handler=}"
+@model IkenBako.Pages.UserMaintenanceModel
+@{
+    ViewData["Title"] = "ユーザーメンテナンス";
+
+    // エラーメッセージリスト
+    var errorMessages = ViewData["ErrorMessages"] as List<string>;
+}
+
+<div class="container">
+    <div class="text-center" style="margin-bottom: 2em;">
+        <h1>@ViewData["Title"]</h1>
+    </div>
+    @if (errorMessages != null)
+    {
+        <div class=" col-md-6 offset-md-3" style="border: 1px red solid; margin-bottom: 1em;color:red;">
+            <ul>
+                @foreach (var item in errorMessages)
+                {
+                    <li>@item </li>
+                }
+            </ul>
+        </div>
+    }
+
+    @if (Model.Users.Any())
+    {
+                <form method="POST">
+                    <table class="table table-bordered mx-sm-auto">
+                        <tr>
+                            <th>削除</th>
+                            <th>ID</th>
+                            <th>受信者</th>
+                            <th>受信者名</th>
+                            <th>送信対象に表示</th>
+                            <th>管理者権限</th>
+                            <th>編集</th>
+                        </tr>
+                        @foreach (var user in Model.Users)
+                        {
+                                    <tr>
+                                        <td>
+                                            <input type="checkbox" id="remove_@user.ID" class="remove" />
+                                        </td>
+                                        <td>@user.ID</td>
+                                        <td>@user.ViewIsReceiver</td>
+                                        <td>@user.ViewDisplayName</td>
+                                        <td>@user.ViewDisplayList</td>
+                                        <td>@user.ViewIsAdminRole</td>
+                                        <td>
+                                            <input class="btn btn-primary mb-2 float-right" type="submit" value="編集" asp-route-id="@user.ID"  asp-page-handler="Edit"/>
+                            </td>
+                            </tr>
+                        }
+                    </table>
+                </form>
+                <div class="row">
+                    <div class="col text-right">
+                        <form method="POST" asp-page-handler="Remove">
+                            <input class="btn btn-primary mb-2" id="remove" name="remove" type="submit" value="削除" />
+                            <input type="hidden" asp-for="RemoveItemsJson" />
+                        </form>
+                    </div>
+                </div>
+
+                <div style="padding-top:3em"></div>
+     }
+    else
+    {
+        <div style="padding-top:3em"></div>
+        <div class="text-center">
+            <h2>
+                @ViewData["Message"]
+            </h2>
+        </div>
+        <div style="padding-top:3em"></div>
+    }
+
+    <form method="POST">
+        <div class="card col-md-8 offset-md-2">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col">
+                        <label class="col-md-4" for="EditDisplayID">ID</label>
+                        <input class="col-md-5" asp-for="EditTarget.ID" id="EditDisplayID" value="@Model.EditTarget.ID" readonly="@Model.IsEdit" />
+                        <input type="hidden" asp-for="IsEdit" />
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <label class="col-md-4" for="PasswordControl">パスワード設定</label>
+                        <span id="PasswordControl">
+                            <input asp-for="EditIsSetPassword" id="EditIsSetPassword" />
+                            <label class="col-md-2" for="EditIsSetPassword" id="EditIsSetPassword">設定</label>
+                            <input class="col-md-4" asp-for="EditPassword" id="EditPassword" style="display:none" value="@Model.EditPassword" />
+                        </span>                                </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <label class="col-md-4">受信者</label>
+                        <input asp-for="EditTarget.IsReceiver" id="EditReceiver" />
+                        <label class="col-md-5" for="EditReceiver">受信対象</label>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <label class="col-md-4" for="EditDisplayName">受信者名</label>
+                        <input class="col-md-5 receiverItem" asp-for="EditTarget.DisplayName" id="EditDisplayName" value="@Model.EditTarget.DisplayName" />
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <label class="col-md-4">送信対象</label>
+                        <input asp-for="EditTarget.DisplayList" id="EditDisplayList" class="receiverItem" />
+                        <label class="col-md-5" for="EditDisplayList">送信リスト表示</label>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <label class="col-md-4">管理者</label>
+                        <input asp-for="EditTarget.IsAdminRole" id="EditAdminRole" class="receiverItem" />
+                        <label class="col-md-5" for="EditAdminRole">権限あり</label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col text-right">
+                    <input class="btn btn-primary mb-2" id="clear" name="clear" type="submit" value="クリア" asp-page-handler="Clear" />
+                    <input class="btn btn-primary mb-2" id="save" name="save" type="submit" value="@Model.SaveButtonText" asp-page-handler="Save" />
+                </div>
+            </div>
+        </div>
+
+        <input asp-for="EditTargetUserVersion" style="display:none" value="@Model.EditTargetUserVersion" />
+        <input asp-for="EditTargetReceiverVersion" style="display:none" value="@Model.EditTargetReceiverVersion"  />
+    </form>
+
+    <script>
+        // 削除
+        $("#remove").click(function () {
+            const removeItems = $(".remove:checked").map(function () {
+                return '"' + $(this).prop("id").replace("remove_", "") + '"';
+            });
+
+            if (removeItems.length <= 0) {
+                $("#RemoveItemsJson").val("");
+                return;
+            }
+
+            // 削除確認
+            if (!window.confirm("削除しますか？")) {
+                $("#RemoveItemsJson").val("");
+                return;
+            }
+
+            let json = '{"data":[';
+
+            let index = 0;
+            while (index < removeItems.length) {
+                if (index > 0) {
+                    json += ',';
+                }
+                json += removeItems[index];
+                index++;
+            }
+            json += ']}';
+
+            $("#RemoveItemsJson").val(JSON.stringify(json));
+        });
+
+        // パスワード設定切り替え
+        $("#EditIsSetPassword").change(function () {
+            var checked = $("#EditIsSetPassword:checked").length > 0;
+            if (checked) {
+                $("#EditPassword").show();
+            } else {
+                $("#EditPassword").hide();
+            }
+        });
+
+        // クリア
+        $("#clear").click(function () {
+            // チェックボックスクリア
+            $("#EditIsSetPassword:checked,#EditReceiver:checked,.receiverItem:checked").prop("checked", "");
+        });
+
+        // 送信者設定チェックボックス連携
+        changeEdit = function () {
+            if ($("#EditReceiver:checked").length == 1) {
+                $(".receiverItem").prop("disabled", null);
+            } else {
+                $(".receiverItem").prop("disabled", "disabled");
+            }
+        };
+
+        $("#EditReceiver").change(function () {
+            changeEdit();
+        });
+
+        // 初期化
+        $(document).ready(function () {
+            changeEdit();
+        });
+    </script>
+
+</div>
+
