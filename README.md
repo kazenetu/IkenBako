@@ -75,7 +75,12 @@ dockerがインストール済みであること
    ```docker-compose build```
 4. コンテナ起動  
    ```docker-compose up -d```
-5. コンテナ停止・削除
+5. Visual Studio Codeの拡張機能「Docker for Visual Studio Code」を使用しない場合は下記コマンドを発行  
+   1. Ikenbakoコンテナに入る  
+      ```docker-compose exec Ikenbako bash```
+   1. 終了時は下記コマンドを発行  
+      ```exit```
+6. コンテナ停止・削除  
    ```docker-compose down```
 
 ※Visual Studio Codeの拡張機能「Docker for Visual Studio Code」の利用を推奨する
