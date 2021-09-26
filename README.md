@@ -73,9 +73,9 @@ dockerがインストール済みであること
 2. ```cd docker_div```を実行
 3. 初回のみビルドを実行  
    ```docker-compose build```
-4. コンテナ起動（アプリケーションの実行）  
+4. コンテナ起動  
    ```docker-compose up -d```
-5. コンテナ停止・削除（アプリケーションの終了）
+5. コンテナ停止・削除
    ```docker-compose down```
 
 ※Visual Studio Codeの拡張機能「Docker for Visual Studio Code」の利用を推奨する
