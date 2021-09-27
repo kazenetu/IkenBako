@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 
 namespace IkenBako.Pages
@@ -21,12 +22,14 @@ namespace IkenBako.Pages
     /// <summary>
     /// 旧パスワード
     /// </summary>
+    [DataType(DataType.Password)]
     [BindProperty]
     public string OldPassword { set; get; }
 
     /// <summary>
     /// 新パスワード
     /// </summary>
+    [DataType(DataType.Password)]
     [BindProperty]
     public string NewPassword { set; get; }
 

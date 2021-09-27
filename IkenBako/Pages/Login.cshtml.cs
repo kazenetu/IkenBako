@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using Domain.Application;
 using Microsoft.AspNetCore.Mvc;
@@ -39,6 +40,7 @@ namespace IkenBako.Pages
     /// パスワード
     /// </summary>
     [BindProperty]
+    [DataType(DataType.Password)]
     public string Password { set; get; }
 
     /// コンストラクタ
