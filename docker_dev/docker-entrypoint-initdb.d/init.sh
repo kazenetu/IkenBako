@@ -20,6 +20,7 @@ CREATE TABLE m_receiver(
  fullname varchar(255) NOT NULL,
  display_list boolean default true,
  is_admin_role boolean default false,
+ is_viewlist_role boolean default true,
  version integer default 1,
  primary key(unique_name)
 );
@@ -43,11 +44,12 @@ comment on column m_receiver.unique_name   is 'ユニークな略称';
 comment on column m_receiver.fullname      is '氏名';
 comment on column m_receiver.display_list  is 'リスト表示可否';
 comment on column m_receiver.is_admin_role is '管理者権限';
+comment on column m_receiver.is_viewlist_role is '一覧確認権限';
 comment on column m_receiver.version     is '更新バージョン';
 
 comment on table t_message                     is 'メッセージテーブル';
 comment on column t_message.id                 is '連番';
-comment on column t_message.send_to            is '送信対象の受信者略称';
+comment on column t_message.send_to            is '送信対象の上司略称';
 comment on column t_message.detail             is '送信メッセージ';
 
 -- ユーザーマスタ登録
