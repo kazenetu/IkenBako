@@ -3,7 +3,7 @@
 namespace Domain.Domain.Receivers
 {
   /// <summary>
-  /// 受信者マスタ
+  /// 受信者Entity
   /// </summary>
   public class Receiver
   {
