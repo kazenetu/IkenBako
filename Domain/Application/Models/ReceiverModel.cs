@@ -28,6 +28,12 @@ namespace Domain.Application.Models
     public bool IsAdminRole { get; private set; } = false;
 
     /// <summary>
+    /// 一覧確認権限
+    /// </summary>
+    /// <remarks>一覧の表示権限があるか</remarks>
+    public bool IsViewListRole { get; set; } = true;
+
+    /// <summary>
     /// 更新バージョン
     /// </summary>
     public int Version{ get; private set; } = 1;
@@ -42,6 +48,7 @@ namespace Domain.Application.Models
       ID = source.ID.Value;
       DisplayList = source.DisplayList;
       IsAdminRole = source.IsAdminRole;
+      IsViewListRole = source.IsViewListRole;
       Version = source.Version;
     }
   }
