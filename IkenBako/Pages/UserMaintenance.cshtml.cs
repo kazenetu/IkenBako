@@ -226,6 +226,7 @@ namespace IkenBako.Pages
         EditTarget.DisplayName = receiver.DisplayName;
         EditTarget.DisplayList = receiver.DisplayList;
         EditTarget.IsAdminRole= receiver.IsAdminRole;
+        EditTarget.IsViewListRole= receiver.IsViewListRole;
         EditTargetReceiverVersion = receiver.Version;
       }
 
