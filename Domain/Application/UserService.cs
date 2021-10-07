@@ -101,12 +101,13 @@ namespace Domain.Application
     /// <param name="displayName">受信者名</param>
     /// <param name="displayList">送信元表示</param>
     /// <param name="isAdminRole">管理者権限</param>
+    /// <param name="isViewlistRole">一覧確認権限</param>
     /// <param name="receiverVersion">取得時の受信マスタのバージョン</param>
     /// <param name="newPassword">再設定のパスワード(平文)</param>
     /// <returns>登録成功・失敗</returns>
     /// <remarks>newPasswordがnullの場合はパスワード変更を行わない</remarks>
     public bool Save(string ID, int userVersion,
-                     bool useReceiver, string displayName, bool displayList, bool isAdminRole, int receiverVersion,
+                     bool useReceiver, string displayName, bool displayList, bool isAdminRole, bool isViewlistRole, int receiverVersion,
                      string newPassword)
     {
       try
@@ -138,7 +139,7 @@ namespace Domain.Application
         Receiver targetReceiver = null;
         if (useReceiver)
         {
-          targetReceiver = Receiver.Create(displayName, ID, displayList, isAdminRole, receiverVersion);
+          targetReceiver = Receiver.Create(displayName, ID, displayList, isAdminRole, isViewlistRole, receiverVersion);
         }
 
         // DB更新
