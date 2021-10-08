@@ -114,7 +114,8 @@ namespace IkenBako.Pages
           IsReceiver = user.Receiver != null,
           DisplayName = user.Receiver != null ? user.Receiver.DisplayName : string.Empty,
           DisplayList = user.Receiver != null && user.Receiver.DisplayList,
-          IsAdminRole = user.Receiver != null && user.Receiver.IsAdminRole
+          IsAdminRole = user.Receiver != null && user.Receiver.IsAdminRole,
+          IsViewListRole = user.Receiver != null && user.Receiver.IsViewListRole
         };
       });
 
