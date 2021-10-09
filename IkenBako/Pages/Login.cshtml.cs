@@ -100,7 +100,10 @@ namespace IkenBako.Pages
       // 一覧表示権限・管理者権限のチェック
       var receiver = receiverService.GetReceiver(Target);
       if(receiver != null){
-        HttpContext.Session.SetString(KEY_RECEIVER, receiver.ID);
+        // 一覧確認権限がある場合のみ設定
+        if(receiver.IsViewListRole){
+          HttpContext.Session.SetString(KEY_RECEIVER, receiver.ID);
+        }
 
         // 管理者権限がある場合のみ設定
         if(receiver.IsAdminRole)
