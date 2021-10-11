@@ -114,7 +114,8 @@ namespace IkenBako.Pages
           IsReceiver = user.Receiver != null,
           DisplayName = user.Receiver != null ? user.Receiver.DisplayName : string.Empty,
           DisplayList = user.Receiver != null && user.Receiver.DisplayList,
-          IsAdminRole = user.Receiver != null && user.Receiver.IsAdminRole
+          IsAdminRole = user.Receiver != null && user.Receiver.IsAdminRole,
+          IsViewListRole = user.Receiver != null && user.Receiver.IsViewListRole
         };
       });
 
@@ -226,6 +227,7 @@ namespace IkenBako.Pages
         EditTarget.DisplayName = receiver.DisplayName;
         EditTarget.DisplayList = receiver.DisplayList;
         EditTarget.IsAdminRole= receiver.IsAdminRole;
+        EditTarget.IsViewListRole= receiver.IsViewListRole;
         EditTargetReceiverVersion = receiver.Version;
       }
 
@@ -261,6 +263,7 @@ namespace IkenBako.Pages
       EditTarget.DisplayName = string.Empty;
       EditTarget.DisplayList = false;
       EditTarget.IsAdminRole = false;
+      EditTarget.IsViewListRole= true;
       EditTargetUserVersion = VERSION_NONE;
       EditTargetReceiverVersion = VERSION_NONE;
 
@@ -363,7 +366,7 @@ namespace IkenBako.Pages
         newPassword = EditPassword;
       }
       var dbResult = userService.Save(EditTarget.ID, EditTargetUserVersion, 
-                                      EditTarget.IsReceiver, EditTarget.DisplayName, EditTarget.DisplayList, EditTarget.IsAdminRole, EditTargetReceiverVersion, 
+                                      EditTarget.IsReceiver, EditTarget.DisplayName, EditTarget.DisplayList, EditTarget.IsAdminRole, EditTarget.IsViewListRole, EditTargetReceiverVersion, 
                                       newPassword);
 
       if (dbResult)

@@ -1,7 +1,7 @@
 namespace Domain.Domain.Users
 {
   /// <summary>
-  /// ユーザー
+  /// ユーザーEntity
   /// </summary>
   public class User
   {

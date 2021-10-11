@@ -3,7 +3,7 @@
 namespace Domain.Domain.Receivers
 {
   /// <summary>
-  /// 受信者マスタ
+  /// 受信者Entity
   /// </summary>
   public class Receiver
   {
@@ -29,6 +29,12 @@ namespace Domain.Domain.Receivers
     /// </summary>
     /// <remarks>一覧ですべてを選択できるか</remarks>
     public bool IsAdminRole { get; private set; } = false;
+
+    /// <summary>
+    /// 一覧確認権限
+    /// </summary>
+    /// <remarks>一覧の表示権限があるか</remarks>
+    public bool IsViewListRole { get; private set; } = true;
 
     /// <summary>
     /// 更新バージョン
@@ -70,6 +76,20 @@ namespace Domain.Domain.Receivers
     public static Receiver Create(string displayName, string id, bool displayList, bool isAdminRole, int version = 1)
     {
       return new Receiver(displayName, new ReceiverId(id), version){DisplayList = displayList, IsAdminRole= isAdminRole};
+    }
+
+    /// <summary>
+    /// 受信者インスタンスの作成
+    /// </summary>
+    /// <param name="displayName">受信者表示名</param>
+    /// <param name="id">受信者ID</param>
+    /// <param name="displayList">送信先に表示するか</param>
+    /// <param name="isAdminRole">一覧ですべてを選択できるか</param>
+    /// <param name="isViewListRole">一覧の表示権限があるか</param>
+    /// <param name="version">更新バージョン</param>
+    public static Receiver Create(string displayName, string id, bool displayList, bool isAdminRole, bool isViewListRole, int version = 1)
+    {
+      return new Receiver(displayName, new ReceiverId(id), version){DisplayList = displayList, IsAdminRole = isAdminRole, IsViewListRole = isViewListRole};
     }
   }
 }

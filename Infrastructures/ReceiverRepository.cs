@@ -74,6 +74,7 @@ namespace Infrastructures
         var name = row["fullname"].ToString();
         var displayList = false;
         var isAdminRole = false;
+        var isViewlistRole = false;
         var version = int.Parse(row["version"].ToString());
 
         if(!bool.TryParse(row["display_list"].ToString(), out displayList))
@@ -92,7 +93,15 @@ namespace Infrastructures
           }
         }
 
-        result = Receiver.Create(name, id, displayList, isAdminRole, version);
+        if (!bool.TryParse(row["is_viewlist_role"].ToString(), out isViewlistRole))
+        {
+          if (int.TryParse(row["is_viewlist_role"].ToString(), out var isViewlistRoleValue))
+          {
+            isViewlistRole = isViewlistRoleValue == 1;
+          }
+        }
+
+        result = Receiver.Create(name, id, displayList, isAdminRole, isViewlistRole, version);
 
         break;
       }

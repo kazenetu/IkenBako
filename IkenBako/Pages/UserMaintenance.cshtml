@@ -34,6 +34,7 @@
                             <th>受信者名</th>
                             <th>送信対象に表示</th>
                             <th>管理者権限</th>
+                            <th>一覧確認権限</th>
                             <th>編集</th>
                         </tr>
                         @foreach (var user in Model.Users)
@@ -47,6 +48,7 @@
                                         <td>@user.ViewDisplayName</td>
                                         <td>@user.ViewDisplayList</td>
                                         <td>@user.ViewIsAdminRole</td>
+                                        <td>@user.ViewIsViewListRole</td>
                                         <td>
                                             <input class="btn btn-primary mb-2 float-right" type="submit" value="編集" asp-route-id="@user.ID"  asp-page-handler="Edit"/>
                             </td>
@@ -120,6 +122,13 @@
                         <label class="col-md-4">管理者</label>
                         <input asp-for="EditTarget.IsAdminRole" id="EditAdminRole" class="receiverItem" />
                         <label class="col-md-5" for="EditAdminRole">権限あり</label>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <label class="col-md-4">一覧確認権限</label>
+                        <input asp-for="EditTarget.IsViewListRole" id="IsViewListRole" class="receiverItem" />
+                        <label class="col-md-5" for="IsViewListRole">権限あり</label>
                     </div>
                 </div>
             </div>

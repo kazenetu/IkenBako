@@ -35,6 +35,12 @@ namespace IkenBako.ViewModels
     /// <remarks>一覧ですべてを選択できるか</remarks>
     public bool IsAdminRole { get; set; } = false;
 
+    /// <summary>
+    /// 一覧確認権限
+    /// </summary>
+    /// <remarks>一覧の表示権限があるか</remarks>
+    public bool IsViewListRole { get; set; } = true;
+
     #region 表示用
     /// <summary>
     /// 一覧表示用受信者か否か
@@ -82,6 +88,20 @@ namespace IkenBako.ViewModels
         return IsReceiver ? result : "-";
       }
     }
+
+    /// <summary>
+    /// 一覧確認権限
+    /// </summary>
+    /// <remarks>一覧の表示権限があるか</remarks>
+    public string ViewIsViewListRole
+    {
+      get
+      {
+        var result = IsViewListRole ? "〇" : "×";
+        return IsReceiver ? result : "-";
+      }
+    }
+
     #endregion
 
   }

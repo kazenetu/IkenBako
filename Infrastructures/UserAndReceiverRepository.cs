@@ -66,6 +66,7 @@ namespace Infrastructures
       sql.AppendLine(" ,m_receiver.fullname");
       sql.AppendLine(" ,m_receiver.display_list");
       sql.AppendLine(" ,m_receiver.is_admin_role");
+      sql.AppendLine(" ,m_receiver.is_viewlist_role");
       sql.AppendLine(" ,m_receiver.version r_version");
       sql.AppendLine("FROM");
       sql.AppendLine("  m_user");
@@ -99,6 +100,7 @@ namespace Infrastructures
           var name = row["fullname"].ToString();
           var displayList = false;
           var isAdminRole = false;
+          var isViewlistRole = false;
           var r_version = int.Parse(row["r_version"].ToString());
 
           if (!bool.TryParse(row["display_list"].ToString(), out displayList))
@@ -117,7 +119,15 @@ namespace Infrastructures
             }
           }
 
-          receiver = Receiver.Create(name, id, displayList, isAdminRole, r_version);
+          if (!bool.TryParse(row["is_viewlist_role"].ToString(), out isViewlistRole))
+          {
+            if (int.TryParse(row["is_viewlist_role"].ToString(), out var isViewlistRoleValue))
+            {
+              isViewlistRole = isViewlistRoleValue == 1;
+            }
+          }
+
+          receiver = Receiver.Create(name, id, displayList, isAdminRole, isViewlistRole, version);
         }
 
         // 集約エンティティ作成
@@ -237,13 +247,14 @@ namespace Infrastructures
         db.AddParam("@fullname", target.UserReceiver.DisplayName);
         db.AddParam("@display_list", target.UserReceiver.DisplayList);
         db.AddParam("@is_admin_role", target.UserReceiver.IsAdminRole);
+        db.AddParam("@is_viewlist_role", target.UserReceiver.IsViewListRole);
 
         if (dbReceiver is null)
         {
           // 更新対象がいない場合は登録
           var insrtSQL = new StringBuilder();
-          insrtSQL.AppendLine("INSERT INTO m_receiver(unique_name, fullname, display_list, is_admin_role)");
-          insrtSQL.AppendLine("VALUES(@unique_name, @fullname, @display_list, @is_admin_role)");
+          insrtSQL.AppendLine("INSERT INTO m_receiver(unique_name, fullname, display_list, is_admin_role, is_viewlist_role)");
+          insrtSQL.AppendLine("VALUES(@unique_name, @fullname, @display_list, @is_admin_role, @is_viewlist_role)");
 
           // SQL発行
           if (db.ExecuteNonQuery(insrtSQL.ToString()) == 1)
@@ -263,6 +274,7 @@ namespace Infrastructures
         updateSQL.AppendLine("fullname = @fullname,");
         updateSQL.AppendLine("display_list = @display_list,");
         updateSQL.AppendLine("is_admin_role = @is_admin_role,");
+        updateSQL.AppendLine("is_viewlist_role = @is_viewlist_role,");
         updateSQL.AppendLine("version = version+1");
         updateSQL.AppendLine("WHERE");
         updateSQL.AppendLine("  unique_name = @unique_name");
