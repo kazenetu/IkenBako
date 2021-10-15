@@ -8,14 +8,14 @@ namespace Domain.Domain.Users
   public class UserId : IEquatable<UserId>
   {
     /// <summary>
-    /// 送信対象ID
+    /// ユーザーID
     /// </summary>
     public string Value { get; }
 
     /// <summary>
     /// コンストラクタ
     /// </summary>
-    /// <param name="id">送信対象ID</param>
+    /// <param name="id">ユーザーID</param>
     public UserId(string id)
     {
       if (string.IsNullOrEmpty(id))

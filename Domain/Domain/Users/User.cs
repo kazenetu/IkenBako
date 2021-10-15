@@ -6,7 +6,7 @@ namespace Domain.Domain.Users
   public class User
   {
     /// <summary>
-    /// 送信対象ID
+    /// ユーザーID
     /// </summary>
     /// <remarks>アルファベットで表現すること</remarks>
     public UserId ID { get; private set; }
@@ -29,7 +29,7 @@ namespace Domain.Domain.Users
     /// <summary>
     /// コンストラクタ
     /// </summary>
-    /// <param name="id">送信対象ID</param>
+    /// <param name="id">ユーザーID</param>
     /// <param name="password">パスワード</param>
     /// <param name="salt">ソルト</param>
     /// <param name="version">更新バージョン</param>
@@ -44,7 +44,7 @@ namespace Domain.Domain.Users
     /// <summary>
     /// ユーザーインスタンスの作成
     /// </summary>
-    /// <param name="id">送信対象ID</param>
+    /// <param name="id">ユーザーID</param>
     /// <param name="password">パスワード</param>
     /// <param name="salt">ソルト</param>
     /// <param name="version">更新バージョン</param>
