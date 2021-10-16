@@ -12,7 +12,7 @@ namespace Domain.Domain.Users
     public UserId ID { get; private set; }
 
     /// <summary>
-    /// パスワード
+    /// ハッシュ化済パスワード
     /// </summary>
     public string Password { get; private set; } = string.Empty;
 
@@ -30,7 +30,7 @@ namespace Domain.Domain.Users
     /// コンストラクタ
     /// </summary>
     /// <param name="id">ユーザーID</param>
-    /// <param name="password">パスワード</param>
+    /// <param name="password">ハッシュ化済パスワード</param>
     /// <param name="salt">ソルト</param>
     /// <param name="version">更新バージョン</param>
     protected User(UserId id, string password, string salt, int version)
@@ -45,7 +45,7 @@ namespace Domain.Domain.Users
     /// ユーザーインスタンスの作成
     /// </summary>
     /// <param name="id">ユーザーID</param>
-    /// <param name="password">パスワード</param>
+    /// <param name="password">ハッシュ化済パスワード</param>
     /// <param name="salt">ソルト</param>
     /// <param name="version">更新バージョン</param>
     public static User Create(string id, string password, string salt, int version = 1)

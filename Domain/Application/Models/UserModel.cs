@@ -11,7 +11,7 @@ namespace Domain.Application.Models
     public string ID { get; private set; }
 
     /// <summary>
-    /// パスワード
+    /// ハッシュ化済パスワード
     /// </summary>
     public string Password { get; private set; } = string.Empty;
 
