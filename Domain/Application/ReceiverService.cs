@@ -6,7 +6,7 @@ using System.Linq;
 namespace Domain.Application
 {
   /// <summary>
-  /// 送信対象者
+  /// 送信対象者用サービス
   /// </summary>
   public class ReceiverService
   {

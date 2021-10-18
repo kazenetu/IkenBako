@@ -9,7 +9,7 @@ using System.Linq;
 namespace Domain.Application
 {
   /// <summary>
-  /// ユーザー
+  /// ユーザー用サービス
   /// </summary>
   public class UserService
   {
