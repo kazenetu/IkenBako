@@ -85,17 +85,5 @@ namespace Infrastructures
     {
       db.Rollback();
     }
-
-
-    /// <summary>
-    /// サブクラスへのキャスト
-    /// </summary>
-    /// <typeparam name="T">サブクラス</typeparam>
-    /// <returns>サブクラスのインスタンス</returns>
-    public virtual T Cast<T>() where T : IRepositoryBase
-    {
-      // インスタンスを作成して返す
-      return (T)Activator.CreateInstance(typeof(T), db);
-    }
   }
 }
