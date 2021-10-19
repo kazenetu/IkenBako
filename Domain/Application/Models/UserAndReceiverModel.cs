@@ -4,7 +4,7 @@ using Domain.Domain.Users;
 namespace Domain.Application.Models
 {
   /// <summary>
-  /// ユーザーと受信者の集約Entity
+  /// ユーザーと受信者の集約モデル
   /// </summary>
   public class UserAndReceiverModel: UserModel
   {

@@ -2,6 +2,9 @@
 
 namespace Domain.Application.Models
 {
+  /// <summary>
+  /// 受信者モデル
+  /// </summary>
   public class ReceiverModel
   {
     /// <summary>

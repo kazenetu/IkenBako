@@ -2,6 +2,9 @@ using Domain.Domain.Users;
 
 namespace Domain.Application.Models
 {
+  /// <summary>
+  /// ユーザーモデル
+  /// </summary>
   public class UserModel
   {
     /// <summary>

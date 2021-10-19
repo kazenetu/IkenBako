@@ -3,7 +3,7 @@
 namespace Domain.Application.Models
 {
   /// <summary>
-  /// 表示用意見メッセージ
+  /// 表示用意見メッセージモデル
   /// </summary>
   public class DisplayMessageModel : MessageModel
   {
