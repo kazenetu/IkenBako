@@ -28,30 +28,30 @@
                 <form method="POST">
                     <table class="table table-bordered mx-sm-auto">
                         <tr>
-                            <th>削除</th>
-                            <th>ID</th>
-                            <th>受信者</th>
-                            <th>受信者名</th>
-                            <th>送信対象に表示</th>
-                            <th>管理者権限</th>
-                            <th>一覧確認権限</th>
-                            <th>編集</th>
+                            <th class="col-1 text-center">削除</th>
+                            <th>ユーザーID</th>
+                            <th>ユーザー名</th>
+                            <th class="col-1 text-center" style="word-wrap:break-word;">受信者</th>
+                            <th class="col-1 text-center" style="word-wrap:break-word;">送信対象に表示</th>
+                            <th class="col-1 text-center" style="word-wrap:break-word;">管理者権限</th>
+                            <th class="col-1 text-center" style="word-wrap:break-word;">一覧確認権限</th>
+                            <th class="col-1 text-center">編集</th>
                         </tr>
                         @foreach (var user in Model.Users)
                         {
-                                    <tr>
-                                        <td>
-                                            <input type="checkbox" id="remove_@user.ID" class="remove" />
-                                        </td>
-                                        <td>@user.ID</td>
-                                        <td>@user.ViewIsReceiver</td>
-                                        <td>@user.ViewDisplayName</td>
-                                        <td>@user.ViewDisplayList</td>
-                                        <td>@user.ViewIsAdminRole</td>
-                                        <td>@user.ViewIsViewListRole</td>
-                                        <td>
-                                            <input class="btn btn-primary mb-2 float-right" type="submit" value="編集" asp-route-id="@user.ID"  asp-page-handler="Edit"/>
-                            </td>
+                            <tr>
+                                <td class="text-center">
+                                    <input type="checkbox" id="remove_@user.ID" class="remove" />
+                                </td>
+                                <td>@user.ID</td>
+                                <td>@user.ViewDisplayName</td>
+                                <td class="text-center">@user.ViewIsReceiver</td>
+                                <td class="text-center">@user.ViewDisplayList</td>
+                                <td class="text-center">@user.ViewIsAdminRole</td>
+                                <td class="text-center">@user.ViewIsViewListRole</td>
+                                <td class="text-center">
+                                    <input class="btn btn-primary mb-2 float-right" type="submit" value="編集" asp-route-id="@user.ID"  asp-page-handler="Edit"/>
+                                </td>
                             </tr>
                         }
                     </table>
