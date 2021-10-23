@@ -236,6 +236,22 @@ namespace IkenBako.Pages
     }
 
     /// <summary>
+    /// URLでIDの指定
+    /// </summary>
+    /// <param name="id">ユーザーID</param>
+    public IActionResult OnGetEdit(string id)
+    {
+      // ページの閲覧権限チェック
+      if (!CanUsePage())
+      {
+        return RedirectToPage("/Login");
+      }
+
+      // URLでIDを指定した場合は強制的にGetメソッドを呼ぶ
+      return RedirectToPage();
+    }
+
+    /// <summary>
     /// 編集項目クリア
     /// </summary>
     public IActionResult OnPostClear()
