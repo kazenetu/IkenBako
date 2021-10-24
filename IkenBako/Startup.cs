@@ -30,10 +30,10 @@ namespace IkenBako
 
       // DI設定
       // リポジトリ
-      services.AddSingleton<IMessageRepository, MessageRepository>();
-      services.AddSingleton<IReceiverRepository, ReceiverRepository>();
-      services.AddSingleton<IUserRepository, UserRepository>();
-      services.AddSingleton<IUserAndReceiverRepository, UserAndReceiverRepository>();
+      services.AddTransient<IMessageRepository, MessageRepository>();
+      services.AddTransient<IReceiverRepository, ReceiverRepository>();
+      services.AddTransient<IUserRepository, UserRepository>();
+      services.AddTransient<IUserAndReceiverRepository, UserAndReceiverRepository>();
 
       // Configを専用Modelに設定
       var dbRoot = Configuration.GetSection("DB");
