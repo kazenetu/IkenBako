@@ -432,6 +432,12 @@ namespace IkenBako.Pages
 
       if (dbResult)
       {
+        // 新規作成の場合は最終ページ+1に遷移
+        if (!IsEdit)
+        {
+          HttpContext.Session.SetInt32(KEY_PAGE_INDEX, DisplayUsers.TotalPages + 1); 
+        }
+
         // 登録成功時は一覧の再表示
         return RedirectToPage();
       }
