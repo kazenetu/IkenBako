@@ -16,6 +16,8 @@ namespace IkenBako.Pages
   public class UserMaintenanceModel : PageModel
   {
     private const string KEY_USER_LIST = "KEY_USER_LIST";
+    private const string KEY_PAGE_INDEX = "KEY_PAGE_INDEX";
+    private const int PAGE_SIZE = 4;
     private const int VERSION_NONE = -1;
 
     private readonly ILogger<UserMaintenanceModel> _logger;
@@ -34,6 +36,11 @@ namespace IkenBako.Pages
     /// ユーザーリスト
     /// </summary>
     public List<UserViewModel> Users { get; private set; } = new List<UserViewModel>();
+
+    /// <summary>
+    /// 表示用ユーザーリスト
+    /// </summary>
+    public PaginatedList<UserViewModel> DisplayUsers  { get; private set; } 
 
     /// <summary>
     /// 編集ユーザー情報
@@ -132,7 +139,41 @@ namespace IkenBako.Pages
         ViewData["Message"] = "ユーザーはありません。";
       }
 
+      DisplayUsers = GetDisplayUsers(userList);
+
       return Page();
+    }
+
+    /// <summary>
+    /// ページ変更
+    /// </summary>
+    /// <param name="pageIndex">変更後のページインデックス</param>
+    public IActionResult OnPostPageChange(string pageIndex)
+    {
+      // ページの閲覧権限チェック
+      if (!CanUsePage())
+      {
+        return RedirectToPage("/Login");
+      }
+
+      // 一覧復元
+      if (HttpContext.Session.Keys.Contains(KEY_USER_LIST))
+      {
+        Users.Clear();
+        var bytes = HttpContext.Session.Get(KEY_USER_LIST);
+        Users.AddRange(JsonSerializer.Deserialize<List<UserViewModel>>(bytes));
+
+        var pageIndexValue = 1;
+        if(!int.TryParse(pageIndex, out pageIndexValue))
+        {
+          pageIndexValue = 1;
+        }
+
+        DisplayUsers = GetDisplayUsers(Users, pageIndexValue);
+      }
+
+      // 再表示
+      return RedirectToPage();
     }
 
     /// <summary>
@@ -152,6 +193,7 @@ namespace IkenBako.Pages
         Users.Clear();
         var bytes = HttpContext.Session.Get(KEY_USER_LIST);
         Users.AddRange(JsonSerializer.Deserialize<List<UserViewModel>>(bytes));
+        DisplayUsers = GetDisplayUsers(Users);
       }
 
       if(!string.IsNullOrEmpty(RemoveItemsJson))
@@ -207,6 +249,7 @@ namespace IkenBako.Pages
         Users.Clear();
         var bytes = HttpContext.Session.Get(KEY_USER_LIST);
         Users.AddRange(JsonSerializer.Deserialize<List<UserViewModel>>(bytes));
+        DisplayUsers = GetDisplayUsers(Users);
       }
 
       if (string.IsNullOrEmpty(id))
@@ -268,6 +311,7 @@ namespace IkenBako.Pages
         Users.Clear();
         var bytes = HttpContext.Session.Get(KEY_USER_LIST);
         Users.AddRange(JsonSerializer.Deserialize<List<UserViewModel>>(bytes));
+        DisplayUsers = GetDisplayUsers(Users);
       }
 
       // 編集項目をクリア
@@ -304,6 +348,7 @@ namespace IkenBako.Pages
         Users.Clear();
         var bytes = HttpContext.Session.Get(KEY_USER_LIST);
         Users.AddRange(JsonSerializer.Deserialize<List<UserViewModel>>(bytes));
+        DisplayUsers = GetDisplayUsers(Users);
       }
 
       // 入力チェック
@@ -410,6 +455,41 @@ namespace IkenBako.Pages
       }
 
       return true;
+    }
+
+    /// <summary>
+    /// 表示用ユーザー一覧の取得
+    /// </summary>
+    /// <param name="srcList">ユーザー一覧</param>
+    /// <param name="changedIndex">変更後のページインデックス</param>
+    /// <returns>表示用ユーザー一覧</returns>
+    private PaginatedList<UserViewModel> GetDisplayUsers(List<UserViewModel> srcList, int changedIndex = 0)
+    {
+      // ページインデックスをセッションから取得
+      var pageIndex = 1;
+      if (HttpContext.Session.Keys.Contains(KEY_PAGE_INDEX))
+      {
+        var sessionPageIndex = HttpContext.Session.GetInt32(KEY_PAGE_INDEX);
+        if (sessionPageIndex.HasValue)
+          pageIndex = sessionPageIndex.Value;
+      }
+
+      if (changedIndex != 0)
+      {
+        // 変更後のページインデックスを反映
+        pageIndex = changedIndex;
+      }
+
+      // ページング機能付きリストを生成
+      var result = PaginatedList<UserViewModel>.Create(srcList.AsQueryable(), pageIndex, PAGE_SIZE);
+
+      if (changedIndex != 0)
+      {
+        // 正しく訂正された変更後のページインデックスをセッションに格納
+        HttpContext.Session.SetInt32(KEY_PAGE_INDEX, result.PageIndex);
+      }
+
+      return result;
     }
   }
 }
