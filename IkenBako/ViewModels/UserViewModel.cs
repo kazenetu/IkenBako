@@ -1,6 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
-
-namespace IkenBako.ViewModels
+﻿namespace IkenBako.ViewModels
 {
   /// <summary>
   /// ユーザーメンテナンス
