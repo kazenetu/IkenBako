@@ -178,14 +178,15 @@ dockerがインストール済みであること
 * 意見投稿画面  
   ![](doc/images/send_message.png)  
 
-* メッセージ一覧：メッセージ受信者対象選択  
-   ![](doc/images/message_list1.png)  
+* メッセージ一覧
+  * メッセージ受信者対象選択  
+    ![](doc/images/message_list1.png)  
 
-* メッセージ一覧：メッセージ一覧表示  
-  ![](doc/images/message_list2.png)  
+  * メッセージ一覧表示  
+    ![](doc/images/message_list2.png)  
 
-* メッセージ一覧：メッセージなし  
-  ![](doc/images/message_list3.png)  
+  * メッセージなし  
+    ![](doc/images/message_list3.png)  
 
 * ユーザーメンテナンス  
   ![](doc/images/userMainte.png)  
