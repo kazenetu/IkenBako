@@ -165,6 +165,16 @@ dockerがインストール済みであること
 * ログイン画面(AllLoginがfalseの場合は一般ユーザーはログイン不要)  
   ![](doc/images/login.png)  
 
+* メニュー種類
+  * 未ログイン時(AllLoginがfalseの場合の一般ユーザー)  
+    ![](doc/images/menu_not_login.png)  
+  * ログイン時:一般ユーザー  
+    ![](doc/images/menu_user.png)  
+  * ログイン時:受信者ユーザー  
+    ![](doc/images/menu_receiver.png)  
+  * ログイン時:管理者ユーザー  
+    ![](doc/images/menu_admin.png)  
+
 * 意見投稿画面  
   ![](doc/images/send_message.png)  
 
