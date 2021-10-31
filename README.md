@@ -125,7 +125,7 @@ dockerがインストール済みであること
   ```  
   * Setting/AllLogin  
     すべてのユーザーはログイン必須(true/false)  
-    省略時：false
+    省略時：true
 
 * 環境変数  
   コロン(:)で区切る
