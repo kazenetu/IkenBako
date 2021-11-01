@@ -34,6 +34,7 @@ namespace Infrastructures
       sql.AppendLine("  m_receiver");
       sql.AppendLine("WHERE ");
       sql.AppendLine("  display_list = true");
+      sql.AppendLine("ORDER BY unique_name");
 
       var sqlResult = db.Fill(sql.ToString());
       foreach(DataRow row in sqlResult.Rows)
