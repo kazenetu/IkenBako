@@ -16,6 +16,7 @@ namespace IkenBako.Pages
   {
     private const string KEY_USER_LIST = "KEY_USER_LIST";
     private const string KEY_PAGE_INDEX = "KEY_PAGE_INDEX";
+    private const string KEY_CREATED_ID = "KEY_EDITED_ID";
     private const int PAGE_SIZE = 4;
     private const int VERSION_NONE = -1;
 
@@ -128,6 +129,33 @@ namespace IkenBako.Pages
       // セッションに一覧を格納
       var userList = userMaintenanceModels.ToList();
       HttpContext.Session.Set(KEY_USER_LIST, JsonSerializer.SerializeToUtf8Bytes(userList));
+
+      // 新規作成している場合は対象ページを開く
+      if (HttpContext.Session.Keys.Contains(KEY_CREATED_ID))
+      {
+        var createdId = HttpContext.Session.GetString(KEY_CREATED_ID);
+
+        // リスト内に対象IDが存在するか確認
+        var targetIndex = -1;
+        for (var i = 0; i < userList.Count; i++)
+        {
+          if (userList[i].ID == createdId)
+          {
+            targetIndex = i;
+            break;
+          }
+        }
+
+        // 新規作成IDを削除
+        HttpContext.Session.Remove(KEY_CREATED_ID);
+
+        // リスト内に新規作成が存在する場合はインデックスからページ数を設定する
+        if (targetIndex >= 0)
+        {
+          HttpContext.Session.SetInt32(KEY_PAGE_INDEX, (targetIndex / PAGE_SIZE) + 1); // ページ数は1ベースのため+1する
+        }
+      }
+
 
       Users.Clear();
       Users.AddRange(userList);
@@ -278,22 +306,6 @@ namespace IkenBako.Pages
     }
 
     /// <summary>
-    /// URLでIDの指定
-    /// </summary>
-    /// <param name="id">ユーザーID</param>
-    public IActionResult OnGetEdit(string id)
-    {
-      // ページの閲覧権限チェック
-      if (!CanUsePage())
-      {
-        return RedirectToPage("/Login");
-      }
-
-      // URLでIDを指定した場合は強制的にGetメソッドを呼ぶ
-      return RedirectToPage();
-    }
-
-    /// <summary>
     /// 編集項目クリア
     /// </summary>
     public IActionResult OnPostClear()
@@ -431,10 +443,10 @@ namespace IkenBako.Pages
 
       if (dbResult)
       {
-        // 新規作成の場合は最終ページ+1に遷移
+        // 新規作成の場合は専用セッションにユーザーIDを格納
         if (!IsEdit)
         {
-          HttpContext.Session.SetInt32(KEY_PAGE_INDEX, DisplayUsers.TotalPages + 1); 
+          HttpContext.Session.SetString(KEY_CREATED_ID, EditTarget.ID); 
         }
 
         // 登録成功時は一覧の再表示

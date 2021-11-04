@@ -82,6 +82,10 @@ namespace Infrastructures
         // Param設定
         db.AddParam("@unique_name", userId.Value);
       }
+      else
+      {
+        sql.AppendLine("ORDER BY m_user.unique_name");
+      }
 
       var sqlResult = db.Fill(sql.ToString());
       foreach (DataRow row in sqlResult.Rows)
