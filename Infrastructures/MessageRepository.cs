@@ -69,6 +69,7 @@ namespace Infrastructures
         db.ClearParam();
         db.AddParam("@send_to", receiverId.Value);
       }
+      sql.AppendLine("ORDER BY id DESC");
 
       var sqlResult = db.Fill(sql.ToString());
       foreach (DataRow row in sqlResult.Rows)
