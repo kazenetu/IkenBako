@@ -131,7 +131,7 @@ namespace Infrastructures
             }
           }
 
-          receiver = Receiver.Create(name, id, displayList, isAdminRole, isViewlistRole, version);
+          receiver = Receiver.Create(name, id, displayList, isAdminRole, isViewlistRole, r_version);
         }
 
         // 集約エンティティ作成
