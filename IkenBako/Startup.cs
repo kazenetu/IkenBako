@@ -41,7 +41,7 @@ namespace IkenBako
 #if DEBUG
       var dbConnectionStrings = dbRoot.GetSection("ConnectionStrings");
       var dbTarget = dbRoot.GetSection("Target");
-      if (dbConnectionStrings.Value is null || dbTarget.Value is null)
+      if (dbTarget.Value is null)
       {
         // デバッグ時のみ未設定の場合はSQLiteを選択
         dbConnectionStrings.GetSection("sqlite").Value = "Resource/Test.db";
