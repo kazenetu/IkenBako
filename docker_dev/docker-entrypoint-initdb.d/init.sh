@@ -10,6 +10,7 @@ CREATE TABLE m_user(
  unique_name varchar(255) NOT NULL,
  password varchar(255) NOT NULL,
  salt varchar(255) NOT NULL,
+ disabled boolean default false,
  version integer default 1,
  primary key(unique_name)
 );
