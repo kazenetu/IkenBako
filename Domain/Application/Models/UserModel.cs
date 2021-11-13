@@ -24,6 +24,12 @@ namespace Domain.Application.Models
     public string Salt { get; private set; } = string.Empty;
 
     /// <summary>
+    /// 無効
+    /// </summary>
+    /// <remarks>trueの場合は無効</remarks>
+    public bool Disabled { get; private set; } = false;
+
+    /// <summary>
     /// 更新バージョン
     /// </summary>
     public int Version{ get; private set; } = 1;
@@ -37,6 +43,7 @@ namespace Domain.Application.Models
       ID = source.ID.Value;
       Password = source.Password;
       Salt = source.Salt;
+      Disabled = source.Disabled;
       Version = source.Version;
     }
   }
