@@ -62,6 +62,7 @@ namespace Infrastructures
       sql.AppendLine(" m_user.unique_name");
       sql.AppendLine(" ,m_user.password");
       sql.AppendLine(" ,m_user.salt");
+      sql.AppendLine(" ,m_user.disabled");
       sql.AppendLine(" ,m_user.version u_version");
       sql.AppendLine(" ,m_receiver.fullname");
       sql.AppendLine(" ,m_receiver.display_list");
@@ -95,7 +96,17 @@ namespace Infrastructures
         var password = row["password"].ToString();
         var salt = row["salt"].ToString();
         var version = int.Parse(row["u_version"].ToString());
-        var user = User.Create(id, password, salt, version);
+
+        var disabled = false;
+        if (!bool.TryParse(row["disabled"].ToString(), out disabled))
+        {
+          if (int.TryParse(row["disabled"].ToString(), out var disabledValue))
+          {
+            disabled = disabledValue == 1;
+          }
+        }
+
+        var user = User.Create(id, password, salt, version, disabled);
 
         // 受信者
         Receiver receiver = null;
