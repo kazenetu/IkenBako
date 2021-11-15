@@ -124,7 +124,7 @@ namespace Infrastructures
     public bool EqalsPassword(string unique_name, string password)
     {
       var target = GetUser(unique_name);
-      if (target is null) return false;
+      if (target is null || target.Disabled) return false;
 
       var salt = Convert.FromBase64String(target.Salt);
 
