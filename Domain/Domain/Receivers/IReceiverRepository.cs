@@ -10,8 +10,9 @@ namespace Domain.Domain.Receivers
     /// <summary>
     /// 受信者リストを取得
     /// </summary>
+    /// <param name="enabledList">有効な送信対象のみ取得</param>
     /// <returns>受信者メッセージリスト</returns>
-    List<Receiver> GetReceivers();
+    List<Receiver> GetReceivers(bool enabledList);
 
     /// <summary>
     /// 受信者を取得

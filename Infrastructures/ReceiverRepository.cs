@@ -22,19 +22,25 @@ namespace Infrastructures
     /// 受信者リストを取得
     /// </summary>
     /// <returns>受信者メッセージリスト</returns>
-    public List<Receiver> GetReceivers()
+    /// <param name="enabledList">有効な送信対象のみ取得</param>
+    public List<Receiver> GetReceivers(bool enabledList)
     {
       var result = new List<Receiver>();
 
       var sql = new StringBuilder();
       sql.AppendLine("SELECT");
-      sql.AppendLine("  unique_name");
+      sql.AppendLine("  m_receiver.unique_name");
       sql.AppendLine("  , fullname");
       sql.AppendLine("FROM");
       sql.AppendLine("  m_receiver");
-      sql.AppendLine("WHERE ");
-      sql.AppendLine("  display_list = true");
-      sql.AppendLine("ORDER BY unique_name");
+      if(enabledList){
+        sql.AppendLine("INNER JOIN m_user");
+        sql.AppendLine("  ON m_receiver.unique_name = m_user.unique_name");
+        sql.AppendLine("     AND m_user.disabled = false");
+        sql.AppendLine("WHERE ");
+        sql.AppendLine("  display_list = true");
+      }
+      sql.AppendLine("ORDER BY m_receiver.unique_name");
 
       var sqlResult = db.Fill(sql.ToString());
       foreach(DataRow row in sqlResult.Rows)
