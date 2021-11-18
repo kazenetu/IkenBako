@@ -43,7 +43,7 @@
                         <td class="text-center">
                             <input type="checkbox" id="remove_@user.ID" class="remove" />
                         </td>
-                        <td>@user.ID</td>
+                        <td>@user.ID<span style="color: red;">@user.ViewIsDisabled</span></td>
                         <td>@user.ViewDisplayName</td>
                         <td class="text-center">@user.ViewIsReceiver</td>
                         <td class="text-center">@user.ViewDisplayList</td>
@@ -149,6 +149,14 @@
                     </div>
                 </div>
                 <div class="row">
+                    <div class="col">
+                        <label class="col-md-4"></label>
+                        <input asp-for="EditTarget.Disabled" id="Disabled" />
+                        <label class="col-md-5" style="color: red;" for="Disabled">無効</label>
+                        <input type="hidden" value="@Model.EditTarget.Disabled.ToString()" id="BeforeDisabled" />
+                    </div>
+                </div>
+                <div class="row">
                     <div class="col text-right">
                         <input class="btn btn-primary mb-2" id="clear" name="clear" type="submit" value="クリア" asp-page-handler="Clear" />
                         <input class="btn btn-primary mb-2" id="save" name="save" type="submit" value="@Model.SaveButtonText" asp-page-handler="Save" />
@@ -194,6 +202,26 @@
             $("#RemoveItemsJson").val(JSON.stringify(json));
         });
 
+        // 更新
+        $("#save").click(function () {
+            if($("#IsEdit").val() === 'False') {
+                    return true;
+            }
+
+            if($("#Disabled:checked").length > 0 && $("#BeforeDisabled").val()==="False") {
+                // 削除確認
+                if (!window.confirm("無効にしますか？")) {
+                    return false;
+                }
+            }
+            if($("#Disabled:checked").length == 0 && $("#BeforeDisabled").val()==="True") {
+                // 削除確認
+                if (!window.confirm("有効にしますか？")) {
+                    return false;
+                }
+            }
+        });
+
         // パスワード設定切り替え
         $("#EditIsSetPassword").change(function () {
             var checked = $("#EditIsSetPassword:checked").length > 0;
@@ -207,7 +235,7 @@
         // クリア
         $("#clear").click(function () {
             // チェックボックスクリア
-            $("#EditIsSetPassword:checked,#EditReceiver:checked,.receiverItem:checked").prop("checked", "");
+            $("#EditIsSetPassword:checked,#Disabled:checked,#EditReceiver:checked,.receiverItem:checked").prop("checked", "");
         });
 
         // 送信者設定チェックボックス連携

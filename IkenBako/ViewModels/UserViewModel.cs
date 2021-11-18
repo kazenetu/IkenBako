@@ -39,6 +39,12 @@
     /// <remarks>一覧の表示権限があるか</remarks>
     public bool IsViewListRole { get; set; } = true;
 
+    /// <summary>
+    /// 無効
+    /// </summary>
+    /// <remarks>trueの場合は無効</remarks>
+    public bool Disabled { get; set; } = false;
+
     #region 表示用
     /// <summary>
     /// 一覧表示用受信者か否か
@@ -97,6 +103,17 @@
       {
         var result = IsViewListRole ? "〇" : "×";
         return IsReceiver ? result : "-";
+      }
+    }
+
+    /// <summary>
+    /// 無効状態
+    /// </summary>
+    public string ViewIsDisabled
+    {
+      get
+      {
+        return Disabled ? "(無効)" : "";
       }
     }
 
