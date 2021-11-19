@@ -20,7 +20,7 @@ namespace Domain.Domain.UserAndReceivers
     /// <param name="user">ユーザーエンティティ</param>
     /// <param name="receiver">受信者エンティティ</param>
     /// <remarks>受信者エンティティはnullを許容</remarks>
-    private UserAndReceiver(User user, Receiver receiver) : base(user.ID, user.Password, user.Salt, user.Version)
+    private UserAndReceiver(User user, Receiver receiver) : base(user.ID, user.Password, user.Salt, user.Disabled ,user.Version)
     {
       UserReceiver = receiver;
     }

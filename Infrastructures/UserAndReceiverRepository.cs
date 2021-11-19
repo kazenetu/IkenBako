@@ -62,6 +62,7 @@ namespace Infrastructures
       sql.AppendLine(" m_user.unique_name");
       sql.AppendLine(" ,m_user.password");
       sql.AppendLine(" ,m_user.salt");
+      sql.AppendLine(" ,m_user.disabled");
       sql.AppendLine(" ,m_user.version u_version");
       sql.AppendLine(" ,m_receiver.fullname");
       sql.AppendLine(" ,m_receiver.display_list");
@@ -95,7 +96,17 @@ namespace Infrastructures
         var password = row["password"].ToString();
         var salt = row["salt"].ToString();
         var version = int.Parse(row["u_version"].ToString());
-        var user = User.Create(id, password, salt, version);
+
+        var disabled = false;
+        if (!bool.TryParse(row["disabled"].ToString(), out disabled))
+        {
+          if (int.TryParse(row["disabled"].ToString(), out var disabledValue))
+          {
+            disabled = disabledValue == 1;
+          }
+        }
+
+        var user = User.Create(id, password, salt, version, disabled);
 
         // 受信者
         Receiver receiver = null;
@@ -192,6 +203,7 @@ namespace Infrastructures
         db.AddParam("@password", target.Password);
         db.AddParam("@salt", target.Salt);
         db.AddParam("@unique_name", target.ID.Value);
+        db.AddParam("@disabled", target.Disabled);
 
         if (dbUser is null)
         {
@@ -203,8 +215,8 @@ namespace Infrastructures
 
           // 更新対象がいない場合は登録
           var insrtSQL = new StringBuilder();
-          insrtSQL.AppendLine("INSERT into m_user(unique_name, password, salt)");
-          insrtSQL.AppendLine("VALUES(@unique_name, @password, @salt)");
+          insrtSQL.AppendLine("INSERT into m_user(unique_name, password, salt, disabled)");
+          insrtSQL.AppendLine("VALUES(@unique_name, @password, @salt, @disabled)");
 
           // SQL発行
           if (db.ExecuteNonQuery(insrtSQL.ToString()) == 1)
@@ -223,6 +235,7 @@ namespace Infrastructures
         updateSQL.AppendLine("SET");
         updateSQL.AppendLine("password = @password,");
         updateSQL.AppendLine("salt = @salt,");
+        updateSQL.AppendLine("disabled = @disabled,");
         updateSQL.AppendLine("version = version+1");
         updateSQL.AppendLine("WHERE");
         updateSQL.AppendLine("  unique_name = @unique_name");

@@ -104,11 +104,12 @@ namespace Domain.Application
     /// <param name="isViewlistRole">一覧確認権限</param>
     /// <param name="receiverVersion">取得時の受信マスタのバージョン</param>
     /// <param name="newPassword">再設定のパスワード(平文)</param>
+    /// <param name="disabled">無効状態</param>
     /// <returns>登録成功・失敗</returns>
     /// <remarks>newPasswordがnullの場合はパスワード変更を行わない</remarks>
     public bool Save(string ID, int userVersion,
                      bool useReceiver, string displayName, bool displayList, bool isAdminRole, bool isViewlistRole, int receiverVersion,
-                     string newPassword)
+                     string newPassword, bool disabled)
     {
       try
       {
@@ -135,7 +136,7 @@ namespace Domain.Application
         }
 
         // 登録するエンティティを生成
-        var targetUser = User.Create(ID, password, salt, userVersion);
+        var targetUser = User.Create(ID, password, salt, userVersion, disabled);
         Receiver targetReceiver = null;
         if (useReceiver)
         {

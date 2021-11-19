@@ -48,7 +48,17 @@ namespace Infrastructures
         var password = row["password"].ToString();
         var salt = row["salt"].ToString();
         var version = int.Parse(row["version"].ToString());
-        result = User.Create(id, password, salt, version);
+
+        var disabled = false;
+        if (!bool.TryParse(row["disabled"].ToString(), out disabled))
+        {
+          if (int.TryParse(row["disabled"].ToString(), out var disabledValue))
+          {
+            disabled = disabledValue == 1;
+          }
+        }
+
+        result = User.Create(id, password, salt, version, disabled);
         break;
       }
 
@@ -114,7 +124,7 @@ namespace Infrastructures
     public bool EqalsPassword(string unique_name, string password)
     {
       var target = GetUser(unique_name);
-      if (target is null) return false;
+      if (target is null || target.Disabled) return false;
 
       var salt = Convert.FromBase64String(target.Salt);
 

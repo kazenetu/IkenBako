@@ -73,7 +73,7 @@ namespace Domain.Application
     public List<DisplayMessageModel> Find(string receiverId)
     {
       var messages = repository.Find(new ReceiverId(receiverId));
-      var receivers = receiverService.GetList();
+      var receivers = receiverService.GetList(false, false);
       return messages.Select(message => new DisplayMessageModel(message, GetSendTargetName(message.SendTo.Value))).ToList();
 
       // 送信対象者の名称を取得

@@ -122,7 +122,8 @@ namespace IkenBako.Pages
           DisplayName = user.Receiver != null ? user.Receiver.DisplayName : string.Empty,
           DisplayList = user.Receiver != null && user.Receiver.DisplayList,
           IsAdminRole = user.Receiver != null && user.Receiver.IsAdminRole,
-          IsViewListRole = user.Receiver != null && user.Receiver.IsViewListRole
+          IsViewListRole = user.Receiver != null && user.Receiver.IsViewListRole,
+          Disabled = user.Disabled
         };
       });
 
@@ -289,6 +290,7 @@ namespace IkenBako.Pages
       var editTarget = userService.GetUser(id);
       var receiver = receiverService.GetReceiver(id);
       EditTarget.ID = editTarget.ID;
+      EditTarget.Disabled = editTarget.Disabled;
       EditTargetUserVersion = editTarget.Version;
       EditTargetReceiverVersion = -1;
       if (receiver != null)
@@ -303,6 +305,22 @@ namespace IkenBako.Pages
 
       // 表示
       return Page();
+    }
+
+    /// <summary>
+    /// URLでIDの指定
+    /// </summary>
+    /// <param name="id">ユーザーID</param>
+    public IActionResult OnGetEdit(string id)
+    {
+      // ページの閲覧権限チェック
+      if (!CanUsePage())
+      {
+        return RedirectToPage("/Login");
+      }
+
+      // URLでIDを指定した場合は強制的にGetメソッドを呼ぶ
+      return RedirectToPage();
     }
 
     /// <summary>
@@ -330,6 +348,7 @@ namespace IkenBako.Pages
       EditPassword = string.Empty;
       EditIsSetPassword = false;
       EditTarget.ID = string.Empty;
+      EditTarget.Disabled = false;
       EditTarget.IsReceiver = false;
       EditTarget.DisplayName = string.Empty;
       EditTarget.DisplayList = false;
@@ -439,7 +458,7 @@ namespace IkenBako.Pages
       }
       var dbResult = userService.Save(EditTarget.ID, EditTargetUserVersion, 
                                       EditTarget.IsReceiver, EditTarget.DisplayName, EditTarget.DisplayList, EditTarget.IsAdminRole, EditTarget.IsViewListRole, EditTargetReceiverVersion, 
-                                      newPassword);
+                                      newPassword, EditTarget.Disabled);
 
       if (dbResult)
       {
