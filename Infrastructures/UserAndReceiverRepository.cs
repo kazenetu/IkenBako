@@ -203,6 +203,7 @@ namespace Infrastructures
         db.AddParam("@password", target.Password);
         db.AddParam("@salt", target.Salt);
         db.AddParam("@unique_name", target.ID.Value);
+        db.AddParam("@disabled", target.Disabled);
 
         if (dbUser is null)
         {
@@ -214,8 +215,8 @@ namespace Infrastructures
 
           // 更新対象がいない場合は登録
           var insrtSQL = new StringBuilder();
-          insrtSQL.AppendLine("INSERT into m_user(unique_name, password, salt)");
-          insrtSQL.AppendLine("VALUES(@unique_name, @password, @salt)");
+          insrtSQL.AppendLine("INSERT into m_user(unique_name, password, salt, disabled)");
+          insrtSQL.AppendLine("VALUES(@unique_name, @password, @salt, @disabled)");
 
           // SQL発行
           if (db.ExecuteNonQuery(insrtSQL.ToString()) == 1)
@@ -234,6 +235,7 @@ namespace Infrastructures
         updateSQL.AppendLine("SET");
         updateSQL.AppendLine("password = @password,");
         updateSQL.AppendLine("salt = @salt,");
+        updateSQL.AppendLine("disabled = @disabled,");
         updateSQL.AppendLine("version = version+1");
         updateSQL.AppendLine("WHERE");
         updateSQL.AppendLine("  unique_name = @unique_name");

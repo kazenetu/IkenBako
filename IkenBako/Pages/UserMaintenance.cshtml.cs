@@ -458,7 +458,7 @@ namespace IkenBako.Pages
       }
       var dbResult = userService.Save(EditTarget.ID, EditTargetUserVersion, 
                                       EditTarget.IsReceiver, EditTarget.DisplayName, EditTarget.DisplayList, EditTarget.IsAdminRole, EditTarget.IsViewListRole, EditTargetReceiverVersion, 
-                                      newPassword);
+                                      newPassword, EditTarget.Disabled);
 
       if (dbResult)
       {
