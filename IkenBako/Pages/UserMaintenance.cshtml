@@ -178,13 +178,13 @@
 
             if (removeItems.length <= 0) {
                 $("#RemoveItemsJson").val("");
-                return;
+                return true;
             }
 
             // 削除確認
             if (!window.confirm("削除しますか？")) {
                 $("#RemoveItemsJson").val("");
-                return;
+                return false;
             }
 
             let json = '{"data":[';
