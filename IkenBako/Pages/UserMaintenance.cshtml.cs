@@ -224,10 +224,9 @@ namespace IkenBako.Pages
         DisplayUsers = GetDisplayUsers(Users);
       }
 
+      var errorMessages = new List<string>();
       if(!string.IsNullOrEmpty(RemoveItemsJson))
       {
-        var errorMessages = new List<string>();
-
         // JSON文字列をデシアライズ
         var json = RemoveItemsJson.Replace("\\", string.Empty).Replace("\"{", "{").Replace("}\"","}");
         var jsonDictionary = JsonSerializer.Deserialize<Dictionary<string, List<string>>>(json);
@@ -246,13 +245,17 @@ namespace IkenBako.Pages
         {
           errorMessages.Add("削除に失敗しました。");
         }
-
-        // エラーがある場合は終了
-        if (errorMessages.Any())
-        {
-          ViewData["ErrorMessages"] = errorMessages;
-          return Page();
-        }
+      }
+      else
+      {
+        errorMessages.Add("削除対象を選択してください。");
+      }
+      
+      // エラーがある場合は終了
+      if (errorMessages.Any())
+      {
+        ViewData["ErrorMessages"] = errorMessages;
+        return Page();
       }
 
       // 再表示
