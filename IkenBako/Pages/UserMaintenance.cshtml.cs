@@ -361,7 +361,7 @@ namespace IkenBako.Pages
       EditTargetReceiverVersion = VERSION_NONE;
 
       // 表示
-      return Page();
+      return RedirectToPage();
     }
 
     /// <summary>

@@ -232,12 +232,6 @@
             }
         });
 
-        // クリア
-        $("#clear").click(function () {
-            // チェックボックスクリア
-            $("#EditIsSetPassword:checked,#Disabled:checked,#EditReceiver:checked,.receiverItem:checked").prop("checked", "");
-        });
-
         // 送信者設定チェックボックス連携
         changeEdit = function () {
             if ($("#EditReceiver:checked").length == 1) {
