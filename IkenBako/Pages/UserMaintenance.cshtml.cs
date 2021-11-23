@@ -337,30 +337,7 @@ namespace IkenBako.Pages
         return RedirectToPage("/Login");
       }
 
-      // 一覧復元
-      if (HttpContext.Session.Keys.Contains(KEY_USER_LIST))
-      {
-        Users.Clear();
-        var bytes = HttpContext.Session.Get(KEY_USER_LIST);
-        Users.AddRange(JsonSerializer.Deserialize<List<UserViewModel>>(bytes));
-        DisplayUsers = GetDisplayUsers(Users);
-      }
-
-      // 編集項目をクリア
-      IsEdit = false;
-      EditPassword = string.Empty;
-      EditIsSetPassword = false;
-      EditTarget.ID = string.Empty;
-      EditTarget.Disabled = false;
-      EditTarget.IsReceiver = false;
-      EditTarget.DisplayName = string.Empty;
-      EditTarget.DisplayList = false;
-      EditTarget.IsAdminRole = false;
-      EditTarget.IsViewListRole= true;
-      EditTargetUserVersion = VERSION_NONE;
-      EditTargetReceiverVersion = VERSION_NONE;
-
-      // 表示
+      // 初期表示に戻してクリアする
       return RedirectToPage();
     }
 
