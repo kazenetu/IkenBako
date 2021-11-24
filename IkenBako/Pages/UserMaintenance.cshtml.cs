@@ -35,7 +35,7 @@ namespace IkenBako.Pages
     /// <summary>
     /// ユーザーリスト
     /// </summary>
-    public List<UserViewModel> Users { get; private set; } = new List<UserViewModel>();
+    private List<UserViewModel> users = new List<UserViewModel>();
 
     /// <summary>
     /// 表示用ユーザーリスト
@@ -158,11 +158,11 @@ namespace IkenBako.Pages
       }
 
 
-      Users.Clear();
-      Users.AddRange(userList);
+      users.Clear();
+      users.AddRange(userList);
 
       // ゼロ件の場合はエラー
-      if (!Users.Any())
+      if (!users.Any())
       {
         ViewData["Message"] = "ユーザーはありません。";
       }
@@ -187,9 +187,9 @@ namespace IkenBako.Pages
       // 一覧復元
       if (HttpContext.Session.Keys.Contains(KEY_USER_LIST))
       {
-        Users.Clear();
+        users.Clear();
         var bytes = HttpContext.Session.Get(KEY_USER_LIST);
-        Users.AddRange(JsonSerializer.Deserialize<List<UserViewModel>>(bytes));
+        users.AddRange(JsonSerializer.Deserialize<List<UserViewModel>>(bytes));
 
         var pageIndexValue = 1;
         if(!int.TryParse(pageIndex, out pageIndexValue))
@@ -197,7 +197,7 @@ namespace IkenBako.Pages
           pageIndexValue = 1;
         }
 
-        DisplayUsers = GetDisplayUsers(Users, pageIndexValue);
+        DisplayUsers = GetDisplayUsers(users, pageIndexValue);
       }
 
       // 再表示
@@ -218,10 +218,10 @@ namespace IkenBako.Pages
       // 一覧復元
       if (HttpContext.Session.Keys.Contains(KEY_USER_LIST))
       {
-        Users.Clear();
+        users.Clear();
         var bytes = HttpContext.Session.Get(KEY_USER_LIST);
-        Users.AddRange(JsonSerializer.Deserialize<List<UserViewModel>>(bytes));
-        DisplayUsers = GetDisplayUsers(Users);
+        users.AddRange(JsonSerializer.Deserialize<List<UserViewModel>>(bytes));
+        DisplayUsers = GetDisplayUsers(users);
       }
 
       var errorMessages = new List<string>();
@@ -277,10 +277,10 @@ namespace IkenBako.Pages
       // 一覧復元
       if (HttpContext.Session.Keys.Contains(KEY_USER_LIST))
       {
-        Users.Clear();
+        users.Clear();
         var bytes = HttpContext.Session.Get(KEY_USER_LIST);
-        Users.AddRange(JsonSerializer.Deserialize<List<UserViewModel>>(bytes));
-        DisplayUsers = GetDisplayUsers(Users);
+        users.AddRange(JsonSerializer.Deserialize<List<UserViewModel>>(bytes));
+        DisplayUsers = GetDisplayUsers(users);
       }
 
       if (string.IsNullOrEmpty(id))
@@ -355,10 +355,10 @@ namespace IkenBako.Pages
       // 一覧復元
       if (HttpContext.Session.Keys.Contains(KEY_USER_LIST))
       {
-        Users.Clear();
+        users.Clear();
         var bytes = HttpContext.Session.Get(KEY_USER_LIST);
-        Users.AddRange(JsonSerializer.Deserialize<List<UserViewModel>>(bytes));
-        DisplayUsers = GetDisplayUsers(Users);
+        users.AddRange(JsonSerializer.Deserialize<List<UserViewModel>>(bytes));
+        DisplayUsers = GetDisplayUsers(users);
       }
 
       // 入力チェック
