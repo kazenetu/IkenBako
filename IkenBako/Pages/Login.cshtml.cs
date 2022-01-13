@@ -7,6 +7,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
+using Microsoft.AspNetCore.Antiforgery;
+using System.Text;
 
 namespace IkenBako.Pages
 {
@@ -95,22 +97,69 @@ namespace IkenBako.Pages
         return Page();
       }
 
-      HttpContext.Session.SetString(KEY_LOGIN_ID, Target);
+      // Cookie削除(のちほど自動的に再取得)
+      foreach (var key in Request.Cookies.Keys)
+      {
+        // CSRF対策用Cookieは削除しない
+        if (key.StartsWith(".AspNetCore.Antiforgery."))
+        {
+          continue;
+        }
+        Response.Cookies.Delete(key);
+      }
+ 
+      // CSRF対策用トークンの取得
+      var antiforgery = (IAntiforgery)HttpContext.RequestServices.GetService(typeof(IAntiforgery));
+      var tokenSet = antiforgery.GetAndStoreTokens(HttpContext);
+ 
+      // 一時表示用HTML作成(OnPostRedirectIndexを呼ぶHTML)
+      var contentResult = new StringBuilder();
+      contentResult.AppendLine($"<html><body><div style=\"display:none;\">");
+      contentResult.AppendLine($"<form method=\"POST\" action=\"/Login/RedirectIndex\">");
+      contentResult.AppendLine($"<input type=\"hidden\" name=\"loginID\" value=\"{Target}\">");
+      contentResult.AppendLine($"<input type=\"hidden\" name=\"{tokenSet.FormFieldName}\" value=\"{tokenSet.RequestToken}\">");
+      contentResult.AppendLine($"<input type=\"submit\" id=\"submit\">");
+      contentResult.AppendLine($"</form></div>");
+      contentResult.AppendLine($"<script>");
+      contentResult.AppendLine("window.onload = function() {");
+      contentResult.AppendLine("document.getElementById('submit').click();");
+      contentResult.AppendLine("}");
+      contentResult.AppendLine($"</script>");
+      contentResult.AppendLine($"</body></html>");
+ 
+      // HTMLとして出力
+      return Content(contentResult.ToString(), "text/html; charset=utf-8");
+    }
 
-      // 一覧表示権限・管理者権限のチェック
-      var receiver = receiverService.GetReceiver(Target);
-      if(receiver != null){
-        // 一覧確認権限がある場合のみ設定
-        if(receiver.IsViewListRole){
-          HttpContext.Session.SetString(KEY_RECEIVER, receiver.ID);
+    /// <summary>
+    /// ログインIDをセッションに設定とindexにリダイレクト
+    /// </summary>
+    /// <param name="loginID">ログインID(form内要素から取得)</param>
+    /// <returns>遷移先</returns>
+    public IActionResult OnPostRedirectIndex(string loginID)
+    {
+      if (!string.IsNullOrEmpty(loginID))
+      {
+        HttpContext.Session.SetString(KEY_LOGIN_ID, loginID);
+
+        // 一覧表示権限・管理者権限のチェック
+        var receiver = receiverService.GetReceiver(loginID);
+        if(receiver != null){
+          // 一覧確認権限がある場合のみ設定
+          if(receiver.IsViewListRole){
+            HttpContext.Session.SetString(KEY_RECEIVER, receiver.ID);
+          }
+
+          // 管理者権限がある場合のみ設定
+          if(receiver.IsAdminRole)
+            HttpContext.Session.SetString(KEY_ADMIN, receiver.IsAdminRole.ToString());
         }
 
-        // 管理者権限がある場合のみ設定
-        if(receiver.IsAdminRole)
-          HttpContext.Session.SetString(KEY_ADMIN, receiver.IsAdminRole.ToString());
+        return RedirectToPage("/index");
       }
-
-      return RedirectToPage("/index");
+ 
+      // IDがない場合はLoginページに戻す
+      return Redirect("/Login");
     }
   }
 }
