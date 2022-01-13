@@ -19,7 +19,5 @@
     /// ロールバック
     /// </summary>
     void Rollback();
-
-    T Cast<T>() where T : IRepositoryBase;
   }
 }
